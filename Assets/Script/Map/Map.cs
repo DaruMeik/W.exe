@@ -25,7 +25,6 @@ public class MapSystem
     }
     public void SetRoomType(int x, int y, string roomType)
     {
-        Debug.Log(mapArray[x, y].roomType);
         mapArray[x,y].roomType = roomType;
     }
     public string GetRoomType(int x, int y)

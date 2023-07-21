@@ -8,10 +8,11 @@ public class PlayerNormalState : PlayerBaseState
     private Vector2 mousePos;
     private float lookAngle;
 
-    private bool isShooting;
+    public bool isShooting;
     private IEnumerator shootingCoroutine;
 
     private GameObject mouseOverObj;
+    private float nextTimeToSwitch = 0f;
     public override void EnterState(PlayerStateManager player)
     {
     }
@@ -41,6 +42,28 @@ public class PlayerNormalState : PlayerBaseState
             player.bodyAnimator.SetBool("isReversed", true);
         else
             player.bodyAnimator.SetBool("isReversed", false);
+        #endregion
+
+        #region switch weapon
+        if (PlayerControl.Instance.pInput.Player.Switch.WasPerformedThisFrame() && Time.time > nextTimeToSwitch)
+        {
+            isShooting = false;
+            int temp;
+            temp = player.playerStat.currentWeapon[0];
+            player.playerStat.currentWeapon[0] = player.playerStat.currentWeapon[1];
+            player.playerStat.currentWeapon[1] = temp;
+
+            temp = player.playerStat.currentAmmo[0];
+            player.playerStat.currentAmmo[0] = player.playerStat.currentAmmo[1];
+            player.playerStat.currentAmmo[1] = temp;
+            player.UpdateWeaponSprite();
+
+            nextTimeToSwitch = Time.time + 1f;
+        }
+        else if (Time.time <= nextTimeToSwitch)
+        {
+            player.switchCooldownSlider.value = 1 - (nextTimeToSwitch - Time.time);
+        }
         #endregion
 
         #region shooting
@@ -90,6 +113,36 @@ public class PlayerNormalState : PlayerBaseState
             player.SwitchState(player.dashState);
         }
         #endregion
+
+        #region map
+        if (PlayerControl.Instance.pInput.Player.Map.WasPerformedThisFrame())
+        {
+            player.map.SetActive(!player.map.activeSelf);
+        }
+        #endregion
+
+        #region interact
+        if (PlayerControl.Instance.pInput.Player.Interact.WasPerformedThisFrame())
+        {
+            if (player.interactableObj.Count > 0)
+            {
+                player.interactingObj = player.interactableObj[player.interactableObj.Count - 1];
+                switch (player.interactingObj.tag)
+                {
+                    case "Portal":
+                        player.SwitchState(player.teleportState);
+                        break;
+                    case "NPC":
+                        player.interactingObj.GetComponent<NPC>().TurnOnText();
+                        break;
+                    case "OneTime":
+                        player.interactingObj.GetComponent<Onetime>().Interact();
+                        break;
+                }
+                isShooting = false;
+            }
+        }
+        #endregion
     }
     public override void ExitState(PlayerStateManager player)
     {
@@ -133,12 +186,17 @@ public class PlayerNormalState : PlayerBaseState
             {
                 weapon.weaponBaseEffect.ApplyEffect(player.weaponPivotPoint.position, mousePos + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, true, player.playerStat);
                 player.playerStat.currentAmmo[0]--;
-            }
-            if (player.playerStat.currentAmmo[0] == 0)
-            {
-                player.playerStat.currentWeapon[0] = 0;
-                player.UpdateWeaponSprite();
-                isShooting = false;
+                player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
+                    + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
+                if (player.playerStat.currentAmmo[0] == 0)
+                {
+                    player.playerStat.currentWeapon[0] = 0;
+                    player.playerStat.currentAmmo[0] = -1;
+                    player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
+                        + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
+                    player.UpdateWeaponSprite();
+                    isShooting = false;
+                }
             }
             yield return new WaitForSeconds(5f / weapon.atkSpd);
         }

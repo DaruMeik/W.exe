@@ -22,10 +22,16 @@ public class Wea01_GatlingEffect : WeaponBaseEffect
         Wea01_Gatling temp = instancedObj.GetComponent<Wea01_Gatling>();
         temp.spawnPos = startPoint;
         temp.bySelf = bySelf;
-        if(bySelf)
+        if (bySelf)
+        {
             temp.rb.velocity = (endPoint - startPoint).normalized * speed;
+            temp.atkPerc = playerStat.atkPerc;
+        }
         else
+        {
             temp.rb.velocity = (endPoint - startPoint).normalized * speed * 0.75f;
+            temp.atkPerc = 0;
+        }
         temp.ready = true;
     }
 }

@@ -42,7 +42,7 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnNewEnemy()
     {
         RefreshMap();
-        spawnAmount = 3 + spawnWave;
+        spawnAmount = 2 + spawnWave;
         for (int i = 0; i < spawnAmount; i++)
         {
             List<float[]> possibleField = new List<float[]> { };
@@ -58,13 +58,9 @@ public class EnemySpawner : MonoBehaviour
             {
                 enemyID = enemyIDList[0];
             }
-            else if (i < 4)
+            else 
             {
                 enemyID = enemyIDList[1];
-            }
-            else
-            {
-                enemyID = enemyIDList[2];
             }
             if (possibleField.Count == 0)
             {
@@ -85,7 +81,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void GenerateEnemyID()
     {
-        if(enemyObj.Length < 3)
+        if(enemyObj.Length < 2)
         {
             Debug.LogError("Not enough enemy!");
             return;
@@ -106,7 +102,7 @@ public class EnemySpawner : MonoBehaviour
                 enemyIDList.Add(i);
             }
         }
-        while (enemyIDList.Count < 3);
+        while (enemyIDList.Count < 2);
     }
     private void RefreshMap()
     {

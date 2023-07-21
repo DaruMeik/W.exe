@@ -9,9 +9,12 @@ public class Wea01_Gatling : MonoBehaviour
     public bool bySelf;
     public Vector2 spawnPos;
     public bool ready = false;
+    private bool firstHit = true;
+    public int atkPerc;
     private void OnEnable()
     {
         ready = false;
+        firstHit = true;
     }
     private void Update()
     {
@@ -24,19 +27,21 @@ public class Wea01_Gatling : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!ready || collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
+        if (!ready || !firstHit ||collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
             return;
         if (bySelf && collision.gameObject.layer != LayerMask.NameToLayer("PlayerHurtBox"))
         {
+            firstHit = false;
             if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
-                temp.TakeDamage(WeaponDatabase.weaponList[ID].power);
+                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
             }
             Destroy(gameObject);
         }
         else if (!bySelf && collision.gameObject.layer != LayerMask.NameToLayer("EnemyHurtBox"))
         {
+            firstHit = false;
             if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
             {
                 PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();

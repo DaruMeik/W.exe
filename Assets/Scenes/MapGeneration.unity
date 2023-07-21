@@ -201,7 +201,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 470849617}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 5, y: 2.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -271,8 +271,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugNumberTest: {fileID: 8879184237428172388, guid: cbd61f20df1824c4988fa52ba636fa9b, type: 3}
+  line: {fileID: 4917627584510891419, guid: cda7189d12d4fb54594e4f1a00f7451a, type: 3}
+  nodeImages:
+  - {fileID: -530081658, guid: ebc47ed9b1ed3e64e938aab30fbdd0e8, type: 3}
+  - {fileID: 340688625, guid: ebc47ed9b1ed3e64e938aab30fbdd0e8, type: 3}
+  - {fileID: 2075002505, guid: ebc47ed9b1ed3e64e938aab30fbdd0e8, type: 3}
+  - {fileID: -1714290234, guid: ebc47ed9b1ed3e64e938aab30fbdd0e8, type: 3}
+  - {fileID: -2088092834, guid: ebc47ed9b1ed3e64e938aab30fbdd0e8, type: 3}
+  - {fileID: -920806299, guid: ebc47ed9b1ed3e64e938aab30fbdd0e8, type: 3}
   width: 10
-  height: 7
+  height: 6
 --- !u!4 &1422835324
 Transform:
   m_ObjectHideFlags: 0

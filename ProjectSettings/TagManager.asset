@@ -7,21 +7,24 @@ TagManager:
   - Enemy
   - PlayerBullet
   - EnemyBullet
+  - Portal
+  - NPC
+  - OneTime
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Light
   - Water
   - UI
   - PlayerCollision
   - Wall
   - EnemyHurtBox
   - Bullet
-  - 
+  - Interact
   - Possession
   - PlayerHurtBox
-  - 
+  - Minimap
   - 
   - 
   - 

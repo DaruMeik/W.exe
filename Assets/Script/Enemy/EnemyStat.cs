@@ -11,6 +11,7 @@ public class EnemyStat : ScriptableObject
     public int enemyRewardWeaponID = 0;
     public List<int> enemyWeaponId = new List<int>();
     public List<float> enemyAtkRange = new List<float>();
+    public List<bool> requireLOS = new List<bool>();
     public List<float> enemyCD = new List<float>();
-    public List<float> enemyAimSpeed = new List<float>();
+    public List<float> enemyAimTime = new List<float>();
 }

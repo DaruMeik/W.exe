@@ -12,11 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bac29c49779e624997d7a74842fdb73, type: 3}
   m_Name: PlayerStat
   m_EditorClassIdentifier: 
-  maxHP: 100
   currentHP: 100
   currentWeapon: 0000000000000000
-  currentAmmo: 0000000000000000
-  playerSpeed: 5
+  currentAmmo: ffffffffffffffff
   hasCard: 1
+  level: 1
+  exp: 0
+  defaultMaxHP: 100
+  defaultPlayerSpeed: 5
+  defaultMaxDash: 2
+  defaultShockWaveRange: 2.5
+  defaultShockWaveStuntTime: 0.5
+  defaultMoney: 0
+  defaultLuck: -5
+  defaultAtkPerc: 0
+  defaultDefPerc: 0
+  maxHP: 100
+  playerSpeed: 5
   maxDash: 2
+  shockWaveRange: 2.5
+  shockWaveStuntTime: 0.5
+  money: 0
+  luck: -5
+  atkPerc: 0
+  defPerc: 0
+  upgradeRegister: 
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}

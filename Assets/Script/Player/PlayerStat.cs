@@ -10,29 +10,87 @@ public class PlayerStat : ScriptableObject
     public int[] currentWeapon;
     public int[] currentAmmo;
     public bool hasCard;
+    public int level;
+    public int exp;
 
-    // Stat
+    [Header("Default Stat")]
+    public int defaultMaxHP;
+    public float defaultPlayerSpeed;
+    public int defaultMaxDash;
+    public float defaultShockWaveRange;
+    public float defaultShockWaveStuntTime;
+    public int defaultMoney;
+    public int defaultLuck;
+    public int defaultAtkPerc;
+    public int defaultDefPerc;
+
+    [Header("Stat")]
     public int maxHP;
     public float playerSpeed;
     public int maxDash;
     public float shockWaveRange;
     public float shockWaveStuntTime;
+    public int money;
+    public int luck;
+    public int atkPerc;
+    public int defPerc;
+
+    // Regis stuffs
+    public List<int> upgradeRegister = new List<int>();
+
 
     public EventBroadcast eventBroadcast;
     private void OnEnable()
     {
-        maxHP = 100;
-        playerSpeed = 5f;
-        maxDash = 2;
-        shockWaveRange = 2.5f;
-        shockWaveStuntTime = 0.5f;
+        defaultMaxHP = 100;
+        defaultPlayerSpeed = 5f;
+        defaultMaxDash = 2;
+        defaultShockWaveRange = 2.5f;
+        defaultShockWaveStuntTime = 0.5f;
+        defaultMoney = 0;
+        defaultLuck = -5;
+        defaultAtkPerc = 0;
+        defaultDefPerc = 0;
+        level = 1;
+        exp = 0;
 
-        currentHP = 100;
-        currentWeapon = new int[2] { 2, 0 };
-        currentAmmo = new int[2] { -1, 0 };
+        maxHP = defaultMaxHP;
+        playerSpeed = defaultPlayerSpeed;
+        maxDash = defaultMaxDash;
+        shockWaveRange = defaultShockWaveRange;
+        shockWaveStuntTime = defaultShockWaveStuntTime;
+        money = defaultMoney;
+        luck = defaultLuck;
+        atkPerc = defaultAtkPerc;
+        defPerc = defaultDefPerc;
+        currentHP = maxHP;
+        currentWeapon = new int[2] { 0, 0 };
+        currentAmmo = new int[2] { -1, -1 };
         hasCard = true;
+        upgradeRegister.Clear();
     }
+    public void ResetStat()
+    {
+        level = 1;
+        exp = 0;
 
+        hasCard = true;
+        maxHP = defaultMaxHP;
+        playerSpeed = defaultPlayerSpeed;
+        maxDash = defaultMaxDash;
+        shockWaveRange = defaultShockWaveRange;
+        shockWaveStuntTime = defaultShockWaveStuntTime;
+        money = defaultMoney;
+        luck = defaultLuck;
+        atkPerc = defaultAtkPerc;
+        defPerc = defaultDefPerc;
+
+
+        currentHP = maxHP;
+        currentWeapon = new int[2] { 0, 0 };
+        currentAmmo = new int[2] { -1, -1 };
+        upgradeRegister.Clear();
+    }
     public void UpdateCard(bool hasCard)
     {
         this.hasCard = hasCard;

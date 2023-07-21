@@ -10,6 +10,15 @@ public class EventBroadcast : ScriptableObject
     public event GameEvent updateCardUI;
     public event GameEvent enemyKilled;
     public event GameEvent allDead;
+    public event GameEvent generateMap;
+    public event GameEvent updateHP;
+    public event GameEvent updateMoney;
+    public event GameEvent finishText;
+
+    // Random Event
+    public delegate void RandomMachine(int buff, int nerf);
+    public event RandomMachine finishNewMachine;
+
     public delegate void GameObjEvent(GameObject gObj);
     public event GameObjEvent possessEvent;
 
@@ -32,6 +41,31 @@ public class EventBroadcast : ScriptableObject
     {
         if(allDead != null)
             allDead.Invoke();
+    }
+    public void GenerateMapNoti()
+    {
+        if(generateMap != null)
+            generateMap.Invoke();
+    }
+    public void UpdateHPNoti()
+    {
+        if(updateHP != null)
+            updateHP.Invoke();
+    }
+    public void UpdateMoneyNoti()
+    {
+        if(updateMoney != null)
+            updateMoney.Invoke();
+    }
+    public void FinishTextNoti()
+    {
+        if(finishText != null)
+            finishText.Invoke();
+    }
+    public void FinishNewMachineNoti(int i, int j)
+    {
+        if(finishNewMachine != null)
+            finishNewMachine.Invoke(i, j);
     }
     public void PossessEventNoti(GameObject gObj)
     {

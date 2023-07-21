@@ -8,7 +8,7 @@ public class PlayerDashState : PlayerBaseState
     Vector2 playerDir;
     public override void EnterState(PlayerStateManager player)
     {
-        player.col.enabled = false;
+        player.hurtBoxCol.enabled = false;
         player.dashNumber++;
         player.nextDashResetTime = Time.time + 0.75f;
         playerDir = PlayerControl.Instance.pInput.Player.Move.ReadValue<Vector2>();
@@ -24,7 +24,7 @@ public class PlayerDashState : PlayerBaseState
             }
         }
         dashStartTime = Time.time;
-        player.rb.velocity = playerDir * player.playerStat.playerSpeed * 4f;
+        player.rb.velocity = playerDir * player.playerStat.playerSpeed * 3f;
     }
     public override void UpdateState(PlayerStateManager player)
     {
@@ -39,6 +39,6 @@ public class PlayerDashState : PlayerBaseState
     }
     public override void ExitState(PlayerStateManager player)
     {
-        player.col.enabled = true;
+        player.hurtBoxCol.enabled = true;
     }
 }

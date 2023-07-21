@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ec31f481e4e11c14e9e26aca562ad516
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - HPSlider: {instanceID: 0}
+  - playerStat: {fileID: 11400000, guid: 8a107fd139e91684d9ec2c13774160e6, type: 2}
+  - eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

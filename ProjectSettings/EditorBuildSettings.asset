@@ -6,6 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
+    path: Assets/Scenes/preload.unity
+    guid: b33ca55af7b4ad14faf41eb8db3f5833
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 488fa007abea2dd49878f3836a0ec22e
+  - enabled: 1
+    path: Assets/Scenes/Home.unity
+    guid: d357bbddb89d11540a399e906b317b69
+  - enabled: 1
+    path: Assets/Scenes/Garage1.unity
+    guid: 7d4ffdf826cbf464589f3f49d0e555e8
+  - enabled: 1
+    path: Assets/Scenes/GarageScientist.unity
+    guid: eebaf8e495929f940ac8e5483b0f10ba
+  - enabled: 1
+    path: Assets/Scenes/GarageRest.unity
+    guid: 8ff8cb74942a1ff489d83153d745cecd
   m_configObjects: {}

@@ -10,10 +10,12 @@ public class FishingMail : MonoBehaviour
     public bool isPickupable = false;
     public bool ready = false;
     public PlayerStat playerStat;
+    private bool firstHit = true;
     private void OnEnable()
     {
         isPickupable = false;
         ready = false;
+        firstHit = true;
     }
     private void Update()
     {
@@ -31,10 +33,11 @@ public class FishingMail : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!ready)
+        if (!ready || (!firstHit && !isPickupable) || collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
             return;
         if (!isPickupable && collision.tag != "Player")
         {
+            firstHit = false;
             if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
             {
                 isPickupable = true;
@@ -45,12 +48,13 @@ public class FishingMail : MonoBehaviour
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 temp.marked = true;
                 temp.mark.SetActive(true);
-                temp.TakeDamage(WeaponDatabase.fishingMail.power);
+                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.fishingMail.power * (100+playerStat.atkPerc)/100f));
                 Destroy(gameObject);
             }
         }
         else if (isPickupable && collision.tag == "Player")
         {
+            firstHit = false;
             playerStat.UpdateCard(true);
             Destroy(gameObject);
         }

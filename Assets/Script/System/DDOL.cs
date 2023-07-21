@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DDOL : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject[] foreverApp;
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        Application.targetFrameRate = 60;
+        foreach (GameObject obj in foreverApp)
+        {
+            DontDestroyOnLoad(obj);
+        }
+        SceneManager.LoadScene("MainMenu");
     }
 }

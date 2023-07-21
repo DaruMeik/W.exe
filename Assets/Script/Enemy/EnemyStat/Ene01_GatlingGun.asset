@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4397c174e2ab84d44bf4d5796516bc07, type: 3}
   m_Name: Ene01_GatlingGun
   m_EditorClassIdentifier: 
-  enemyMaxHP: 120
-  enemyMovementSpeed: 2
+  enemyMaxHP: 80
+  enemyMovementSpeed: 2.5
   isBoss: 0
   enemyRewardWeaponID: 1
   enemyWeaponId: 01000000
   enemyAtkRange:
-  - 3
+  - 5
+  requireLOS: 01
   enemyCD:
   - 1.5
-  enemyAimSpeed:
-  - 0
+  enemyAimTime:
+  - 0.05

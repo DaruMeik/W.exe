@@ -22,6 +22,14 @@ public class Wea02_ShortSwordEffect : WeaponBaseEffect
         Wea02_ShortSword temp = instancedObj.GetComponent<Wea02_ShortSword>();
         temp.spawnPos = startPoint;
         temp.bySelf = bySelf;
+        if (bySelf)
+        {
+            temp.atkPerc = playerStat.atkPerc;
+        }
+        else
+        {
+            temp.atkPerc = 0;
+        }
         temp.ready = true;
     }
 }

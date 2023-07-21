@@ -23,6 +23,16 @@ public class Wea00_BusterEffect : WeaponBaseEffect
         temp.spawnPos = startPoint;
         temp.bySelf = bySelf;
         temp.rb.velocity = (endPoint - startPoint).normalized * speed;
+
+        if (bySelf)
+        {
+            temp.atkPerc = playerStat.atkPerc;
+        }
+        else
+        {
+            temp.atkPerc = 0;
+        }
+
         temp.ready = true;
     }
 }

@@ -33,13 +33,15 @@ public class EnemyNormalState : EnemyBaseState
                 enemy.enemySprite.flipX = true;
             }
 
-            float distance = Vector2.Distance(enemy.scanPoint.position, enemy.path.vectorPath[enemy.currentWayPoint]);
+            float distanceToNextWayPoint = Vector2.Distance(enemy.scanPoint.position, enemy.path.vectorPath[enemy.currentWayPoint]);
+            float distanceToTarget = enemy.path.GetTotalLength();
 
-            if (distance < enemy.enemyStat.enemyAtkRange[0] && Time.time > enemy.nextTimeToUseSkill)
+            if (distanceToTarget < enemy.enemyStat.enemyAtkRange[0] && Time.time > enemy.nextTimeToUseSkill)
             {
-                enemy.SwitchState(enemy.skillState);
+                if (!enemy.enemyStat.requireLOS[0] || (enemy.enemyStat.requireLOS[0] && !Physics2D.Linecast(enemy.scanPoint.position, enemy.target.position, LayerMask.GetMask("Wall"))))
+                    enemy.SwitchState(enemy.skillState);
             }
-            if (distance < enemy.nextWayPointDistance)
+            if (distanceToNextWayPoint < enemy.nextWayPointDistance)
             {
                 enemy.currentWayPoint++;
             }

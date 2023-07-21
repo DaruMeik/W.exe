@@ -13,7 +13,7 @@ public class PlayerPossessState : PlayerBaseState
         player.weaponSprite.enabled = false;
         player.bodyAnimator.SetTrigger("Possess");
         player.rb.velocity = Vector2.zero;
-        player.col.enabled = false;
+        player.hurtBoxCol.enabled = false;
     }
     public override void UpdateState(PlayerStateManager player)
     {
@@ -24,7 +24,7 @@ public class PlayerPossessState : PlayerBaseState
         Debug.Log("Exit");
         player.bodyAnimator.SetTrigger("FinishPossess");
         player.shockWave.SetActive(true);
-        player.col.enabled = true;
+        player.hurtBoxCol.enabled = true;
         player.playerStat.UpdateCard(true);
     }
 
@@ -33,6 +33,8 @@ public class PlayerPossessState : PlayerBaseState
         Debug.Log("Teleport");
         playerStateManager.playerStat.currentWeapon[0] = enemy.enemyStat.enemyRewardWeaponID;
         playerStateManager.playerStat.currentAmmo[0] = WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[0]].maxAmmo;
+        playerStateManager.ammo.text = ((playerStateManager.playerStat.currentAmmo[0] >= 0) ? playerStateManager.playerStat.currentAmmo[0].ToString() : "‡") + "|"
+            + ((playerStateManager.playerStat.currentAmmo[1] >= 0) ? playerStateManager.playerStat.currentAmmo[1].ToString() : "‡");
         playerStateManager.UpdateWeaponSprite();
         playerStateManager.playerSprites[1].enabled = true;
         playerStateManager.weaponSprite.enabled = true;

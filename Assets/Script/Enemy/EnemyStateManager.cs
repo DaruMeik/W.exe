@@ -50,6 +50,8 @@ public class EnemyStateManager : MonoBehaviour
     public Seeker seeker;
     public Transform target;
     public Transform scanPoint;
+    public Vector3 aimPoint;
+    public LayerMask blockMask;
     public float nextWayPointDistance = 2f;
     [System.NonSerialized] public Path path;
     [System.NonSerialized] public int currentWayPoint;
@@ -72,6 +74,7 @@ public class EnemyStateManager : MonoBehaviour
         // Stat
         currentHP = enemyStat.enemyMaxHP;
         HPSlider.maxValue = enemyStat.enemyMaxHP;
+        HPSlider.value = HPSlider.maxValue;
         marked = false;
         isInvincible = false;
         isPossessed = false;
@@ -91,7 +94,6 @@ public class EnemyStateManager : MonoBehaviour
         {
             if (Time.time - flashWhiteTimer >= 0.2f)
             {
-                Debug.Log(enemySprite.material);
                 if (show)
                 {
                     enemySprite.material = defaultMat;
@@ -100,7 +102,6 @@ public class EnemyStateManager : MonoBehaviour
                 {
                     enemySprite.material = whiteFlashMat;
                 }
-                Debug.Log("After: " + enemySprite.material);
                 show = !show;
                 flashWhiteTimer = Time.time;
             }
@@ -160,6 +161,7 @@ public class EnemyStateManager : MonoBehaviour
     }
     public void FinishPossessionAnimation()
     {
+        possessionCollider.SetActive(false);
         eventBroadcast.FinishPossessionAnimationNoti();
     }
     public void FinishExplodingAnimation()
@@ -169,6 +171,11 @@ public class EnemyStateManager : MonoBehaviour
             WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat);
         }
         eventBroadcast.EnemyKilledNoti();
+        if (Random.Range(0, 100) > 75)
+        {
+            playerStat.money += 10;
+            eventBroadcast.UpdateMoneyNoti();
+        }
         Destroy(gameObject);
     }
     IEnumerator Shooting()
@@ -176,7 +183,7 @@ public class EnemyStateManager : MonoBehaviour
         while (true)
         {
             Weapon weapon = WeaponDatabase.weaponList[enemyStat.enemyWeaponId[0]];
-            weapon.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, (Vector2)target.position + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, false, null);
+            weapon.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, (Vector2)aimPoint + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, false, null);
             yield return new WaitForSeconds(5f / weapon.atkSpd);
         }
     }
@@ -186,7 +193,7 @@ public class EnemyStateManager : MonoBehaviour
         {
             if (seeker.IsDone())
             {
-                seeker.StartPath(scanPoint.position, target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0], OnPathComplete);
+                seeker.StartPath(scanPoint.position, target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0]*0.5f, OnPathComplete);
             }
             yield return new WaitForSeconds(0.4f);
         }

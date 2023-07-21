@@ -10,6 +10,7 @@ public class Wea02_ShortSword : MonoBehaviour
     public Vector2 spawnPos;
     public float spawnTime;
     public bool ready = false;
+    public int atkPerc;
     private void OnEnable()
     {
         spawnTime = Time.time;
@@ -34,7 +35,7 @@ public class Wea02_ShortSword : MonoBehaviour
             if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
-                temp.TakeDamage(WeaponDatabase.weaponList[ID].power);
+                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
             }
             if(collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet")
             {

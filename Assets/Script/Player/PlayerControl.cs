@@ -9,11 +9,11 @@ public class PlayerControl : MonoBehaviour
 
     private void OnEnable()
     {
-        Instance = this;
+        if(Instance == null)
+            Instance = this;
         pInput = new PlayerInput();
         pInput.Enable();
         pInput.Player.Enable();
         pInput.UI.Disable();
-        Debug.Log(pInput);
     }
 }
