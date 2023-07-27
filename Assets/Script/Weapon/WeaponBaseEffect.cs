@@ -4,5 +4,7 @@ using UnityEngine;
 
 public abstract class WeaponBaseEffect
 {
-    public abstract void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, float chargeAmount = 0);
+    public Transform weaponPoint;
+    public abstract void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj);
+    public abstract void Release(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj);
 }

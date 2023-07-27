@@ -6,7 +6,7 @@ public class Wea01_GatlingEffect : WeaponBaseEffect
 {
     private int weaponId = 1;
     float speed = 10f;
-    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat = null, float chargedAmount = 0)
+    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj)
     {
         startPoint.z = 0;
         endPoint.z = 0;
@@ -34,4 +34,5 @@ public class Wea01_GatlingEffect : WeaponBaseEffect
         }
         temp.ready = true;
     }
+    public override void Release(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj) { }
 }

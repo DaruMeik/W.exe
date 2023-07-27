@@ -16,9 +16,10 @@ MonoBehaviour:
   enemyMovementSpeed: 2.25
   isBoss: 0
   enemyRewardWeaponID: 3
+  enemyBehavior: Default
   enemyWeaponId: 03000000
   enemyAtkRange:
-  - 3
+  - 4
   requireLOS: 01
   enemyCD:
   - 1.5

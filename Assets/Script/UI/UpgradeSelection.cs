@@ -14,12 +14,14 @@ public class UpgradeSelection : MonoBehaviour
     private float previousTimeScale;
     private void OnEnable()
     {
+        eventBroadcast.EnterUINoti();
         previousTimeScale = Time.timeScale;
         Time.timeScale = 0f;
         GenerateReward();
     }
     private void OnDisable()
     {
+        eventBroadcast.ExitUINoti();
         Time.timeScale = previousTimeScale;
     }
     private void GenerateReward()

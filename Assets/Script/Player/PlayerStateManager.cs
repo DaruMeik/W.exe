@@ -8,11 +8,13 @@ using TMPro;
 public class PlayerStateManager : MonoBehaviour
 {
     private PlayerBaseState currentState;
+    public PlayerSpawnState spawnState = new PlayerSpawnState();
     public PlayerNormalState normalState = new PlayerNormalState();
     public PlayerDashState dashState = new PlayerDashState();
-    public PlayerFlinchState flinchState = new PlayerFlinchState();
+    public PlayerSpawnState flinchState = new PlayerSpawnState();
     public PlayerPossessState possessState = new PlayerPossessState();
     public PlayerTeleportState teleportState = new PlayerTeleportState();
+    public PlayerStunState stunState = new PlayerStunState();
 
     public Rigidbody2D rb;
     public Collider2D hurtBoxCol;
@@ -29,6 +31,7 @@ public class PlayerStateManager : MonoBehaviour
     [Header("Status")]
     public float speedPenalty;
     public bool isInvincible = false;
+    public bool isInUI = false;
 
     [Header("Interact")]
     public List<GameObject> interactableObj = new List<GameObject>();
@@ -48,10 +51,16 @@ public class PlayerStateManager : MonoBehaviour
     private bool show;
     public Material whiteFlashMat;
     public Material defaultMat;
+    public GameObject healingVFX;
 
     [Header("Dashing")]
     public int dashNumber = 0;
     public float nextDashResetTime = 0f;
+
+    [Header("Register")]
+    public GameObject canPossessMarker;
+    [System.NonSerialized] public GameObject spawnedBullet;
+    [System.NonSerialized] public EnemyStateManager enemy;
 
     [Header("Universal Stuffs")]
     public PlayerStat playerStat;
@@ -59,15 +68,21 @@ public class PlayerStateManager : MonoBehaviour
     private void OnEnable()
     {
         UpdateWeaponSprite();
-
+        isInUI = false;
+        eventBroadcast.enterUI += EnterUI;
+        eventBroadcast.exitUI += ExitUI;
         eventBroadcast.allDead += GainEXP;
+        eventBroadcast.possessEvent += CanPossess;
         eventBroadcast.finishPossessionAnimation += FinishPossessAnimation;
         eventBroadcast.finishPossessionAnimation += possessState.Teleport;
     }
 
     private void OnDisable()
     {
+        eventBroadcast.enterUI -= EnterUI;
+        eventBroadcast.exitUI -= ExitUI;
         eventBroadcast.allDead -= GainEXP;
+        eventBroadcast.possessEvent -= CanPossess;
         eventBroadcast.finishPossessionAnimation -= FinishPossessAnimation;
         eventBroadcast.finishPossessionAnimation -= possessState.Teleport;
     }
@@ -88,11 +103,11 @@ public class PlayerStateManager : MonoBehaviour
         flashWhiteTimer = 0f;
         defaultMat = playerSprites[0].material;
         shockWave.SetActive(false);
-        SwitchState(normalState);
+        SwitchState(spawnState);
     }
     private void Update()
     {
-        if(Time.time > nextDashResetTime && dashNumber != 0)
+        if (Time.time > nextDashResetTime && dashNumber != 0)
         {
             dashNumber = 0;
         }
@@ -102,7 +117,7 @@ public class PlayerStateManager : MonoBehaviour
             {
                 if (show)
                 {
-                    foreach(SpriteRenderer sr in playerSprites)
+                    foreach (SpriteRenderer sr in playerSprites)
                     {
                         sr.material = defaultMat;
                     }
@@ -134,13 +149,22 @@ public class PlayerStateManager : MonoBehaviour
         currentState = state;
         currentState.EnterState(this);
     }
+
+    #region health
     public void TakeDamage(int damage)
     {
         if (isInvincible)
             return;
 
         damagedAnimationTimer = Time.time;
-        playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - Mathf.CeilToInt(damage*(100-playerStat.defPerc)/100f));
+        if(damage > 0)
+            playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - Mathf.CeilToInt(damage * (100 - playerStat.defPerc) / 100f));
+        else
+        {
+            playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - damage);
+            healingVFX.SetActive(false);
+            healingVFX.SetActive(true);
+        }
         eventBroadcast.UpdateHPNoti();
 
         if (playerStat.currentHP <= 0)
@@ -150,28 +174,50 @@ public class PlayerStateManager : MonoBehaviour
             SceneManager.LoadScene("Home");
         }
     }
+    #endregion
+
+    #region Weapon Sprite
     public void UpdateWeaponSprite()
     {
         weaponSprite.sprite = WeaponDatabase.weaponList[playerStat.currentWeapon[0]].weaponSprite;
         subWeaponSprite.sprite = WeaponDatabase.weaponList[playerStat.currentWeapon[1]].weaponSprite;
         ammo.text = ((playerStat.currentAmmo[0] >= 0) ? playerStat.currentAmmo[0].ToString() : "Åá") + "|" + ((playerStat.currentAmmo[1] >= 0) ? playerStat.currentAmmo[1].ToString() : "Åá");
     }
+    #endregion
 
+    #region possession related
+    public void CanPossess(EnemyStateManager enemy)
+    {
+        canPossessMarker.SetActive(true);
+        this.enemy = enemy;
+        StartCoroutine(CannotPossess());
+    }
     public void FinishPossessAnimation()
     {
-        if(currentState == possessState)
+        if (currentState == possessState)
+        {
+            enemy = null;
             SwitchState(normalState);
+        }
     }
     public void TeleportToNextStage()
     {
         Portal portal = interactingObj.GetComponent<Portal>();
         MapGenerator.Instance.Travel(portal.nextRoomType, portal.nextRoomIndex);
     }
+    IEnumerator CannotPossess()
+    {
+        yield return new WaitForSeconds(1.5f);
+        enemy = null;
+        canPossessMarker.SetActive(false);
+    }
+    #endregion
 
+    #region UI
     private void GainEXP()
     {
         playerStat.exp++;
-        while(playerStat.exp >= (playerStat.level*(playerStat.level + 1))/2)
+        while (playerStat.exp >= (playerStat.level * (playerStat.level + 1)) / 2)
         {
             playerStat.level++;
             playerStat.luck += 10;
@@ -182,6 +228,29 @@ public class PlayerStateManager : MonoBehaviour
         LvlText.text = playerStat.level.ToString();
         LvlSlider.maxValue = playerStat.level;
         LvlSlider.value = playerStat.exp - (playerStat.level * (playerStat.level - 1)) / 2;
+    }
+    private void EnterUI()
+    {
+        isInUI = true;
+    }
+    private void ExitUI()
+    {
+        isInUI = false;
+    }
+    #endregion
+
+    #region animation
+    public void FinishSpawning()
+    {
+        if(currentState == spawnState)
+            SwitchState(normalState);
+    }
+    #endregion
+
+    public void GetStun(float duration)
+    {
+        stunState.stunDuration = duration;
+        SwitchState(stunState);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -239,6 +308,18 @@ public class PlayerStateManager : MonoBehaviour
             case "OneTime":
                 gObj.GetComponent<Onetime>().TurnOffHighlight();
                 break;
+        }
+    }
+
+    private static class CoroutineUtil
+    {
+        public static IEnumerator WaitForRealSeconds(float time)
+        {
+            float start = Time.realtimeSinceStartup;
+            while (Time.realtimeSinceStartup < start + time)
+            {
+                yield return null;
+            }
         }
     }
 }

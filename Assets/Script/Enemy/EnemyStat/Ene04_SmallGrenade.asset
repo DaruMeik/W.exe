@@ -16,6 +16,7 @@ MonoBehaviour:
   enemyMovementSpeed: 3.5
   isBoss: 0
   enemyRewardWeaponID: 4
+  enemyBehavior: Flee
   enemyWeaponId: 04000000
   enemyAtkRange:
   - 10

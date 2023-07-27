@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyStuntState : EnemyBaseState
+public class EnemyStunState : EnemyBaseState
 {
-    public float stuntDuration = 0f;
-    private float outOfStuntTime = 0f;
+    public float stunDuration = 0f;
+    private float outOfStunTime = 0f;
     private float flashTime;
     private bool show = true;
     public override void EnterState(EnemyStateManager enemy)
@@ -16,7 +16,7 @@ public class EnemyStuntState : EnemyBaseState
         enemy.enemySprite.color = new Color32(255, 255, 220, 255);
         flashTime = Time.time;
         show = true;
-        outOfStuntTime = Time.time + stuntDuration;
+        outOfStunTime = Time.time + stunDuration;
     }
     public override void UpdateState(EnemyStateManager enemy)
     {
@@ -33,7 +33,7 @@ public class EnemyStuntState : EnemyBaseState
             show = !show;
             flashTime = Time.time;
         }
-        if (Time.time > outOfStuntTime)
+        if (Time.time > outOfStunTime)
         {
             enemy.SwitchState(enemy.normalState);
         }

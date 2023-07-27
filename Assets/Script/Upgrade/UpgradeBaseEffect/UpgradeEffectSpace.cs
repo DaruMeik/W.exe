@@ -63,25 +63,25 @@ public class Upgrade_ShockWaveRange3 : UpgradeBaseEffect
         playerStat.shockWaveRange += 1.5f;
     }
 }
-public class Upgrade_ShockWaveStunt1 : UpgradeBaseEffect
+public class Upgrade_ShockWaveStun1 : UpgradeBaseEffect
 {
     public override void ApplyEffect(PlayerStat playerStat)
     {
-        playerStat.shockWaveStuntTime += 0.25f;
+        playerStat.shockWaveStunTime += 0.25f;
     }
 }
-public class Upgrade_ShockWaveStunt2 : UpgradeBaseEffect
+public class Upgrade_ShockWaveStun2 : UpgradeBaseEffect
 {
     public override void ApplyEffect(PlayerStat playerStat)
     {
-        playerStat.shockWaveStuntTime += 0.5f;
+        playerStat.shockWaveStunTime += 0.5f;
     }
 }
-public class Upgrade_ShockWaveStunt3 : UpgradeBaseEffect
+public class Upgrade_ShockWaveStun3 : UpgradeBaseEffect
 {
     public override void ApplyEffect(PlayerStat playerStat)
     {
-        playerStat.shockWaveStuntTime += 1f;
+        playerStat.shockWaveStunTime += 1f;
     }
 }
 #endregion

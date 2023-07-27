@@ -16,12 +16,11 @@ public class ShockWave : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.name);
         if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
             GameObject.Destroy(collision.gameObject);
         else if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
         {
-            collision.gameObject.GetComponent<EnemyStateManager>().GetStunt(playerStat.shockWaveStuntTime);
+            collision.gameObject.GetComponent<EnemyStateManager>().GetStun(playerStat.shockWaveStunTime);
         }
     }
 }

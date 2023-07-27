@@ -16,6 +16,7 @@ MonoBehaviour:
   enemyMovementSpeed: 2.5
   isBoss: 0
   enemyRewardWeaponID: 1
+  enemyBehavior: Hold
   enemyWeaponId: 01000000
   enemyAtkRange:
   - 5

@@ -6,18 +6,18 @@ public class Wea03_ShotgunEffect : WeaponBaseEffect
 {
     private int weaponId = 3;
     float speed = 12f;
-    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat = null, float chargedAmount = 0)
+    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj)
     {
         startPoint.z = 0;
         endPoint.z = 0;
 
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             GameObject instancedObj = GameObject.Instantiate(WeaponDatabase.weaponList[weaponId].weaponHitBox) as GameObject;
             instancedObj.tag = (bySelf) ? "PlayerBullet" : "EnemyBullet";
             // Rotate Skill
             Vector3 lookDir = endPoint - startPoint;
-            float lookAngle = -Mathf.Atan2(lookDir.x, lookDir.y) * Mathf.Rad2Deg + 90f - 15f + 7.5f*i;
+            float lookAngle = -Mathf.Atan2(lookDir.x, lookDir.y) * Mathf.Rad2Deg + 90f - 15f + 7.5f * i;
             instancedObj.transform.rotation = Quaternion.Euler(0f, 0f, lookAngle);
             //Set up Obj
             instancedObj.transform.position = startPoint;
@@ -37,4 +37,5 @@ public class Wea03_ShotgunEffect : WeaponBaseEffect
             temp.ready = true;
         }
     }
+    public override void Release(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj) { }
 }

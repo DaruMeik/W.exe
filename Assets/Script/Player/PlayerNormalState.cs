@@ -11,27 +11,18 @@ public class PlayerNormalState : PlayerBaseState
     public bool isShooting;
     private IEnumerator shootingCoroutine;
 
-    private GameObject mouseOverObj;
     private float nextTimeToSwitch = 0f;
     public override void EnterState(PlayerStateManager player)
     {
     }
     public override void UpdateState(PlayerStateManager player)
     {
-
+        if (player.isInUI)
+            return;
         #region aiming
         mousePos = Camera.main.ScreenToWorldPoint(PlayerControl.Instance.pInput.Player.Look.ReadValue<Vector2>());
         lookAngle = Mathf.Atan2((mousePos - (Vector2)player.weaponPivotPoint.position).y, (mousePos - (Vector2)player.weaponPivotPoint.position).x) * Mathf.Rad2Deg;
         FlipSprite(player);
-        #endregion
-
-        #region check if can possess
-        Ray ray = Camera.main.ScreenPointToRay(PlayerControl.Instance.pInput.Player.Look.ReadValue<Vector2>());
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-        if (hit && hit.collider.gameObject.layer == LayerMask.NameToLayer("Possession"))
-            mouseOverObj = hit.collider.gameObject;
-        else
-            mouseOverObj = null;
         #endregion
 
         #region movement
@@ -85,15 +76,14 @@ public class PlayerNormalState : PlayerBaseState
         #region sending calling card
         if (PlayerControl.Instance.pInput.Player.Throw.WasPerformedThisFrame())
         {
-            if (mouseOverObj != null)
+            if (player.enemy != null)
             {
-                EnemyStateManager enemy = mouseOverObj.GetComponentInParent<EnemyStateManager>();
-                if (!enemy.isExploding)
+                if (!player.enemy.isExploding)
                 {
-                    enemy.isPossessed = true;
-                    enemy.animator.SetBool("Marked", true);
-                    enemy.animator.SetTrigger("Explode");
-                    player.possessState.enemy = enemy;
+                    player.enemy.isPossessed = true;
+                    player.enemy.animator.SetBool("Marked", true);
+                    player.enemy.animator.SetTrigger("Explode");
+                    player.possessState.enemy = player.enemy;
                     player.SwitchState(player.possessState);
                 }
             }
@@ -173,6 +163,7 @@ public class PlayerNormalState : PlayerBaseState
     private IEnumerator Shooting(PlayerStateManager player)
     {
         Weapon weapon = WeaponDatabase.weaponList[player.playerStat.currentWeapon[0]];
+        weapon.weaponBaseEffect.weaponPoint = player.weaponPivotPoint;
         player.speedPenalty += weapon.speedPenalty;
         while (isShooting)
         {
@@ -182,9 +173,13 @@ public class PlayerNormalState : PlayerBaseState
                 player.trigger.aimPos = mousePos;
                 player.weaponAnimator.SetTrigger(weapon.triggerId);
             }
+            else if(weapon.weaponType == "Charge")
+            {
+                weapon.weaponBaseEffect.ApplyEffect(player.weaponPivotPoint.position, mousePos + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, true, player.playerStat, ref player.spawnedBullet);
+            }
             else
             {
-                weapon.weaponBaseEffect.ApplyEffect(player.weaponPivotPoint.position, mousePos + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, true, player.playerStat);
+                weapon.weaponBaseEffect.ApplyEffect(player.weaponPivotPoint.position, mousePos + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, true, player.playerStat, ref player.spawnedBullet);
                 player.playerStat.currentAmmo[0]--;
                 player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
                     + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
@@ -200,7 +195,22 @@ public class PlayerNormalState : PlayerBaseState
             }
             yield return new WaitForSeconds(5f / weapon.atkSpd);
         }
-
+        if (weapon.weaponType == "Charge")
+        {
+            weapon.weaponBaseEffect.Release(player.weaponPivotPoint.position, mousePos + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, true, player.playerStat, ref player.spawnedBullet);
+            player.playerStat.currentAmmo[0]--;
+            player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
+                + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
+            if (player.playerStat.currentAmmo[0] == 0)
+            {
+                player.playerStat.currentWeapon[0] = 0;
+                player.playerStat.currentAmmo[0] = -1;
+                player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
+                    + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
+                player.UpdateWeaponSprite();
+                isShooting = false;
+            }
+        }
         player.speedPenalty -= weapon.speedPenalty;
         if (shootingCoroutine != null)
             player.StopCoroutine(shootingCoroutine);

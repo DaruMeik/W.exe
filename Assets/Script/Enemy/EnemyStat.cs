@@ -9,6 +9,7 @@ public class EnemyStat : ScriptableObject
     public float enemyMovementSpeed = 0.25f;
     public bool isBoss = false;
     public int enemyRewardWeaponID = 0;
+    public string enemyBehavior = "Default";
     public List<int> enemyWeaponId = new List<int>();
     public List<float> enemyAtkRange = new List<float>();
     public List<bool> requireLOS = new List<bool>();

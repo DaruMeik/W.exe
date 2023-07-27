@@ -7,20 +7,21 @@ using UnityEngine.UI;
 public class EnemyStateManager : MonoBehaviour
 {
     private EnemyBaseState currentState;
+    public EnemySpawnState spawnState = new EnemySpawnState();
     public EnemyNormalState normalState = new EnemyNormalState();
     public EnemySkillState skillState = new EnemySkillState();
-    public EnemyStuntState stuntState = new EnemyStuntState();
+    public EnemyStunState stunState = new EnemyStunState();
     public EnemyDeadState deadState = new EnemyDeadState();
 
     public Rigidbody2D rb;
     public Collider2D enemyCollider;
     public Animator animator;
     public SpriteRenderer enemySprite;
-    public GameObject possessionCollider;
 
     [Header("Enemy Status")]
     public int currentHP;
     public bool marked;
+    public bool provoked;
     public bool isInvincible;
     public bool isPossessed;
     public bool isExploding;
@@ -28,6 +29,7 @@ public class EnemyStateManager : MonoBehaviour
     [Header("Enemy Skill")]
     public Transform enemyShootingPoint;
     public float nextTimeToUseSkill;
+    public GameObject spawnedBullet;
     public IEnumerator shootingCoroutine;
 
     [Header("EnemyUI")]
@@ -53,7 +55,10 @@ public class EnemyStateManager : MonoBehaviour
     public Vector3 aimPoint;
     public LayerMask blockMask;
     public float nextWayPointDistance = 2f;
+    public Transform[] patrolPath;
+    private int currentPathIndex = 0;
     [System.NonSerialized] public Path path;
+    [System.NonSerialized] public Path tempPath;
     [System.NonSerialized] public int currentWayPoint;
     [System.NonSerialized] public bool isEndOfPath;
     private IEnumerator updatePathCourotine;
@@ -69,16 +74,25 @@ public class EnemyStateManager : MonoBehaviour
     }
     private void Start()
     {
-        possessionCollider.SetActive(false);
-
         // Stat
         currentHP = enemyStat.enemyMaxHP;
         HPSlider.maxValue = enemyStat.enemyMaxHP;
         HPSlider.value = HPSlider.maxValue;
         marked = false;
+        switch (enemyStat.enemyBehavior)
+        {
+            case "Patrol":
+            case "Passive":
+                provoked = false;
+                break;
+            default:
+                provoked = true;
+                break;
+        }
         isInvincible = false;
         isPossessed = false;
         isExploding = false;
+        currentPathIndex = 0;
         nextTimeToUseSkill = Time.time + enemyStat.enemyCD[0];
 
         //Animation
@@ -86,7 +100,7 @@ public class EnemyStateManager : MonoBehaviour
         damagedAnimationTimer = 0f;
         flashWhiteTimer = 0f;
         StartCoroutine(updatePathCourotine);
-        SwitchState(normalState);
+        SwitchState(spawnState);
     }
     private void Update()
     {
@@ -106,7 +120,7 @@ public class EnemyStateManager : MonoBehaviour
                 flashWhiteTimer = Time.time;
             }
         }
-        else if(currentState != deadState && currentState != stuntState)
+        else if (currentState != deadState && currentState != stunState)
         {
             enemySprite.material = defaultMat;
         }
@@ -123,7 +137,11 @@ public class EnemyStateManager : MonoBehaviour
     {
         if (isInvincible)
             return;
-
+        if (damage > 0)
+        {
+            provoked = true;
+            animator.SetBool("Provoked", true);
+        }
         damagedAnimationTimer = Time.time;
         currentHP = Mathf.Min(enemyStat.enemyMaxHP, currentHP - damage);
         HPSlider.value = currentHP;
@@ -133,10 +151,10 @@ public class EnemyStateManager : MonoBehaviour
             SwitchState(deadState);
         }
     }
-    public void GetStunt(float duration)
+    public void GetStun(float duration)
     {
-        stuntState.stuntDuration = duration;
-        SwitchState(stuntState);
+        stunState.stunDuration = duration;
+        SwitchState(stunState);
     }
     public void UsingSkill()
     {
@@ -145,6 +163,8 @@ public class EnemyStateManager : MonoBehaviour
     public void StopSkill()
     {
         StopCoroutine(shootingCoroutine);
+        Weapon weapon = WeaponDatabase.weaponList[enemyStat.enemyWeaponId[0]];
+        weapon.weaponBaseEffect.Release(enemyShootingPoint.position, (Vector2)aimPoint + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, false, null, ref spawnedBullet);
     }
     public void BackToNormal()
     {
@@ -155,20 +175,26 @@ public class EnemyStateManager : MonoBehaviour
     {
         if (!p.error)
         {
-            path = p;
-            currentWayPoint = 0;
+            tempPath = p;
+            if (path == null
+                || (tempPath.GetTotalLength() < path.GetTotalLength())
+                || Vector2.Distance(tempPath.vectorPath[tempPath.vectorPath.Count - 1], path.vectorPath[path.vectorPath.Count - 1]) > enemyStat.enemyAtkRange[0] * 0.5f)
+            {
+                path = tempPath;
+                currentWayPoint = 0;
+            }
+
         }
     }
     public void FinishPossessionAnimation()
     {
-        possessionCollider.SetActive(false);
         eventBroadcast.FinishPossessionAnimationNoti();
     }
     public void FinishExplodingAnimation()
     {
         if (marked && !isPossessed)
         {
-            WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat);
+            WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat, ref spawnedBullet);
         }
         eventBroadcast.EnemyKilledNoti();
         if (Random.Range(0, 100) > 75)
@@ -183,7 +209,8 @@ public class EnemyStateManager : MonoBehaviour
         while (true)
         {
             Weapon weapon = WeaponDatabase.weaponList[enemyStat.enemyWeaponId[0]];
-            weapon.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, (Vector2)aimPoint + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, false, null);
+            weapon.weaponBaseEffect.weaponPoint = enemyShootingPoint;
+            weapon.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, (Vector2)aimPoint + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, false, null, ref spawnedBullet);
             yield return new WaitForSeconds(5f / weapon.atkSpd);
         }
     }
@@ -191,11 +218,80 @@ public class EnemyStateManager : MonoBehaviour
     {
         while (true)
         {
+            bool fail = false;
             if (seeker.IsDone())
             {
-                seeker.StartPath(scanPoint.position, target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0]*0.5f, OnPathComplete);
+                Vector3 temp;
+                switch (enemyStat.enemyBehavior)
+                {
+                    case "Melee":
+                        seeker.StartPath(scanPoint.position, target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0] * 0.5f, OnPathComplete);
+                        break;
+                    case "Hold":
+                        temp = target.position + Random.onUnitSphere * enemyStat.enemyAtkRange[0];
+                        if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall", "Obstacle"))))
+                        {
+                            seeker.StartPath(scanPoint.position, temp, OnPathComplete);
+                        }
+                        else
+                            fail = true;
+                        break;
+                    case "Flee":
+                        if (Time.time > nextTimeToUseSkill)
+                            seeker.StartPath(scanPoint.position, target.position + Random.insideUnitSphere, OnPathComplete);
+                        else
+                            seeker.StartPath(scanPoint.position, scanPoint.position * 2f - target.position, OnPathComplete);
+                        break;
+                    case "Patrol":
+                        if (!provoked)
+                        {
+                            if (Vector2.Distance(scanPoint.position, patrolPath[currentPathIndex].position) < 1f)
+                            {
+                                currentPathIndex = (currentPathIndex+1)%patrolPath.Length;
+                            }
+                            else
+                            {
+                                seeker.StartPath(scanPoint.position, patrolPath[currentPathIndex].position, OnPathComplete);
+                            }
+                        }
+                        else
+                        {
+                            temp = target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0];
+                            if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall", "Obstacle"))))
+                            {
+                                seeker.StartPath(scanPoint.position, temp, OnPathComplete);
+                            }
+                            else
+                                fail = true;
+                        }
+                        break;
+                    case "Passive":
+                        if (provoked)
+                        { 
+                            temp = target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0];
+                            if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall", "Obstacle"))))
+                            {
+                                seeker.StartPath(scanPoint.position, temp, OnPathComplete);
+                            }
+                            else
+                                fail = true;
+                        }
+                        break;
+                    default:
+                        temp = target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0];
+                        if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall", "Obstacle"))))
+                        {
+                            seeker.StartPath(scanPoint.position, temp, OnPathComplete);
+                        }
+                        else
+                            fail = true;
+                        break;
+                }
             }
-            yield return new WaitForSeconds(0.4f);
+            if (!fail)
+                yield return new WaitForSeconds(0.4f);
+            else
+                yield return new WaitForSeconds(0.1f);
         }
     }
 

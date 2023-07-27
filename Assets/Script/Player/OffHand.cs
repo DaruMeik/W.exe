@@ -8,6 +8,6 @@ public class OffHand : MonoBehaviour
     public Vector2 mousePos;
     private void ThrowCard()
     {
-        WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(player.weaponPivotPoint.position, mousePos, true, player.playerStat);
+        WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(player.weaponPivotPoint.position, mousePos, true, player.playerStat, ref player.spawnedBullet);
     }
 }

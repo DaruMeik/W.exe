@@ -18,7 +18,7 @@ public class PlayerStat : ScriptableObject
     public float defaultPlayerSpeed;
     public int defaultMaxDash;
     public float defaultShockWaveRange;
-    public float defaultShockWaveStuntTime;
+    public float defaultShockWaveStunTime;
     public int defaultMoney;
     public int defaultLuck;
     public int defaultAtkPerc;
@@ -29,7 +29,7 @@ public class PlayerStat : ScriptableObject
     public float playerSpeed;
     public int maxDash;
     public float shockWaveRange;
-    public float shockWaveStuntTime;
+    public float shockWaveStunTime;
     public int money;
     public int luck;
     public int atkPerc;
@@ -46,7 +46,7 @@ public class PlayerStat : ScriptableObject
         defaultPlayerSpeed = 5f;
         defaultMaxDash = 2;
         defaultShockWaveRange = 2.5f;
-        defaultShockWaveStuntTime = 0.5f;
+        defaultShockWaveStunTime = 0.5f;
         defaultMoney = 0;
         defaultLuck = -5;
         defaultAtkPerc = 0;
@@ -58,13 +58,13 @@ public class PlayerStat : ScriptableObject
         playerSpeed = defaultPlayerSpeed;
         maxDash = defaultMaxDash;
         shockWaveRange = defaultShockWaveRange;
-        shockWaveStuntTime = defaultShockWaveStuntTime;
+        shockWaveStunTime = defaultShockWaveStunTime;
         money = defaultMoney;
         luck = defaultLuck;
         atkPerc = defaultAtkPerc;
         defPerc = defaultDefPerc;
         currentHP = maxHP;
-        currentWeapon = new int[2] { 0, 0 };
+        currentWeapon = new int[2] { 5, 0 };
         currentAmmo = new int[2] { -1, -1 };
         hasCard = true;
         upgradeRegister.Clear();
@@ -79,7 +79,7 @@ public class PlayerStat : ScriptableObject
         playerSpeed = defaultPlayerSpeed;
         maxDash = defaultMaxDash;
         shockWaveRange = defaultShockWaveRange;
-        shockWaveStuntTime = defaultShockWaveStuntTime;
+        shockWaveStunTime = defaultShockWaveStunTime;
         money = defaultMoney;
         luck = defaultLuck;
         atkPerc = defaultAtkPerc;
@@ -87,7 +87,7 @@ public class PlayerStat : ScriptableObject
 
 
         currentHP = maxHP;
-        currentWeapon = new int[2] { 0, 0 };
+        currentWeapon = new int[2] { 2, 0 };
         currentAmmo = new int[2] { -1, -1 };
         upgradeRegister.Clear();
     }

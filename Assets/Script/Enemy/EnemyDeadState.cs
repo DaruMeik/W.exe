@@ -15,8 +15,10 @@ public class EnemyDeadState : EnemyBaseState
         enemy.enemySprite.color = new Color32(255, 200, 200, 255);
         flashTime = Time.time;
         countTime = Time.time;
-        if(enemy.marked)
-            enemy.possessionCollider.SetActive(true);
+        if (enemy.marked)
+        {
+            enemy.eventBroadcast.PossessEventNoti(enemy);
+        }
         enemy.animator.SetTrigger("Dead");
     }
     public override void UpdateState(EnemyStateManager enemy)

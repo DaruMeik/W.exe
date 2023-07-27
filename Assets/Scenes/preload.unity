@@ -214,6 +214,9 @@ MonoBehaviour:
   - Garage1
   officeFightList: []
   randomFightList:
+  - Garage1
+  - GarageRest
+  - GarageScientist
   - GarageScientist
   restList:
   - GarageRest
@@ -323,12 +326,14 @@ MonoBehaviour:
   - {fileID: 3660700004020178454, guid: 3c38a2cbc6a3d244c96c1a6ebc0a73a5, type: 3}
   - {fileID: 5739646585579655974, guid: 482dc6050dc20324e9c5585ec272c268, type: 3}
   - {fileID: 7491036736614918593, guid: d9a215f4926bae64493f502a84df60cf, type: 3}
+  - {fileID: 5018115745439234555, guid: 4139fdf65a7fc2a4eada30efaec197f1, type: 3}
   weaponSprite:
   - {fileID: -786441382, guid: d3bdec1ef904d5346985fc31a237a932, type: 3}
   - {fileID: 803223617, guid: 7b1412eb009f1c74fb27a0cbbc1c85fb, type: 3}
   - {fileID: -1447609251, guid: 6c10cbc4f70a7b84c8bc357afabe8fa1, type: 3}
   - {fileID: -679368953, guid: fa75bbaba08c80546bd67e3ab11b91db, type: 3}
   - {fileID: 1094291347, guid: f5568a313d3342f439be04829b51b06c, type: 3}
+  - {fileID: -464115641, guid: a62853f25c04e3a47a04de6cb392b9a9, type: 3}
   fishingMailObj: {fileID: 7165194877689153758, guid: 1f540717625b9d446a6c87444c4f60b3, type: 3}
 --- !u!4 &644024528
 Transform:

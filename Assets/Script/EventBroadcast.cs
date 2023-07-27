@@ -14,13 +14,15 @@ public class EventBroadcast : ScriptableObject
     public event GameEvent updateHP;
     public event GameEvent updateMoney;
     public event GameEvent finishText;
+    public event GameEvent enterUI;
+    public event GameEvent exitUI;
 
     // Random Event
     public delegate void RandomMachine(int buff, int nerf);
     public event RandomMachine finishNewMachine;
 
-    public delegate void GameObjEvent(GameObject gObj);
-    public event GameObjEvent possessEvent;
+    public delegate void EnemyEvent(EnemyStateManager enemy);
+    public event EnemyEvent possessEvent;
 
     public void FinishPossessionAnimationNoti()
     {
@@ -29,47 +31,57 @@ public class EventBroadcast : ScriptableObject
     }
     public void UpdateCardUINoti()
     {
-        if(updateCardUI != null)
+        if (updateCardUI != null)
             updateCardUI.Invoke();
     }
     public void EnemyKilledNoti()
     {
-        if(enemyKilled != null)
+        if (enemyKilled != null)
             enemyKilled.Invoke();
     }
     public void AllDeadNoti()
     {
-        if(allDead != null)
+        if (allDead != null)
             allDead.Invoke();
     }
     public void GenerateMapNoti()
     {
-        if(generateMap != null)
+        if (generateMap != null)
             generateMap.Invoke();
     }
     public void UpdateHPNoti()
     {
-        if(updateHP != null)
+        if (updateHP != null)
             updateHP.Invoke();
     }
     public void UpdateMoneyNoti()
     {
-        if(updateMoney != null)
+        if (updateMoney != null)
             updateMoney.Invoke();
     }
     public void FinishTextNoti()
     {
-        if(finishText != null)
+        if (finishText != null)
             finishText.Invoke();
+    }
+    public void EnterUINoti()
+    {
+        if (enterUI != null)
+            enterUI.Invoke();
+    }
+    public void ExitUINoti()
+    {
+        if (exitUI != null)
+            exitUI.Invoke();
     }
     public void FinishNewMachineNoti(int i, int j)
     {
-        if(finishNewMachine != null)
+        if (finishNewMachine != null)
             finishNewMachine.Invoke(i, j);
     }
-    public void PossessEventNoti(GameObject gObj)
+    public void PossessEventNoti(EnemyStateManager enemy)
     {
-        if(possessEvent != null)
-            possessEvent.Invoke(gObj);
+        if (possessEvent != null)
+            possessEvent.Invoke(enemy);
     }
 }

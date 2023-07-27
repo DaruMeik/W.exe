@@ -37,6 +37,12 @@ public class Wea01_Gatling : MonoBehaviour
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
             }
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+            {
+                DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
+                if (temp != null)
+                    temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
+            }
             Destroy(gameObject);
         }
         else if (!bySelf && collision.gameObject.layer != LayerMask.NameToLayer("EnemyHurtBox"))
@@ -46,6 +52,12 @@ public class Wea01_Gatling : MonoBehaviour
             {
                 PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();
                 temp.TakeDamage(WeaponDatabase.weaponList[ID].power);
+            }
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+            {
+                DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
+                if (temp != null)
+                    temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
             }
             Destroy(gameObject);
         }

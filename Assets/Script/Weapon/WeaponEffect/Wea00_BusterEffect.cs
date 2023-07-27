@@ -6,7 +6,7 @@ public class Wea00_BusterEffect : WeaponBaseEffect
 {
     private int weaponId = 0;
     float speed = 12f;
-    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat = null, float chargedAmount = 0)
+    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj)
     {
         startPoint.z = 0;
         endPoint.z = 0;
@@ -35,4 +35,5 @@ public class Wea00_BusterEffect : WeaponBaseEffect
 
         temp.ready = true;
     }
+    public override void Release(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj) { }
 }

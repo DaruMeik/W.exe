@@ -9,6 +9,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] public PlayerStat playerStat;
     [SerializeField] private GameObject target;
     [SerializeField] private Transform[] spawnPos;
+    [SerializeField] private Transform[] patrolPos;
     [SerializeField] public EnemyStat[] enemyStats;
     [SerializeField] private GameObject[] enemyObj;
 
@@ -42,7 +43,7 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnNewEnemy()
     {
         RefreshMap();
-        spawnAmount = 2 + spawnWave;
+        spawnAmount = 3 + spawnWave;
         for (int i = 0; i < spawnAmount; i++)
         {
             List<float[]> possibleField = new List<float[]> { };
@@ -58,9 +59,13 @@ public class EnemySpawner : MonoBehaviour
             {
                 enemyID = enemyIDList[0];
             }
-            else 
+            else if (i < 3) 
             {
                 enemyID = enemyIDList[1];
+            }
+            else
+            {
+                enemyID = enemyIDList[2];
             }
             if (possibleField.Count == 0)
             {
@@ -76,12 +81,13 @@ public class EnemySpawner : MonoBehaviour
             enemyStateManager.playerStat = playerStat;
             enemyStateManager.enemyStat = enemyStats[enemyID];
             enemyStateManager.target = target.transform;
+            enemyStateManager.patrolPath = patrolPos;
         }
     }
 
     private void GenerateEnemyID()
     {
-        if(enemyObj.Length < 2)
+        if(enemyObj.Length < 3)
         {
             Debug.LogError("Not enough enemy!");
             return;
@@ -102,7 +108,7 @@ public class EnemySpawner : MonoBehaviour
                 enemyIDList.Add(i);
             }
         }
-        while (enemyIDList.Count < 2);
+        while (enemyIDList.Count < 3);
     }
     private void RefreshMap()
     {

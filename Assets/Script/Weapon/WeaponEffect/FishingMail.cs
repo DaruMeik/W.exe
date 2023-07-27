@@ -38,7 +38,7 @@ public class FishingMail : MonoBehaviour
         if (!isPickupable && collision.tag != "Player")
         {
             firstHit = false;
-            if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+            if (new List<int> { LayerMask.NameToLayer("Wall"), LayerMask.NameToLayer("Obstacle") }.Contains(collision.gameObject.layer))
             {
                 isPickupable = true;
                 rb.velocity = Vector2.zero;

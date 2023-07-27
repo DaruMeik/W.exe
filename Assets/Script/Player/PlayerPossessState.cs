@@ -8,6 +8,7 @@ public class PlayerPossessState : PlayerBaseState
     private PlayerStateManager playerStateManager;
     public override void EnterState(PlayerStateManager player)
     {
+        player.isInvincible = true;
         playerStateManager = player;
         player.playerSprites[1].enabled = false;
         player.weaponSprite.enabled = false;
@@ -22,9 +23,12 @@ public class PlayerPossessState : PlayerBaseState
     public override void ExitState(PlayerStateManager player)
     {
         Debug.Log("Exit");
+        player.eventBroadcast.UpdateHPNoti();
         player.bodyAnimator.SetTrigger("FinishPossess");
+        player.isInvincible = false;
         player.shockWave.SetActive(true);
         player.hurtBoxCol.enabled = true;
+        player.TakeDamage(-Mathf.FloorToInt(player.playerStat.maxHP * 5 / 100f));
         player.playerStat.UpdateCard(true);
     }
 
