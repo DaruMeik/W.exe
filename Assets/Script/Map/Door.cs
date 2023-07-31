@@ -18,5 +18,10 @@ public class Door : MonoBehaviour
     private void OpenDoor()
     {
         animator.SetTrigger("Open");
+        animator.SetBool("isOpen", true);
+    }
+    private void CloseDoor()
+    {
+        animator.SetBool("isOpen", false);
     }
 }

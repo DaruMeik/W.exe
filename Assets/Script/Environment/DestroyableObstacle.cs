@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class DestroyableObstacle : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private Material whiteFlashMat;
-    [SerializeField] private Collider2D col;
-    private Material defaultMat;
-    private float flashWhiteTimer = 0;
-    private float damagedAnimationTimer = 0;
-    private bool show;
-    private int currentHP;
+    [SerializeField] public SpriteRenderer spriteRenderer;
+    [SerializeField] public Material whiteFlashMat;
+    [SerializeField] public Collider2D col;
+    public Material defaultMat;
+    public float flashWhiteTimer = 0;
+    public float damagedAnimationTimer = 0;
+    public bool show;
+    public int currentHP;
 
     private void OnEnable()
     {
@@ -19,11 +19,12 @@ public class DestroyableObstacle : MonoBehaviour
         defaultMat = spriteRenderer.material;
         damagedAnimationTimer = 0f;
         flashWhiteTimer = 0f;
-        currentHP = 100;
+        currentHP = 50;
     }
     private void OnDisable()
     {
-        AstarPath.active.UpdateGraphs(col.bounds);
+        if(AstarPath.active != null)
+            AstarPath.active.UpdateGraphs(col.bounds);
     }
     private void Update()
     {
@@ -49,7 +50,7 @@ public class DestroyableObstacle : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         damagedAnimationTimer = Time.time;
         currentHP -= damage;

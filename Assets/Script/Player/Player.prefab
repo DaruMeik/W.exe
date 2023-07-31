@@ -761,7 +761,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: -1247123367, guid: c4617c4b67f01c9499faf4a64cdcb825, type: 3}
+  m_Sprite: {fileID: -1095687936, guid: c4617c4b67f01c9499faf4a64cdcb825, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -992,6 +992,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerStat: {fileID: 11400000, guid: 8a107fd139e91684d9ec2c13774160e6, type: 2}
+  col: {fileID: 5694314394376393703}
 --- !u!95 &5694314395865993394
 Animator:
   serializedVersion: 5

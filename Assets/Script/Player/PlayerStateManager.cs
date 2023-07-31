@@ -15,14 +15,13 @@ public class PlayerStateManager : MonoBehaviour
     public PlayerPossessState possessState = new PlayerPossessState();
     public PlayerTeleportState teleportState = new PlayerTeleportState();
     public PlayerStunState stunState = new PlayerStunState();
+    public PlayerDeadState deadState = new PlayerDeadState();
 
     public Rigidbody2D rb;
     public Collider2D hurtBoxCol;
     public SpriteRenderer[] playerSprites;
     public Transform weaponPivotPoint;
     public SpriteRenderer weaponSprite;
-    public Image subWeaponSprite;
-    public Slider switchCooldownSlider;
     public WeaponTrigger trigger;
     public GameObject shockWave;
     public GameObject map;
@@ -45,7 +44,6 @@ public class PlayerStateManager : MonoBehaviour
     public OffHand offHand;
     public Slider LvlSlider;
     public TextMeshProUGUI LvlText;
-    public TextMeshProUGUI ammo;
     private float damagedAnimationTimer;
     private float flashWhiteTimer;
     private bool show;
@@ -67,24 +65,27 @@ public class PlayerStateManager : MonoBehaviour
     public EventBroadcast eventBroadcast;
     private void OnEnable()
     {
+        bodyAnimator.updateMode = AnimatorUpdateMode.Normal;
         UpdateWeaponSprite();
         isInUI = false;
+        eventBroadcast.updateWeaponSprite += UpdateWeaponSprite;
         eventBroadcast.enterUI += EnterUI;
         eventBroadcast.exitUI += ExitUI;
         eventBroadcast.allDead += GainEXP;
         eventBroadcast.possessEvent += CanPossess;
-        eventBroadcast.finishPossessionAnimation += FinishPossessAnimation;
         eventBroadcast.finishPossessionAnimation += possessState.Teleport;
+        eventBroadcast.finishPossessionAnimation += FinishPossessAnimation;
     }
 
     private void OnDisable()
     {
+        eventBroadcast.updateWeaponSprite -= UpdateWeaponSprite;
         eventBroadcast.enterUI -= EnterUI;
         eventBroadcast.exitUI -= ExitUI;
         eventBroadcast.allDead -= GainEXP;
         eventBroadcast.possessEvent -= CanPossess;
-        eventBroadcast.finishPossessionAnimation -= FinishPossessAnimation;
         eventBroadcast.finishPossessionAnimation -= possessState.Teleport;
+        eventBroadcast.finishPossessionAnimation -= FinishPossessAnimation;
     }
 
     private void Start()
@@ -96,8 +97,7 @@ public class PlayerStateManager : MonoBehaviour
         LvlText.text = playerStat.level.ToString();
         LvlSlider.maxValue = playerStat.level;
         LvlSlider.value = playerStat.exp - (playerStat.level * (playerStat.level - 1)) / 2;
-        ammo.text = ((playerStat.currentAmmo[0] >= 0) ? playerStat.currentAmmo[0].ToString() : "Åá") + "|" + ((playerStat.currentAmmo[1] >= 0) ? playerStat.currentAmmo[1].ToString() : "Åá");
-        switchCooldownSlider.value = 1;
+        eventBroadcast.UpdateWeaponNoti();
         isInvincible = false;
         damagedAnimationTimer = 0f;
         flashWhiteTimer = 0f;
@@ -111,33 +111,36 @@ public class PlayerStateManager : MonoBehaviour
         {
             dashNumber = 0;
         }
-        if (Time.time - damagedAnimationTimer < 0.6f)
+        if(currentState != deadState)
         {
-            if (Time.time - flashWhiteTimer >= 0.1f)
+            if (Time.time - damagedAnimationTimer < 0.6f)
             {
-                if (show)
+                if (Time.time - flashWhiteTimer >= 0.1f)
                 {
-                    foreach (SpriteRenderer sr in playerSprites)
+                    if (show)
                     {
-                        sr.material = defaultMat;
+                        foreach (SpriteRenderer sr in playerSprites)
+                        {
+                            sr.material = defaultMat;
+                        }
                     }
-                }
-                else
-                {
-                    foreach (SpriteRenderer sr in playerSprites)
+                    else
                     {
-                        sr.material = whiteFlashMat;
+                        foreach (SpriteRenderer sr in playerSprites)
+                        {
+                            sr.material = whiteFlashMat;
+                        }
                     }
+                    show = !show;
+                    flashWhiteTimer = Time.time;
                 }
-                show = !show;
-                flashWhiteTimer = Time.time;
             }
-        }
-        else
-        {
-            foreach (SpriteRenderer sr in playerSprites)
+            else
             {
-                sr.material = defaultMat;
+                foreach (SpriteRenderer sr in playerSprites)
+                {
+                    sr.material = defaultMat;
+                }
             }
         }
         currentState.UpdateState(this);
@@ -169,7 +172,18 @@ public class PlayerStateManager : MonoBehaviour
 
         if (playerStat.currentHP <= 0)
         {
-            hurtBoxCol.enabled = false;
+            SwitchState(deadState);
+        }
+    }
+    public void SelfDestruct()
+    {
+        if(SceneManager.GetActiveScene().name == "Tutorial")
+        {
+            playerStat.ResetStat();
+            SceneManager.LoadScene("Tutorial");
+        }
+        else
+        {
             eventBroadcast.GenerateMapNoti();
             SceneManager.LoadScene("Home");
         }
@@ -179,9 +193,8 @@ public class PlayerStateManager : MonoBehaviour
     #region Weapon Sprite
     public void UpdateWeaponSprite()
     {
-        weaponSprite.sprite = WeaponDatabase.weaponList[playerStat.currentWeapon[0]].weaponSprite;
-        subWeaponSprite.sprite = WeaponDatabase.weaponList[playerStat.currentWeapon[1]].weaponSprite;
-        ammo.text = ((playerStat.currentAmmo[0] >= 0) ? playerStat.currentAmmo[0].ToString() : "Åá") + "|" + ((playerStat.currentAmmo[1] >= 0) ? playerStat.currentAmmo[1].ToString() : "Åá");
+        weaponSprite.sprite = WeaponDatabase.weaponList[playerStat.currentWeapon[playerStat.currentIndex]].weaponSprite;
+        eventBroadcast.UpdateWeaponNoti();
     }
     #endregion
 
@@ -200,11 +213,6 @@ public class PlayerStateManager : MonoBehaviour
             SwitchState(normalState);
         }
     }
-    public void TeleportToNextStage()
-    {
-        Portal portal = interactingObj.GetComponent<Portal>();
-        MapGenerator.Instance.Travel(portal.nextRoomType, portal.nextRoomIndex);
-    }
     IEnumerator CannotPossess()
     {
         yield return new WaitForSeconds(1.5f);
@@ -212,6 +220,23 @@ public class PlayerStateManager : MonoBehaviour
         canPossessMarker.SetActive(false);
     }
     #endregion
+    public void TeleportToNextStage()
+    {
+        if(interactingObj.name == "Tutorial")
+        {
+            SceneManager.LoadScene("Tutorial");
+        }
+        else if (interactingObj.name == "Home")
+        {
+            playerStat.ResetStat();
+            SceneManager.LoadScene("Home");
+        }
+        else
+        {
+            Portal portal = interactingObj.GetComponent<Portal>();
+            MapGenerator.Instance.Travel(portal.nextRoomType, portal.nextRoomIndex);
+        }
+    }
 
     #region UI
     private void GainEXP()

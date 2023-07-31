@@ -99,8 +99,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.4}
-  m_Size: {x: 0.75, y: 1.125}
+  m_Offset: {x: 0, y: 0.6}
+  m_Size: {x: 0.7, y: 0.7}
   m_Direction: 0
 --- !u!114 &6999700947406126144
 MonoBehaviour:
@@ -117,4 +117,3 @@ MonoBehaviour:
   spriteRenderer: {fileID: 605653162828542915}
   whiteFlashMat: {fileID: 2100000, guid: 4b87a34e87e1b9b40b0c3741884beeb5, type: 2}
   col: {fileID: 605653162828542912}
-  eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}

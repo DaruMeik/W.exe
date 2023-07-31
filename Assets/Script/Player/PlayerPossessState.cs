@@ -27,7 +27,6 @@ public class PlayerPossessState : PlayerBaseState
         player.bodyAnimator.SetTrigger("FinishPossess");
         player.isInvincible = false;
         player.shockWave.SetActive(true);
-        player.hurtBoxCol.enabled = true;
         player.TakeDamage(-Mathf.FloorToInt(player.playerStat.maxHP * 5 / 100f));
         player.playerStat.UpdateCard(true);
     }
@@ -35,10 +34,9 @@ public class PlayerPossessState : PlayerBaseState
     public void Teleport()
     {
         Debug.Log("Teleport");
-        playerStateManager.playerStat.currentWeapon[0] = enemy.enemyStat.enemyRewardWeaponID;
-        playerStateManager.playerStat.currentAmmo[0] = WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[0]].maxAmmo;
-        playerStateManager.ammo.text = ((playerStateManager.playerStat.currentAmmo[0] >= 0) ? playerStateManager.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
-            + ((playerStateManager.playerStat.currentAmmo[1] >= 0) ? playerStateManager.playerStat.currentAmmo[1].ToString() : "Åá");
+        playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex] = enemy.enemyStat.enemyRewardWeaponID;
+        playerStateManager.playerStat.currentAmmo[playerStateManager.playerStat.currentIndex] = WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex]].maxAmmo;
+        playerStateManager.eventBroadcast.UpdateWeaponNoti();
         playerStateManager.UpdateWeaponSprite();
         playerStateManager.playerSprites[1].enabled = true;
         playerStateManager.weaponSprite.enabled = true;

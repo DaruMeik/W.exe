@@ -10,15 +10,13 @@ public class WeaponTrigger : MonoBehaviour
     public void Trigger()
     {
         weapon.weaponBaseEffect.ApplyEffect(player.weaponPivotPoint.position, aimPos + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, true, player.playerStat, ref player.spawnedBullet);
-        player.playerStat.currentAmmo[0]--;
-        player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
-            + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
-        if (player.playerStat.currentAmmo[0] == 0)
+        player.playerStat.currentAmmo[player.playerStat.currentIndex]--;
+        player.eventBroadcast.UpdateWeaponNoti();
+        if (player.playerStat.currentAmmo[player.playerStat.currentIndex] == 0)
         {
-            player.playerStat.currentWeapon[0] = 0;
-            player.playerStat.currentAmmo[0] = -1;
-            player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
-                + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
+            player.playerStat.currentWeapon[player.playerStat.currentIndex] = 0;
+            player.playerStat.currentAmmo[player.playerStat.currentIndex] = -1;
+            player.eventBroadcast.UpdateWeaponNoti();
             player.UpdateWeaponSprite();
             player.normalState.isShooting = false;
         }

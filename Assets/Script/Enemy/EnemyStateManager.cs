@@ -229,7 +229,7 @@ public class EnemyStateManager : MonoBehaviour
                         break;
                     case "Hold":
                         temp = target.position + Random.onUnitSphere * enemyStat.enemyAtkRange[0];
-                        if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall", "Obstacle"))))
+                        if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall"))))
                         {
                             seeker.StartPath(scanPoint.position, temp, OnPathComplete);
                         }
@@ -257,7 +257,7 @@ public class EnemyStateManager : MonoBehaviour
                         else
                         {
                             temp = target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0];
-                            if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall", "Obstacle"))))
+                            if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall"))))
                             {
                                 seeker.StartPath(scanPoint.position, temp, OnPathComplete);
                             }
@@ -269,7 +269,7 @@ public class EnemyStateManager : MonoBehaviour
                         if (provoked)
                         { 
                             temp = target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0];
-                            if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall", "Obstacle"))))
+                            if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall"))))
                             {
                                 seeker.StartPath(scanPoint.position, temp, OnPathComplete);
                             }
@@ -279,7 +279,7 @@ public class EnemyStateManager : MonoBehaviour
                         break;
                     default:
                         temp = target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0];
-                        if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall", "Obstacle"))))
+                        if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall"))))
                         {
                             seeker.StartPath(scanPoint.position, temp, OnPathComplete);
                         }

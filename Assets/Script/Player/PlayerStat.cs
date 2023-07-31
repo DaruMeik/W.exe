@@ -7,6 +7,7 @@ public class PlayerStat : ScriptableObject
 {
     // General Status
     public int currentHP;
+    public int currentIndex;
     public int[] currentWeapon;
     public int[] currentAmmo;
     public bool hasCard;
@@ -64,7 +65,8 @@ public class PlayerStat : ScriptableObject
         atkPerc = defaultAtkPerc;
         defPerc = defaultDefPerc;
         currentHP = maxHP;
-        currentWeapon = new int[2] { 5, 0 };
+        currentIndex = 0;
+        currentWeapon = new int[2] { 0, 0 };
         currentAmmo = new int[2] { -1, -1 };
         hasCard = true;
         upgradeRegister.Clear();
@@ -87,9 +89,13 @@ public class PlayerStat : ScriptableObject
 
 
         currentHP = maxHP;
+        currentIndex = 0;
         currentWeapon = new int[2] { 2, 0 };
         currentAmmo = new int[2] { -1, -1 };
         upgradeRegister.Clear();
+        eventBroadcast.UpdateWeaponSpriteNoti();
+        eventBroadcast.UpdateCardUINoti();
+        Time.timeScale = 1f;
     }
     public void UpdateCard(bool hasCard)
     {

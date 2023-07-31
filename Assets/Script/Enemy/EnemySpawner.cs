@@ -43,7 +43,14 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnNewEnemy()
     {
         RefreshMap();
-        spawnAmount = 3 + spawnWave;
+        if(SceneManager.GetActiveScene().name == "Tutorial")
+        {
+            spawnAmount = 2 + spawnWave;
+        }
+        else
+        {
+            spawnAmount = 3 + spawnWave;
+        }
         for (int i = 0; i < spawnAmount; i++)
         {
             List<float[]> possibleField = new List<float[]> { };

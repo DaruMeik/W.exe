@@ -27,7 +27,7 @@ public class Wea00_Buster : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!ready || !firstHit ||collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
+        if (!ready || !firstHit ||collision.gameObject.layer == LayerMask.NameToLayer("Bullet") || collision.tag == "Low")
             return;
         if (bySelf && collision.gameObject.layer != LayerMask.NameToLayer("PlayerHurtBox"))
         {

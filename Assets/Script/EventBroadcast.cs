@@ -7,11 +7,13 @@ public class EventBroadcast : ScriptableObject
 {
     public delegate void GameEvent();
     public event GameEvent finishPossessionAnimation;
+    public event GameEvent updateWeaponSprite;
     public event GameEvent updateCardUI;
     public event GameEvent enemyKilled;
     public event GameEvent allDead;
     public event GameEvent generateMap;
     public event GameEvent updateHP;
+    public event GameEvent updateWeapon;
     public event GameEvent updateMoney;
     public event GameEvent finishText;
     public event GameEvent enterUI;
@@ -28,6 +30,11 @@ public class EventBroadcast : ScriptableObject
     {
         if (finishPossessionAnimation != null)
             finishPossessionAnimation.Invoke();
+    }
+    public void UpdateWeaponSpriteNoti()
+    {
+        if (updateWeaponSprite != null)
+            updateWeaponSprite.Invoke();
     }
     public void UpdateCardUINoti()
     {
@@ -53,6 +60,11 @@ public class EventBroadcast : ScriptableObject
     {
         if (updateHP != null)
             updateHP.Invoke();
+    }
+    public void UpdateWeaponNoti()
+    {
+        if(updateWeapon != null)
+            updateWeapon.Invoke();
     }
     public void UpdateMoneyNoti()
     {

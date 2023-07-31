@@ -215,6 +215,7 @@ MonoBehaviour:
   officeFightList: []
   randomFightList:
   - Garage1
+  - GarageShop
   - GarageRest
   - GarageScientist
   - GarageScientist
@@ -223,7 +224,7 @@ MonoBehaviour:
   upgradeList:
   - Garage1
   shopList:
-  - Garage1
+  - GarageShop
   garageBossList:
   - Garage1
 --- !u!4 &420518425
@@ -291,6 +292,7 @@ MonoBehaviour:
   - {fileID: 332673826}
   - {fileID: 644024526}
   - {fileID: 1237149743}
+  - {fileID: 2026521539}
 --- !u!1 &644024526
 GameObject:
   m_ObjectHideFlags: 0
@@ -335,6 +337,7 @@ MonoBehaviour:
   - {fileID: 1094291347, guid: f5568a313d3342f439be04829b51b06c, type: 3}
   - {fileID: -464115641, guid: a62853f25c04e3a47a04de6cb392b9a9, type: 3}
   fishingMailObj: {fileID: 7165194877689153758, guid: 1f540717625b9d446a6c87444c4f60b3, type: 3}
+  tutorialSpecialBulletObj: {fileID: 6145814789740876415, guid: fd470e1defd948a4ead23880b4fb8587, type: 3}
 --- !u!4 &644024528
 Transform:
   m_ObjectHideFlags: 0
@@ -463,6 +466,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea35fc325d157dd44a59cea0d9139531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  upgradeSprite:
+  - {fileID: 1818494438, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: 889296123, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: 604681519, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -1455923557, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -1381671513, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -1022692916, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -1639168852, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -1582967377, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -823428518, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -1338588681, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -1458950004, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -317186520, guid: 805467fdd89c41741831552c11be116d, type: 3}
 --- !u!4 &1237149745
 Transform:
   m_ObjectHideFlags: 0
@@ -477,4 +493,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2026521539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2026521541}
+  - component: {fileID: 2026521540}
+  m_Layer: 0
+  m_Name: ShopDatabase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2026521540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026521539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90042686f7180c74dacde533b9da3652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2026521541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026521539}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -30,6 +30,7 @@ public class FishingMailEffect : WeaponBaseEffect
             temp.isPickupable = true;
         }
         temp.playerStat = playerStat;
+        temp.player = weaponPoint;
         temp.ready = true;
     }
     public override void Release(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj) { }

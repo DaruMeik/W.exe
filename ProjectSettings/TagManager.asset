@@ -10,6 +10,7 @@ TagManager:
   - Portal
   - NPC
   - OneTime
+  - Low
   layers:
   - Default
   - TransparentFX

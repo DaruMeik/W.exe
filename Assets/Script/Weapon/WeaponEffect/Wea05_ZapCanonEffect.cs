@@ -30,7 +30,7 @@ public class Wea05_ZapCanonEffect : WeaponBaseEffect
         else
         {
             Wea05_ZapCanon temp = spawnObj.GetComponent<Wea05_ZapCanon>();
-            temp.chargeAmount = Mathf.Min(100, temp.chargeAmount + 10);
+            temp.chargeAmount = Mathf.Min(150, temp.chargeAmount + 10);
             spawnObj.transform.localScale = Vector3.one * (100 + temp.chargeAmount) / 100f;
         }
     }
@@ -53,6 +53,8 @@ public class Wea05_ZapCanonEffect : WeaponBaseEffect
             temp.atkPerc = 0;
         }
         temp.ready = true;
+        temp.GetComponent<Collider2D>().enabled = false;
+        temp.GetComponent<Collider2D>().enabled = true;
         spawnObj = null;
     }
 }

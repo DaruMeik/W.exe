@@ -36,24 +36,39 @@ public class PlayerNormalState : PlayerBaseState
         #endregion
 
         #region switch weapon
-        if (PlayerControl.Instance.pInput.Player.Switch.WasPerformedThisFrame() && Time.time > nextTimeToSwitch)
+        float scrollVal = PlayerControl.Instance.pInput.Player.Scroll.ReadValue<Vector2>().y;
+        if (Time.time > nextTimeToSwitch)
         {
-            isShooting = false;
-            int temp;
-            temp = player.playerStat.currentWeapon[0];
-            player.playerStat.currentWeapon[0] = player.playerStat.currentWeapon[1];
-            player.playerStat.currentWeapon[1] = temp;
+            Debug.Log(scrollVal);
+            if (PlayerControl.Instance.pInput.Player.Switch.WasPerformedThisFrame())
+            {
+                isShooting = false;
+                int temp;
+                temp = player.playerStat.currentWeapon[0];
+                player.playerStat.currentWeapon[0] = player.playerStat.currentWeapon[1];
+                player.playerStat.currentWeapon[1] = temp;
 
-            temp = player.playerStat.currentAmmo[0];
-            player.playerStat.currentAmmo[0] = player.playerStat.currentAmmo[1];
-            player.playerStat.currentAmmo[1] = temp;
-            player.UpdateWeaponSprite();
+                temp = player.playerStat.currentAmmo[0];
+                player.playerStat.currentAmmo[0] = player.playerStat.currentAmmo[1];
+                player.playerStat.currentAmmo[1] = temp;
+                player.UpdateWeaponSprite();
 
-            nextTimeToSwitch = Time.time + 1f;
-        }
-        else if (Time.time <= nextTimeToSwitch)
-        {
-            player.switchCooldownSlider.value = 1 - (nextTimeToSwitch - Time.time);
+                nextTimeToSwitch = Time.time + 1f;
+            }
+            else if (PlayerControl.Instance.pInput.Player.FirstWeapon.WasPerformedThisFrame() || scrollVal > 0.01)
+            {
+                isShooting = false;
+                player.playerStat.currentIndex = 0;
+                player.UpdateWeaponSprite();
+                nextTimeToSwitch = Time.time + 1f;
+            }
+            else if (PlayerControl.Instance.pInput.Player.SecondWeapon.WasPerformedThisFrame() || scrollVal < -0.01)
+            {
+                isShooting = false;
+                player.playerStat.currentIndex = 1;
+                player.UpdateWeaponSprite();
+                nextTimeToSwitch = Time.time + 1f;
+            }
         }
         #endregion
 
@@ -162,7 +177,7 @@ public class PlayerNormalState : PlayerBaseState
     }
     private IEnumerator Shooting(PlayerStateManager player)
     {
-        Weapon weapon = WeaponDatabase.weaponList[player.playerStat.currentWeapon[0]];
+        Weapon weapon = WeaponDatabase.weaponList[player.playerStat.currentWeapon[player.playerStat.currentIndex]];
         weapon.weaponBaseEffect.weaponPoint = player.weaponPivotPoint;
         player.speedPenalty += weapon.speedPenalty;
         while (isShooting)
@@ -180,15 +195,13 @@ public class PlayerNormalState : PlayerBaseState
             else
             {
                 weapon.weaponBaseEffect.ApplyEffect(player.weaponPivotPoint.position, mousePos + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, true, player.playerStat, ref player.spawnedBullet);
-                player.playerStat.currentAmmo[0]--;
-                player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
-                    + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
-                if (player.playerStat.currentAmmo[0] == 0)
+                player.playerStat.currentAmmo[player.playerStat.currentIndex]--;
+                player.eventBroadcast.UpdateWeaponNoti();
+                if (player.playerStat.currentAmmo[player.playerStat.currentIndex] == 0)
                 {
-                    player.playerStat.currentWeapon[0] = 0;
-                    player.playerStat.currentAmmo[0] = -1;
-                    player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
-                        + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
+                    player.playerStat.currentWeapon[player.playerStat.currentIndex] = 0;
+                    player.playerStat.currentAmmo[player.playerStat.currentIndex] = -1;
+                    player.eventBroadcast.UpdateWeaponNoti();
                     player.UpdateWeaponSprite();
                     isShooting = false;
                 }
@@ -198,15 +211,13 @@ public class PlayerNormalState : PlayerBaseState
         if (weapon.weaponType == "Charge")
         {
             weapon.weaponBaseEffect.Release(player.weaponPivotPoint.position, mousePos + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, true, player.playerStat, ref player.spawnedBullet);
-            player.playerStat.currentAmmo[0]--;
-            player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
-                + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
-            if (player.playerStat.currentAmmo[0] == 0)
+            player.playerStat.currentAmmo[player.playerStat.currentIndex]--;
+            player.eventBroadcast.UpdateWeaponNoti();
+            if (player.playerStat.currentAmmo[player.playerStat.currentIndex] == 0)
             {
-                player.playerStat.currentWeapon[0] = 0;
-                player.playerStat.currentAmmo[0] = -1;
-                player.ammo.text = ((player.playerStat.currentAmmo[0] >= 0) ? player.playerStat.currentAmmo[0].ToString() : "Åá") + "|"
-                    + ((player.playerStat.currentAmmo[1] >= 0) ? player.playerStat.currentAmmo[1].ToString() : "Åá");
+                player.playerStat.currentWeapon[player.playerStat.currentIndex] = 0;
+                player.playerStat.currentAmmo[player.playerStat.currentIndex] = -1;
+                player.eventBroadcast.UpdateWeaponNoti();
                 player.UpdateWeaponSprite();
                 isShooting = false;
             }
