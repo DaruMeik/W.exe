@@ -123,7 +123,11 @@ MonoBehaviour:
   rb: {fileID: 7165194877689153756}
   bySelf: 0
   spawnPos: {x: 0, y: 0}
+  isPickupable: 0
   ready: 0
+  playerStat: {fileID: 0}
+  player: {fileID: 0}
+  shockWave: {fileID: 5243595182394385085, guid: 164af534685792d46a7fdea689a14fbe, type: 3}
 --- !u!61 &5482076931832912258
 BoxCollider2D:
   m_ObjectHideFlags: 0

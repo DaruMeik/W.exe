@@ -9,6 +9,10 @@ public class PlayerDashState : PlayerBaseState
     public override void EnterState(PlayerStateManager player)
     {
         player.hurtBoxCol.enabled = false;
+        if (player.IFrameCoroutine != null)
+            player.StopCoroutine(player.IFrameCoroutine);
+        player.IFrameCoroutine = player.InvulnerableFrame();
+        player.StartCoroutine(player.IFrameCoroutine);
         player.dashNumber++;
         player.nextDashResetTime = Time.time + 0.75f;
         playerDir = PlayerControl.Instance.pInput.Player.Move.ReadValue<Vector2>();
@@ -24,11 +28,11 @@ public class PlayerDashState : PlayerBaseState
             }
         }
         dashStartTime = Time.time;
-        player.rb.velocity = playerDir * player.playerStat.playerSpeed * 3f;
+        player.rb.velocity = playerDir * player.playerStat.playerSpeed * 4f;
     }
     public override void UpdateState(PlayerStateManager player)
     {
-        if(Time.time - dashStartTime >= 0.15f)
+        if(Time.time - dashStartTime >= 0.1f)
         {
             player.SwitchState(player.normalState);
         }

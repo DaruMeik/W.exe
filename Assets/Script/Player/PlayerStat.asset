@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: PlayerStat
   m_EditorClassIdentifier: 
   currentHP: 100
-  currentWeapon: 0300000000000000
-  currentAmmo: 10000000ffffffff
+  currentIndex: 0
+  currentWeapon: 0000000000000000
+  currentAmmo: ffffffffffffffff
   hasCard: 1
   level: 1
   exp: 0
@@ -32,9 +33,14 @@ MonoBehaviour:
   maxDash: 2
   shockWaveRange: 2.5
   shockWaveStunTime: 0.5
-  money: 50
+  money: 0
   luck: -5
   atkPerc: 0
   defPerc: 0
-  upgradeRegister: 0100000002000000030000000400000005000000060000000700000008000000090000000a00000000000000
+  extraCardDamage: 0
+  extraAmmoPerc: 0
+  extraPossessHealingPerc: 0
+  shockwaveDealDamage: 0
+  cardShockWave: 0
+  upgradeRegister: 
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}

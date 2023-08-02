@@ -14,7 +14,6 @@ public class Wea04_SmallGrenadeEffect : WeaponBaseEffect
 
         //Set up Obj
         instancedObj.transform.position = startPoint;
-        instancedObj.tag = (bySelf) ? "PlayerBullet" : "EnemyBullet";
         Wea04_SmallGrenade temp = instancedObj.GetComponent<Wea04_SmallGrenade>();
         temp.bySelf = bySelf;
         temp.warningTile.transform.parent = null;

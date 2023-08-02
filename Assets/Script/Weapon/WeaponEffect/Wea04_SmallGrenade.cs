@@ -19,6 +19,10 @@ public class Wea04_SmallGrenade : MonoBehaviour
         ready = false;
         col.enabled = false;
     }
+    private void OnDisable()
+    {
+        warningTile.transform.parent = gameObject.transform;
+    }
     private void Update()
     {
         if (!ready)

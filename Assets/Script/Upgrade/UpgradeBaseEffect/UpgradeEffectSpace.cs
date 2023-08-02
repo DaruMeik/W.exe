@@ -84,6 +84,13 @@ public class Upgrade_ShockWaveStun3 : UpgradeBaseEffect
         playerStat.shockWaveStunTime += 1f;
     }
 }
+public class Upgrade_ShockWaveDamage : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.shockwaveDealDamage = true;
+    }
+}
 #endregion
 
 #region movement
@@ -99,6 +106,82 @@ public class Upgrade_MovementSpeed : UpgradeBaseEffect
     public override void ApplyEffect(PlayerStat playerStat)
     {
         playerStat.playerSpeed += 1f;
+    }
+}
+#endregion
+
+#region card related
+public class Upgrade_CardDamage1: UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.extraCardDamage += 10;
+    }
+}
+public class Upgrade_CardDamage2 : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.extraCardDamage += 20;
+    }
+}
+public class Upgrade_CardDamage3 : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.extraCardDamage += 40;
+    }
+}
+public class Upgrade_CardShockWave : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.cardShockWave = true;
+    }
+}
+#endregion
+
+#region possessing related
+public class Upgrade_WeaponAmmo1 : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.extraAmmoPerc += 25;
+    }
+}
+public class Upgrade_WeaponAmmo2 : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.extraAmmoPerc += 75;
+    }
+}
+public class Upgrade_WeaponAmmo3 : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.extraAmmoPerc += 150;
+    }
+}
+public class Upgrade_PHealing1 : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.extraPossessHealingPerc += 20;
+    }
+}
+public class Upgrade_PHealing2 : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.extraPossessHealingPerc += 50;
+    }
+}
+public class Upgrade_PHealing3 : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.extraPossessHealingPerc += 80;
     }
 }
 #endregion

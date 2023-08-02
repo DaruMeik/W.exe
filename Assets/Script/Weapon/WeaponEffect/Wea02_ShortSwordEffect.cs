@@ -12,7 +12,6 @@ public class Wea02_ShortSwordEffect : WeaponBaseEffect
         endPoint.z = 0;
 
         GameObject instancedObj = GameObject.Instantiate(WeaponDatabase.weaponList[weaponId].weaponHitBox) as GameObject;
-        instancedObj.tag = (bySelf) ? "PlayerBullet" : "EnemyBullet";
         // Rotate Skill
         Vector3 lookDir = endPoint - startPoint;
         float lookAngle = -Mathf.Atan2(lookDir.x, lookDir.y) * Mathf.Rad2Deg + 90f;

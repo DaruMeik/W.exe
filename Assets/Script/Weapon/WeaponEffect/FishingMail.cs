@@ -13,6 +13,7 @@ public class FishingMail : MonoBehaviour
     private bool firstHit = true;
     private bool flyingBack = false;
     public Transform player;
+    public GameObject shockWave;
     private void OnEnable()
     {
         isPickupable = false;
@@ -28,7 +29,7 @@ public class FishingMail : MonoBehaviour
         }
         if (!ready)
             return;
-        if (Vector2.Distance(spawnPos, transform.position) > 15f)
+        if (Vector2.Distance(spawnPos, transform.position) > 20f)
         {
             isPickupable = true;
             rb.velocity = Vector2.zero;
@@ -42,7 +43,7 @@ public class FishingMail : MonoBehaviour
             Vector3 lookDir = player.position - transform.position;
             float lookAngle = -Mathf.Atan2(lookDir.x, lookDir.y) * Mathf.Rad2Deg + 90f;
             transform.rotation = Quaternion.Euler(0f, 0f, lookAngle - 15f);
-            rb.velocity = 10f * (player.position - transform.position).normalized * Mathf.Max(1f, (player.position - transform.position).magnitude);
+            rb.velocity = 12f * (player.position - transform.position).normalized * Mathf.Max(0.5f, (player.position - transform.position).magnitude);
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -52,6 +53,11 @@ public class FishingMail : MonoBehaviour
         if (!isPickupable && collision.tag != "Player")
         {
             firstHit = false;
+            if (playerStat.cardShockWave)
+            {
+                GameObject temp = Instantiate(shockWave, transform);
+                temp.transform.parent = null;
+            }
             if (new List<int> { LayerMask.NameToLayer("Wall"), LayerMask.NameToLayer("Obstacle") }.Contains(collision.gameObject.layer))
             {
                 isPickupable = true;
@@ -62,7 +68,7 @@ public class FishingMail : MonoBehaviour
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 temp.marked = true;
                 temp.mark.SetActive(true);
-                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.fishingMail.power * (100 + playerStat.atkPerc) / 100f));
+                temp.TakeDamage(Mathf.FloorToInt((WeaponDatabase.fishingMail.power + playerStat.extraCardDamage) * (100 + playerStat.atkPerc) / 100f));
                 Destroy(gameObject);
             }
         }

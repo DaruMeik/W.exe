@@ -38,7 +38,7 @@ public class Wea05_ZapCanon : MonoBehaviour
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 collision.gameObject.GetComponent<EnemyStateManager>().GetStun(0.5f * (100 + 2 * chargeAmount) / 100f);
-                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f * (100 + 2 * chargeAmount) / 100f));
+                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f * (100 + 3 * chargeAmount) / 100f));
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {

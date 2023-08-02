@@ -49,14 +49,17 @@ public class DestroyableObstacle : MonoBehaviour
             spriteRenderer.material = defaultMat;
         }
     }
-
+    public void SelfDestruct()
+    {
+        Destroy(gameObject);
+    }
     public virtual void TakeDamage(int damage)
     {
         damagedAnimationTimer = Time.time;
         currentHP -= damage;
         if(currentHP < 0)
         {
-            Destroy(gameObject);
+            SelfDestruct();
         }
     }
 }

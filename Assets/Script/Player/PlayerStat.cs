@@ -36,6 +36,13 @@ public class PlayerStat : ScriptableObject
     public int atkPerc;
     public int defPerc;
 
+    [Header("Upgrade")]
+    public int extraCardDamage;
+    public int extraAmmoPerc;
+    public int extraPossessHealingPerc;
+    public bool shockwaveDealDamage;
+    public bool cardShockWave;
+
     // Regis stuffs
     public List<int> upgradeRegister = new List<int>();
 
@@ -65,6 +72,14 @@ public class PlayerStat : ScriptableObject
         atkPerc = defaultAtkPerc;
         defPerc = defaultDefPerc;
         currentHP = maxHP;
+
+        extraCardDamage = 0;
+        extraAmmoPerc = 0;
+        extraPossessHealingPerc = 0;
+        shockwaveDealDamage = false;
+        cardShockWave = false;
+
+
         currentIndex = 0;
         currentWeapon = new int[2] { 0, 0 };
         currentAmmo = new int[2] { -1, -1 };
@@ -87,10 +102,15 @@ public class PlayerStat : ScriptableObject
         atkPerc = defaultAtkPerc;
         defPerc = defaultDefPerc;
 
+        extraCardDamage = 0;
+        extraAmmoPerc = 0;
+        extraPossessHealingPerc = 0;
+        shockwaveDealDamage = false;
+        cardShockWave = false;
 
         currentHP = maxHP;
         currentIndex = 0;
-        currentWeapon = new int[2] { 2, 0 };
+        currentWeapon = new int[2] { 0, 0 };
         currentAmmo = new int[2] { -1, -1 };
         upgradeRegister.Clear();
         eventBroadcast.UpdateWeaponSpriteNoti();

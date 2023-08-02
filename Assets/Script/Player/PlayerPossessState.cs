@@ -26,8 +26,8 @@ public class PlayerPossessState : PlayerBaseState
         player.eventBroadcast.UpdateHPNoti();
         player.bodyAnimator.SetTrigger("FinishPossess");
         player.isInvincible = false;
-        player.shockWave.SetActive(true);
-        player.TakeDamage(-Mathf.FloorToInt(player.playerStat.maxHP * 5 / 100f));
+        GameObject.Instantiate(player.shockWave, player.transform);
+        player.TakeDamage(-Mathf.FloorToInt(player.playerStat.maxHP * (5 * (100 + player.playerStat.extraPossessHealingPerc) / 100f) / 100f));
         player.playerStat.UpdateCard(true);
     }
 
@@ -35,7 +35,9 @@ public class PlayerPossessState : PlayerBaseState
     {
         Debug.Log("Teleport");
         playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex] = enemy.enemyStat.enemyRewardWeaponID;
-        playerStateManager.playerStat.currentAmmo[playerStateManager.playerStat.currentIndex] = WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex]].maxAmmo;
+        playerStateManager.playerStat.currentAmmo[playerStateManager.playerStat.currentIndex]
+            = Mathf.FloorToInt(WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex]].maxAmmo
+            * (100 + playerStateManager.playerStat.extraAmmoPerc) / 100f);
         playerStateManager.eventBroadcast.UpdateWeaponNoti();
         playerStateManager.UpdateWeaponSprite();
         playerStateManager.playerSprites[1].enabled = true;

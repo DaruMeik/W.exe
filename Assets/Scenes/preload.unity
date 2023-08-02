@@ -207,7 +207,7 @@ MonoBehaviour:
   - {fileID: -2088092834, guid: ebc47ed9b1ed3e64e938aab30fbdd0e8, type: 3}
   - {fileID: -920806299, guid: ebc47ed9b1ed3e64e938aab30fbdd0e8, type: 3}
   currentPos: 
-  width: 10
+  width: 12
   height: 6
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
   garageFightList:
@@ -479,6 +479,17 @@ MonoBehaviour:
   - {fileID: -1338588681, guid: 805467fdd89c41741831552c11be116d, type: 3}
   - {fileID: -1458950004, guid: 805467fdd89c41741831552c11be116d, type: 3}
   - {fileID: -317186520, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: 867619247, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: 2051592321, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: 1908187581, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: 540432273, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -1923062943, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: 1062966452, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -228382451, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -1463591369, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: 736711416, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -1540867640, guid: 805467fdd89c41741831552c11be116d, type: 3}
+  - {fileID: -2140361776, guid: 805467fdd89c41741831552c11be116d, type: 3}
 --- !u!4 &1237149745
 Transform:
   m_ObjectHideFlags: 0

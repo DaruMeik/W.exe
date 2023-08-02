@@ -17,6 +17,13 @@ public class PlayerNormalState : PlayerBaseState
     }
     public override void UpdateState(PlayerStateManager player)
     {
+        #region map
+        if (PlayerControl.Instance.pInput.Player.Map.WasPerformedThisFrame())
+        {
+            player.map.SetActive(!player.map.activeSelf);
+        }
+        #endregion
+
         if (player.isInUI)
             return;
         #region aiming
@@ -39,7 +46,6 @@ public class PlayerNormalState : PlayerBaseState
         float scrollVal = PlayerControl.Instance.pInput.Player.Scroll.ReadValue<Vector2>().y;
         if (Time.time > nextTimeToSwitch)
         {
-            Debug.Log(scrollVal);
             if (PlayerControl.Instance.pInput.Player.Switch.WasPerformedThisFrame())
             {
                 isShooting = false;
@@ -53,21 +59,21 @@ public class PlayerNormalState : PlayerBaseState
                 player.playerStat.currentAmmo[1] = temp;
                 player.UpdateWeaponSprite();
 
-                nextTimeToSwitch = Time.time + 1f;
+                nextTimeToSwitch = Time.time + 0.5f;
             }
-            else if (PlayerControl.Instance.pInput.Player.FirstWeapon.WasPerformedThisFrame() || scrollVal > 0.01)
+            else if (PlayerControl.Instance.pInput.Player.FirstWeapon.WasPerformedThisFrame() || (scrollVal > 0.01 && player.playerStat.currentIndex != 0))
             {
                 isShooting = false;
                 player.playerStat.currentIndex = 0;
                 player.UpdateWeaponSprite();
-                nextTimeToSwitch = Time.time + 1f;
+                nextTimeToSwitch = Time.time + 0.5f;
             }
-            else if (PlayerControl.Instance.pInput.Player.SecondWeapon.WasPerformedThisFrame() || scrollVal < -0.01)
+            else if (PlayerControl.Instance.pInput.Player.SecondWeapon.WasPerformedThisFrame() || (scrollVal < -0.01 && player.playerStat.currentIndex != 1))
             {
                 isShooting = false;
                 player.playerStat.currentIndex = 1;
                 player.UpdateWeaponSprite();
-                nextTimeToSwitch = Time.time + 1f;
+                nextTimeToSwitch = Time.time + 0.5f;
             }
         }
         #endregion
@@ -116,13 +122,6 @@ public class PlayerNormalState : PlayerBaseState
         if (player.dashNumber < player.playerStat.maxDash && PlayerControl.Instance.pInput.Player.Dash.WasPerformedThisFrame())
         {
             player.SwitchState(player.dashState);
-        }
-        #endregion
-
-        #region map
-        if (PlayerControl.Instance.pInput.Player.Map.WasPerformedThisFrame())
-        {
-            player.map.SetActive(!player.map.activeSelf);
         }
         #endregion
 

@@ -31,6 +31,7 @@ public class PlayerStateManager : MonoBehaviour
     public float speedPenalty;
     public bool isInvincible = false;
     public bool isInUI = false;
+    public IEnumerator IFrameCoroutine;
 
     [Header("Interact")]
     public List<GameObject> interactableObj = new List<GameObject>();
@@ -42,8 +43,6 @@ public class PlayerStateManager : MonoBehaviour
     public Animator weaponAnimator;
     public GameObject LevelUpVFX;
     public OffHand offHand;
-    public Slider LvlSlider;
-    public TextMeshProUGUI LvlText;
     private float damagedAnimationTimer;
     private float flashWhiteTimer;
     private bool show;
@@ -93,16 +92,13 @@ public class PlayerStateManager : MonoBehaviour
         // Status
         playerStat.hasCard = true;
         eventBroadcast.UpdateHPNoti();
+        eventBroadcast.UpdateLvlNoti();
         eventBroadcast.UpdateMoneyNoti();
-        LvlText.text = playerStat.level.ToString();
-        LvlSlider.maxValue = playerStat.level;
-        LvlSlider.value = playerStat.exp - (playerStat.level * (playerStat.level - 1)) / 2;
         eventBroadcast.UpdateWeaponNoti();
         isInvincible = false;
         damagedAnimationTimer = 0f;
         flashWhiteTimer = 0f;
         defaultMat = playerSprites[0].material;
-        shockWave.SetActive(false);
         SwitchState(spawnState);
     }
     private void Update()
@@ -210,6 +206,10 @@ public class PlayerStateManager : MonoBehaviour
         if (currentState == possessState)
         {
             enemy = null;
+            if(IFrameCoroutine != null)
+                StopCoroutine(IFrameCoroutine);
+            IFrameCoroutine = InvulnerableFrame();
+            StartCoroutine(IFrameCoroutine);
             SwitchState(normalState);
         }
     }
@@ -218,6 +218,12 @@ public class PlayerStateManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         enemy = null;
         canPossessMarker.SetActive(false);
+    }
+    public IEnumerator InvulnerableFrame()
+    {
+        yield return new WaitForSeconds(0.5f);
+        hurtBoxCol.enabled = true;
+        IFrameCoroutine = null;
     }
     #endregion
     public void TeleportToNextStage()
@@ -250,12 +256,11 @@ public class PlayerStateManager : MonoBehaviour
             LevelUpVFX.SetActive(true);
             upgradeSelection.SetActive(true);
         }
-        LvlText.text = playerStat.level.ToString();
-        LvlSlider.maxValue = playerStat.level;
-        LvlSlider.value = playerStat.exp - (playerStat.level * (playerStat.level - 1)) / 2;
+        eventBroadcast.UpdateLvlNoti();
     }
     private void EnterUI()
     {
+        rb.velocity = Vector2.zero;
         isInUI = true;
     }
     private void ExitUI()

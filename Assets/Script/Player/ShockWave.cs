@@ -5,15 +5,13 @@ using UnityEngine;
 public class ShockWave : MonoBehaviour
 {
     [SerializeField] private PlayerStat playerStat;
-    [SerializeField] private Collider2D col;
     private void OnEnable()
     {
         transform.localScale = Vector3.one * playerStat.shockWaveRange * 2f;
     }
     public void TurnOff()
     {
-        col.enabled = true;
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -24,7 +22,12 @@ public class ShockWave : MonoBehaviour
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
         {
-            collision.gameObject.GetComponent<EnemyStateManager>().GetStun(playerStat.shockWaveStunTime);
+            EnemyStateManager temp = collision.gameObject.GetComponent<EnemyStateManager>();
+            temp.GetStun(playerStat.shockWaveStunTime);
+            if (playerStat.shockwaveDealDamage)
+            {
+                temp.TakeDamage(Mathf.FloorToInt((WeaponDatabase.fishingMail.power + playerStat.extraCardDamage) * (100 + playerStat.atkPerc) / 100f));
+            }
         }
     }
 }

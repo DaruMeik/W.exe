@@ -13,6 +13,7 @@ public class EventBroadcast : ScriptableObject
     public event GameEvent allDead;
     public event GameEvent generateMap;
     public event GameEvent updateHP;
+    public event GameEvent updateLvl;
     public event GameEvent updateWeapon;
     public event GameEvent updateMoney;
     public event GameEvent finishText;
@@ -60,6 +61,11 @@ public class EventBroadcast : ScriptableObject
     {
         if (updateHP != null)
             updateHP.Invoke();
+    }
+    public void UpdateLvlNoti()
+    {
+        if(updateLvl != null)
+            updateLvl.Invoke();
     }
     public void UpdateWeaponNoti()
     {

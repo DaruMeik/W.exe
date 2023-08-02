@@ -286,6 +286,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Simple shotgun
       objectReference: {fileID: 0}
+    - target: {fileID: 133525481607650020, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
+      propertyPath: m_margin.w
+      value: 0.0625
+      objectReference: {fileID: 0}
+    - target: {fileID: 133525481607650020, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
+      propertyPath: m_margin.x
+      value: 0.0625
+      objectReference: {fileID: 0}
     - target: {fileID: 3453592409188408222, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: m_IsActive
       value: 1
