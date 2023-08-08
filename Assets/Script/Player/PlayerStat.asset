@@ -14,33 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHP: 100
   currentIndex: 0
-  currentWeapon: 0000000000000000
-  currentAmmo: ffffffffffffffff
+  currentWeapon: 0500000002000000
+  currentAmmo: 05000000ffffffff
   hasCard: 1
-  level: 1
-  exp: 0
+  level: 3
+  exp: 3
   defaultMaxHP: 100
   defaultPlayerSpeed: 5
   defaultMaxDash: 2
   defaultShockWaveRange: 2.5
   defaultShockWaveStunTime: 0.5
   defaultMoney: 0
-  defaultLuck: -5
+  defaultLuck: -10
   defaultAtkPerc: 0
   defaultDefPerc: 0
+  defaultWeapon: 0
   maxHP: 100
   playerSpeed: 5
   maxDash: 2
   shockWaveRange: 2.5
   shockWaveStunTime: 0.5
-  money: 0
-  luck: -5
+  money: 60
+  luck: 10
   atkPerc: 0
   defPerc: 0
-  extraCardDamage: 0
+  extraCardDamage: 10
   extraAmmoPerc: 0
   extraPossessHealingPerc: 0
   shockwaveDealDamage: 0
-  cardShockWave: 0
-  upgradeRegister: 
+  cardShockWave: 1
+  upgradeRegister: 160000000c000000
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}

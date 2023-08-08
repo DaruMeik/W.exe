@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyStunState : EnemyBaseState
 {
     public float stunDuration = 0f;
+    public bool resetAtk = true;
     private float outOfStunTime = 0f;
     private float flashTime;
     private bool show = true;
@@ -40,7 +41,9 @@ public class EnemyStunState : EnemyBaseState
     }
     public override void ExitState(EnemyStateManager enemy)
     {
-        enemy.nextTimeToUseSkill = Time.time + enemy.enemyStat.enemyCD[0];
+        enemy.StopSkill();
+        if(resetAtk)
+            enemy.nextTimeToUseSkill = Time.time + enemy.enemyStat.enemyCD[0];
         enemy.enemySprite.color = new Color32(255, 255, 255, 255);
     }
 }

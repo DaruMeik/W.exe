@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Ene03_Shotgun
   m_EditorClassIdentifier: 
   enemyMaxHP: 90
-  enemyMovementSpeed: 2.25
-  isBoss: 0
+  enemyMovementSpeed: 3
+  enemyType: Default
   enemyRewardWeaponID: 3
   enemyBehavior: Default
   enemyWeaponId: 03000000
   enemyAtkRange:
-  - 4
+  - 5
   requireLOS: 01
   enemyCD:
   - 1.5

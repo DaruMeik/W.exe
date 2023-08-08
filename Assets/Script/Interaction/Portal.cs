@@ -53,6 +53,9 @@ public class Portal : MonoBehaviour
             case "Upgrade":
                 nextRoomIcon.sprite = mapGenerator.nodeImages[5];
                 break;
+            case "Miniboss":
+                nextRoomIcon.sprite = mapGenerator.nodeImages[6];
+                break;
         }
     }
 

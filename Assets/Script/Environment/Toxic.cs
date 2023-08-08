@@ -25,13 +25,14 @@ public class Toxic : MonoBehaviour
                 ready = false;
                 if (insideColObjs[i].layer == LayerMask.NameToLayer("PlayerCollision"))
                 {
-                    insideColObjs[i].GetComponentInParent<PlayerStateManager>().TakeDamage(Mathf.FloorToInt(damageStack[i]));
+                    insideColObjs[i].GetComponentInParent<PlayerStateManager>().TakeDamage(Mathf.FloorToInt(damageStack[i]), true);
+                    damageStack[i] += Mathf.Min(25, Mathf.FloorToInt(damageStack[i]) * 25 / 100f);
                 }
                 else if (insideColObjs[i].layer == LayerMask.NameToLayer("EnemyHurtBox"))
                 {
                     insideColObjs[i].GetComponent<EnemyStateManager>().TakeDamage(Mathf.FloorToInt(damageStack[i]));
+                    damageStack[i] += Mathf.Min(15, Mathf.FloorToInt(damageStack[i]) * 25 / 100f);
                 }
-                damageStack[i] += Mathf.Min(25,Mathf.FloorToInt(damageStack[i]) * 25 / 100f);
             }
             ready = true;
             nextTriggerTime = Time.time + 0.25f;

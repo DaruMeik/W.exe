@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class EnemyStateManager : MonoBehaviour
 {
-    private EnemyBaseState currentState;
+    public EnemyBaseState currentState;
     public EnemySpawnState spawnState = new EnemySpawnState();
     public EnemyNormalState normalState = new EnemyNormalState();
     public EnemySkillState skillState = new EnemySkillState();
@@ -25,6 +25,8 @@ public class EnemyStateManager : MonoBehaviour
     public bool isInvincible;
     public bool isPossessed;
     public bool isExploding;
+    public float burnTime = 0;
+    public float burnTickTime = 0;
 
     [Header("Enemy Skill")]
     public Transform enemyShootingPoint;
@@ -35,6 +37,7 @@ public class EnemyStateManager : MonoBehaviour
     [Header("EnemyUI")]
     public Slider HPSlider;
     public GameObject mark;
+    public GameObject burningVFX;
 
     [Header("Sprite Effect")]
     public Material whiteFlashMat;
@@ -61,24 +64,25 @@ public class EnemyStateManager : MonoBehaviour
     [System.NonSerialized] public Path tempPath;
     [System.NonSerialized] public int currentWayPoint;
     [System.NonSerialized] public bool isEndOfPath;
-    private IEnumerator updatePathCourotine;
+    public IEnumerator updatePathCourotine;
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         updatePathCourotine = UpdatePath();
         shootingCoroutine = Shooting();
     }
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         StopCoroutine(updatePathCourotine);
     }
-    private void Start()
+    protected virtual void Start()
     {
         // Stat
         currentHP = enemyStat.enemyMaxHP;
         HPSlider.maxValue = enemyStat.enemyMaxHP;
         HPSlider.value = HPSlider.maxValue;
         marked = false;
+        burningVFX.SetActive(false);
         switch (enemyStat.enemyBehavior)
         {
             case "Patrol":
@@ -102,7 +106,7 @@ public class EnemyStateManager : MonoBehaviour
         StartCoroutine(updatePathCourotine);
         SwitchState(spawnState);
     }
-    private void Update()
+    protected virtual void Update()
     {
         if (Time.time - damagedAnimationTimer < 0.6f && currentState != deadState)
         {
@@ -123,6 +127,18 @@ public class EnemyStateManager : MonoBehaviour
         else if (currentState != deadState && currentState != stunState)
         {
             enemySprite.material = defaultMat;
+        }
+        if (burnTime > Time.time)
+        {
+            if (Time.time > burnTickTime)
+            {
+                TakeDamage(Mathf.FloorToInt(enemyStat.enemyMaxHP / 100f));
+                burnTickTime = Time.time + 0.5f;
+            }
+        }
+        else if (burningVFX.activeSelf)
+        {
+            burningVFX.SetActive(false);
         }
         currentState.UpdateState(this);
     }
@@ -151,11 +167,19 @@ public class EnemyStateManager : MonoBehaviour
             SwitchState(deadState);
         }
     }
-    public void GetStun(float duration)
+    #region status effect
+    public void GetStun(float duration, bool resetAtk)
     {
         stunState.stunDuration = duration;
+        stunState.resetAtk = resetAtk;
         SwitchState(stunState);
     }
+    public void GetBurn(float duration)
+    {
+        burnTime = Time.time + duration;
+        burningVFX.SetActive(true);
+    }
+    #endregion
     public void UsingSkill()
     {
         StartCoroutine(shootingCoroutine);
@@ -176,12 +200,30 @@ public class EnemyStateManager : MonoBehaviour
         if (!p.error)
         {
             tempPath = p;
-            if (path == null
-                || (tempPath.GetTotalLength() < path.GetTotalLength())
-                || Vector2.Distance(tempPath.vectorPath[tempPath.vectorPath.Count - 1], path.vectorPath[path.vectorPath.Count - 1]) > enemyStat.enemyAtkRange[0] * 0.5f)
+            if (path == null)
             {
                 path = tempPath;
                 currentWayPoint = 0;
+            }
+            else
+            {
+                bool condition;
+                switch (enemyStat.enemyBehavior)
+                {
+                    case "Flee":
+                        condition = (tempPath.GetTotalLength() > path.GetTotalLength())
+                    || Vector2.Distance(tempPath.vectorPath[tempPath.vectorPath.Count - 1], path.vectorPath[path.vectorPath.Count - 1]) > enemyStat.enemyAtkRange[0] * 2f;
+                        break;
+                    default:
+                        condition = (tempPath.GetTotalLength() < path.GetTotalLength())
+                    || Vector2.Distance(tempPath.vectorPath[tempPath.vectorPath.Count - 1], path.vectorPath[path.vectorPath.Count - 1]) > enemyStat.enemyAtkRange[0] * 2f;
+                        break;
+                }
+                if (condition)
+                {
+                    path = tempPath;
+                    currentWayPoint = 0;
+                }
             }
 
         }
@@ -202,9 +244,11 @@ public class EnemyStateManager : MonoBehaviour
             playerStat.money += 10;
             eventBroadcast.UpdateMoneyNoti();
         }
+        if (enemyStat.enemyType == "Miniboss")
+            eventBroadcast.FinishStageNoti();
         Destroy(gameObject);
     }
-    IEnumerator Shooting()
+    protected virtual IEnumerator Shooting()
     {
         while (true)
         {
@@ -214,7 +258,7 @@ public class EnemyStateManager : MonoBehaviour
             yield return new WaitForSeconds(5f / weapon.atkSpd);
         }
     }
-    IEnumerator UpdatePath()
+    protected virtual IEnumerator UpdatePath()
     {
         while (true)
         {
@@ -228,7 +272,7 @@ public class EnemyStateManager : MonoBehaviour
                         seeker.StartPath(scanPoint.position, target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0] * 0.5f, OnPathComplete);
                         break;
                     case "Hold":
-                        temp = target.position + Random.onUnitSphere * enemyStat.enemyAtkRange[0];
+                        temp = target.position + Random.onUnitSphere * enemyStat.enemyAtkRange[0] * 0.5f;
                         if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall"))))
                         {
                             seeker.StartPath(scanPoint.position, temp, OnPathComplete);
@@ -237,17 +281,16 @@ public class EnemyStateManager : MonoBehaviour
                             fail = true;
                         break;
                     case "Flee":
-                        if (Time.time > nextTimeToUseSkill)
-                            seeker.StartPath(scanPoint.position, target.position + Random.insideUnitSphere, OnPathComplete);
-                        else
-                            seeker.StartPath(scanPoint.position, scanPoint.position * 2f - target.position, OnPathComplete);
+                        Vector3 dir = (scanPoint.position - target.position).normalized;
+                        Vector3 rotation = Quaternion.Euler(new Vector3(0f,0f,Random.Range(-60,60))) * dir;
+                        seeker.StartPath(scanPoint.position, target.position + rotation * enemyStat.enemyAtkRange[0] * 0.75f, OnPathComplete);
                         break;
                     case "Patrol":
                         if (!provoked)
                         {
                             if (Vector2.Distance(scanPoint.position, patrolPath[currentPathIndex].position) < 1f)
                             {
-                                currentPathIndex = (currentPathIndex+1)%patrolPath.Length;
+                                currentPathIndex = (currentPathIndex + 1) % patrolPath.Length;
                             }
                             else
                             {
@@ -267,7 +310,7 @@ public class EnemyStateManager : MonoBehaviour
                         break;
                     case "Passive":
                         if (provoked)
-                        { 
+                        {
                             temp = target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0];
                             if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall"))))
                             {
@@ -289,7 +332,7 @@ public class EnemyStateManager : MonoBehaviour
                 }
             }
             if (!fail)
-                yield return new WaitForSeconds(0.4f);
+                yield return new WaitForSeconds(0.2f);
             else
                 yield return new WaitForSeconds(0.1f);
         }

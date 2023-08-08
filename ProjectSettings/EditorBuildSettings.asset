@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Garage1.unity
     guid: 7d4ffdf826cbf464589f3f49d0e555e8
   - enabled: 1
+    path: Assets/Scenes/GarageKnockFist.unity
+    guid: 58a8db0ba90e5774ba58e1792ea38f40
+  - enabled: 1
     path: Assets/Scenes/GarageShop.unity
     guid: f1ba1de7a1a34a14d9ba75ece0a6c7c7
   - enabled: 1

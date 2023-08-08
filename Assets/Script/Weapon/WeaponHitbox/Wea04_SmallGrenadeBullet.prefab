@@ -1070,12 +1070,19 @@ MonoBehaviour:
   ID: 4
   rb: {fileID: 7491036736614918618}
   bySelf: 0
+  spawnPos: {x: 0, y: 0}
+  spawnTime: 0
+  ready: 0
+  atkPerc: 0
+  firstHit: 1
+  bulletSprite: {fileID: 2905613484426967942}
+  playerStat: {fileID: 11400000, guid: 8a107fd139e91684d9ec2c13774160e6, type: 2}
+  isBurning: 0
   endPoint: {x: 0, y: 0, z: 0}
   col: {fileID: 5324129061934917056}
   fireObj: {fileID: 2905613483975326426}
   warningTile: {fileID: 2905613484327908971}
   theBomb: {fileID: 2905613484426967936}
-  ready: 0
 --- !u!95 &2905613484674202344
 Animator:
   serializedVersion: 5

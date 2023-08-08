@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public bool specialSpawn = false;
+    private bool stageFinished = false;
+    private float nextSpawnTime = 0;
     [SerializeField] private EventBroadcast eventBroadcast;
     [SerializeField] public PlayerStat playerStat;
     [SerializeField] private GameObject target;
@@ -23,10 +26,12 @@ public class EnemySpawner : MonoBehaviour
     private void OnEnable()
     {
         eventBroadcast.enemyKilled += CountDaDeath;
+        eventBroadcast.finishStage += StopSpawning;
     }
     private void OnDisable()
     {
         eventBroadcast.enemyKilled -= CountDaDeath;
+        eventBroadcast.finishStage -= StopSpawning;
     }
 
     private void Start()
@@ -40,12 +45,23 @@ public class EnemySpawner : MonoBehaviour
         }
         SpawnNewEnemy();
     }
+    private void Update()
+    {
+        if(specialSpawn && Time.time > nextSpawnTime && killedAmount == spawnAmount)
+        {
+            killedAmount = 0;
+            SpawnNewEnemy();
+        }
+    }
     private void SpawnNewEnemy()
     {
+        if (stageFinished)
+            return;
         RefreshMap();
-        if(SceneManager.GetActiveScene().name == "Tutorial")
+        if(specialSpawn)
         {
-            spawnAmount = 2 + spawnWave;
+            GenerateEnemyID();
+            spawnAmount = 1;
         }
         else
         {
@@ -90,6 +106,7 @@ public class EnemySpawner : MonoBehaviour
             enemyStateManager.target = target.transform;
             enemyStateManager.patrolPath = patrolPos;
         }
+        nextSpawnTime = Time.time + 6f;
     }
 
     private void GenerateEnemyID()
@@ -99,6 +116,7 @@ public class EnemySpawner : MonoBehaviour
             Debug.LogError("Not enough enemy!");
             return;
         }
+        enemyIDList.Clear();
         int i = 0;
         do
         {
@@ -128,7 +146,8 @@ public class EnemySpawner : MonoBehaviour
     private void CountDaDeath()
     {
         killedAmount++;
-        CheckForFinish();
+        if (!specialSpawn)
+            CheckForFinish();
     }
 
     private void CheckForFinish()
@@ -144,7 +163,15 @@ public class EnemySpawner : MonoBehaviour
             else
             {
                 eventBroadcast.AllDeadNoti();
+                eventBroadcast.GainEXPNoti(1);
             }
         }
+    }
+
+    private void StopSpawning()
+    {
+        stageFinished = true;
+        eventBroadcast.AllDeadNoti();
+        eventBroadcast.GainEXPNoti(2);
     }
 }

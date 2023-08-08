@@ -36,7 +36,7 @@ public class EnemyDeadState : EnemyBaseState
             show = !show;
             flashTime = Time.time;
         }
-        if ((Time.time - countTime >= 2f && !enemy.isPossessed) || !enemy.marked)
+        if ((Time.time - countTime >= 4f && !enemy.isPossessed) || !enemy.marked)
         {
             enemy.isExploding = true;
             enemy.animator.SetTrigger("Explode");

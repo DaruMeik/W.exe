@@ -22,7 +22,6 @@ public class PlayerPossessState : PlayerBaseState
     }
     public override void ExitState(PlayerStateManager player)
     {
-        Debug.Log("Exit");
         player.eventBroadcast.UpdateHPNoti();
         player.bodyAnimator.SetTrigger("FinishPossess");
         player.isInvincible = false;
@@ -33,11 +32,18 @@ public class PlayerPossessState : PlayerBaseState
 
     public void Teleport()
     {
-        Debug.Log("Teleport");
-        playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex] = enemy.enemyStat.enemyRewardWeaponID;
-        playerStateManager.playerStat.currentAmmo[playerStateManager.playerStat.currentIndex]
-            = Mathf.FloorToInt(WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex]].maxAmmo
-            * (100 + playerStateManager.playerStat.extraAmmoPerc) / 100f);
+        switch (enemy.enemyStat.enemyType)
+        {
+            case "Miniboss":
+                playerStateManager.playerStat.defaultWeapon = enemy.enemyStat.enemyRewardWeaponID;
+                break;
+            default:
+                playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex] = enemy.enemyStat.enemyRewardWeaponID;
+                playerStateManager.playerStat.currentAmmo[playerStateManager.playerStat.currentIndex]
+                    = Mathf.FloorToInt(WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex]].maxAmmo
+                    * (100 + playerStateManager.playerStat.extraAmmoPerc) / 100f);
+                break;
+        }
         playerStateManager.eventBroadcast.UpdateWeaponNoti();
         playerStateManager.UpdateWeaponSprite();
         playerStateManager.playerSprites[1].enabled = true;

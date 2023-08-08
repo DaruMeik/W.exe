@@ -1,0 +1,3 @@
+Idea for "default" weapon: utility, low damage (need other abilities to fully be strong)
+1/ Knock fist: a slow but strong punch sending enemy flying (can send barrel flying, deals extra damage on collision)
+2/ Toxic bottle: shattered on impact, create a pool of toxic (harmful for both player & enemy)

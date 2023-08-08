@@ -2,28 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wea04_SmallGrenade : MonoBehaviour
+public class Wea04_SmallGrenade : Bullet
 {
-    public int ID = 4;
-    public Rigidbody2D rb;
-    public bool bySelf;
     public Vector3 endPoint;
     public Collider2D col;
     public GameObject fireObj;
     public GameObject warningTile;
     public GameObject theBomb;
-    public bool ready = false;
-    public int atkPerc;
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        ready = false;
+        base.OnEnable();
         col.enabled = false;
     }
     private void OnDisable()
     {
-        warningTile.transform.parent = gameObject.transform;
+        if (warningTile != null)
+            Destroy(warningTile);
     }
-    private void Update()
+    protected override void Update()
     {
         if (!ready)
             return;
@@ -45,37 +41,10 @@ public class Wea04_SmallGrenade : MonoBehaviour
         warningTile.transform.parent = gameObject.transform;
         Destroy(gameObject);
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (!ready || collision.gameObject.layer == LayerMask.NameToLayer("Bullet") || collision.tag == "Low")
             return;
-        if (bySelf && collision.gameObject.layer != LayerMask.NameToLayer("PlayerHurtBox"))
-        {
-            if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
-            {
-                EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
-                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
-            }
-            else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
-            {
-                DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
-                if (temp != null)
-                    temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
-            }
-        }
-        else if (!bySelf && collision.gameObject.layer != LayerMask.NameToLayer("EnemyHurtBox"))
-        {
-            if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
-            {
-                PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();
-                temp.TakeDamage(WeaponDatabase.weaponList[ID].power);
-            }
-            else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
-            {
-                DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
-                if (temp != null)
-                    temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
-            }
-        }
+        base.OnTriggerEnter2D(collision);
     }
 }

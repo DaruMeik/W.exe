@@ -7,7 +7,7 @@ public class EnemyStat : ScriptableObject
 {
     public int enemyMaxHP = 500;
     public float enemyMovementSpeed = 0.25f;
-    public bool isBoss = false;
+    public string enemyType = "Default";
     public int enemyRewardWeaponID = 0;
     public string enemyBehavior = "Default";
     public List<int> enemyWeaponId = new List<int>();

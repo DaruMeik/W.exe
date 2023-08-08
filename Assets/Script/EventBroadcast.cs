@@ -12,6 +12,7 @@ public class EventBroadcast : ScriptableObject
     public event GameEvent enemyKilled;
     public event GameEvent allDead;
     public event GameEvent generateMap;
+    public event GameEvent finishStage;
     public event GameEvent updateHP;
     public event GameEvent updateLvl;
     public event GameEvent updateWeapon;
@@ -20,12 +21,20 @@ public class EventBroadcast : ScriptableObject
     public event GameEvent enterUI;
     public event GameEvent exitUI;
 
+    public event GameEvent upgradePicked;
+
+    public delegate void IntGameEvent(int i);
+    public event IntGameEvent gainExp;
+
     // Random Event
     public delegate void RandomMachine(int buff, int nerf);
     public event RandomMachine finishNewMachine;
 
     public delegate void EnemyEvent(EnemyStateManager enemy);
     public event EnemyEvent possessEvent;
+
+    public delegate void CameraEffect(float duration, float intensity);
+    public event CameraEffect cameraShake;
 
     public void FinishPossessionAnimationNoti()
     {
@@ -57,6 +66,11 @@ public class EventBroadcast : ScriptableObject
         if (generateMap != null)
             generateMap.Invoke();
     }
+    public void FinishStageNoti()
+    {
+        if (finishStage != null)
+            finishStage.Invoke();
+    }
     public void UpdateHPNoti()
     {
         if (updateHP != null)
@@ -64,12 +78,12 @@ public class EventBroadcast : ScriptableObject
     }
     public void UpdateLvlNoti()
     {
-        if(updateLvl != null)
+        if (updateLvl != null)
             updateLvl.Invoke();
     }
     public void UpdateWeaponNoti()
     {
-        if(updateWeapon != null)
+        if (updateWeapon != null)
             updateWeapon.Invoke();
     }
     public void UpdateMoneyNoti()
@@ -92,6 +106,18 @@ public class EventBroadcast : ScriptableObject
         if (exitUI != null)
             exitUI.Invoke();
     }
+    
+
+    public void UpgradePickedNoti()
+    {
+        if (upgradePicked != null)
+            upgradePicked.Invoke();
+    }
+    public void GainEXPNoti(int ammount)
+    {
+        if(gainExp != null)
+            gainExp.Invoke(ammount);
+    }
     public void FinishNewMachineNoti(int i, int j)
     {
         if (finishNewMachine != null)
@@ -101,5 +127,10 @@ public class EventBroadcast : ScriptableObject
     {
         if (possessEvent != null)
             possessEvent.Invoke(enemy);
+    }
+    public void CameraShakeNoti(float duration, float intensity)
+    {
+        if (cameraShake != null)
+            cameraShake.Invoke(duration, intensity);
     }
 }

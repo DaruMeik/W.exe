@@ -32,6 +32,8 @@ public class PlayerStateManager : MonoBehaviour
     public bool isInvincible = false;
     public bool isInUI = false;
     public IEnumerator IFrameCoroutine;
+    public float burnTime = 0;
+    public float burnTickTime = 0;
 
     [Header("Interact")]
     public List<GameObject> interactableObj = new List<GameObject>();
@@ -49,6 +51,7 @@ public class PlayerStateManager : MonoBehaviour
     public Material whiteFlashMat;
     public Material defaultMat;
     public GameObject healingVFX;
+    public GameObject burningVFX;
 
     [Header("Dashing")]
     public int dashNumber = 0;
@@ -70,7 +73,7 @@ public class PlayerStateManager : MonoBehaviour
         eventBroadcast.updateWeaponSprite += UpdateWeaponSprite;
         eventBroadcast.enterUI += EnterUI;
         eventBroadcast.exitUI += ExitUI;
-        eventBroadcast.allDead += GainEXP;
+        eventBroadcast.gainExp += GainEXP;
         eventBroadcast.possessEvent += CanPossess;
         eventBroadcast.finishPossessionAnimation += possessState.Teleport;
         eventBroadcast.finishPossessionAnimation += FinishPossessAnimation;
@@ -81,7 +84,7 @@ public class PlayerStateManager : MonoBehaviour
         eventBroadcast.updateWeaponSprite -= UpdateWeaponSprite;
         eventBroadcast.enterUI -= EnterUI;
         eventBroadcast.exitUI -= ExitUI;
-        eventBroadcast.allDead -= GainEXP;
+        eventBroadcast.gainExp -= GainEXP;
         eventBroadcast.possessEvent -= CanPossess;
         eventBroadcast.finishPossessionAnimation -= possessState.Teleport;
         eventBroadcast.finishPossessionAnimation -= FinishPossessAnimation;
@@ -99,6 +102,8 @@ public class PlayerStateManager : MonoBehaviour
         damagedAnimationTimer = 0f;
         flashWhiteTimer = 0f;
         defaultMat = playerSprites[0].material;
+        healingVFX.SetActive(false);
+        burningVFX.SetActive(false);
         SwitchState(spawnState);
     }
     private void Update()
@@ -139,6 +144,18 @@ public class PlayerStateManager : MonoBehaviour
                 }
             }
         }
+        if (burnTime > Time.time)
+        {
+            if (Time.time > burnTickTime)
+            {
+                TakeDamage(Mathf.FloorToInt(playerStat.maxHP / 100f), true);
+                burnTickTime = Time.time + 0.5f;
+            }
+        }
+        else if (burningVFX.activeSelf)
+        {
+            burningVFX.SetActive(false);
+        }
         currentState.UpdateState(this);
     }
     public void SwitchState(PlayerBaseState state)
@@ -150,14 +167,16 @@ public class PlayerStateManager : MonoBehaviour
     }
 
     #region health
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool trueDamage = false)
     {
-        if (isInvincible)
+        if (isInvincible && !trueDamage)
             return;
 
-        damagedAnimationTimer = Time.time;
         if(damage > 0)
+        {
+            damagedAnimationTimer = Time.time;
             playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - Mathf.CeilToInt(damage * (100 - playerStat.defPerc) / 100f));
+        }
         else
         {
             playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - damage);
@@ -245,18 +264,21 @@ public class PlayerStateManager : MonoBehaviour
     }
 
     #region UI
-    private void GainEXP()
+    private void GainEXP(int ammount)
     {
-        playerStat.exp++;
-        while (playerStat.exp >= (playerStat.level * (playerStat.level + 1)) / 2)
+        for(int i = 0; i < ammount; i++)
         {
-            playerStat.level++;
-            playerStat.luck += 10;
-            LevelUpVFX.SetActive(false);
-            LevelUpVFX.SetActive(true);
-            upgradeSelection.SetActive(true);
+            playerStat.exp++;
+            if (playerStat.exp >= (playerStat.level * (playerStat.level + 1)) / 2)
+            {
+                playerStat.level++;
+                playerStat.luck += 10;
+                LevelUpVFX.SetActive(false);
+                LevelUpVFX.SetActive(true);
+                upgradeSelection.SetActive(true);
+            }
+            eventBroadcast.UpdateLvlNoti();
         }
-        eventBroadcast.UpdateLvlNoti();
     }
     private void EnterUI()
     {
@@ -276,12 +298,18 @@ public class PlayerStateManager : MonoBehaviour
             SwitchState(normalState);
     }
     #endregion
-
+    #region status effect
     public void GetStun(float duration)
     {
         stunState.stunDuration = duration;
         SwitchState(stunState);
     }
+    public void GetBurn(float duration)
+    {
+        burnTime = Time.time + duration;
+        burningVFX.SetActive(true);
+    }
+    #endregion
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

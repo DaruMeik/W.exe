@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyMaxHP: 120
   enemyMovementSpeed: 3.5
-  isBoss: 0
+  enemyType: Default
   enemyRewardWeaponID: 5
   enemyBehavior: Passive
   enemyWeaponId: 05000000
   enemyAtkRange:
-  - 6
+  - 8
   requireLOS: 01
   enemyCD:
   - 1

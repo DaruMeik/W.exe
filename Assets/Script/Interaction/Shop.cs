@@ -34,7 +34,7 @@ public class Shop : MonoBehaviour
         {
             possibleId.Add(item.id);
         }
-        var temp = possibleId.Where(x => !playerStat.upgradeRegister.Contains(x) && x != 0);
+        var temp = possibleId.Where(x => !playerStat.levelUpgradeRegister.Contains(x) && x != 0);
         items[2].itemType = "Upgrade";
         if (temp.Count() > 0)
             items[2].itemId = temp.ElementAt(Random.Range(0, temp.Count()));

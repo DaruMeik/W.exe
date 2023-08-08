@@ -48,8 +48,8 @@ public class BuyItem : Onetime
                     eventBroadcast.UpdateWeaponSpriteNoti();
                     break;
                 case "Upgrade":
-                    UpgradeDatabase.upgradeList[itemId].upgradeBaseEffect.ApplyEffect(playerStat);
-                    playerStat.upgradeRegister.Add(ShopDatabase.upgradeList[itemId].id);
+                    UpgradeDatabase.levelUpgradeList[itemId].upgradeBaseEffect.ApplyEffect(playerStat);
+                    playerStat.levelUpgradeRegister.Add(ShopDatabase.upgradeList[itemId].id);
                     break;
             }
             Destroy(gameObject);

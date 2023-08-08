@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Ene04_SmallGrenade
   m_EditorClassIdentifier: 
   enemyMaxHP: 60
-  enemyMovementSpeed: 3.5
-  isBoss: 0
+  enemyMovementSpeed: 4.5
+  enemyType: Default
   enemyRewardWeaponID: 4
   enemyBehavior: Flee
   enemyWeaponId: 04000000
   enemyAtkRange:
-  - 10
+  - 16
   requireLOS: 00
   enemyCD:
   - 2

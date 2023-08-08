@@ -2,21 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wea02_ShortSword : MonoBehaviour
+public class Wea02_ShortSword : Bullet
 {
-    public int ID = 2;
-    public Rigidbody2D rb;
-    public bool bySelf;
-    public Vector2 spawnPos;
-    public float spawnTime;
-    public bool ready = false;
-    public int atkPerc;
-    private void OnEnable()
-    {
-        spawnTime = Time.time;
-        ready = false;
-    }
-    private void Update()
+    protected override void Update()
     {
         if (!ready)
             return;
@@ -26,7 +14,7 @@ public class Wea02_ShortSword : MonoBehaviour
         }
         
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (!ready)
             return;
@@ -36,6 +24,8 @@ public class Wea02_ShortSword : MonoBehaviour
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
+                if (isBurning)
+                    temp.GetBurn(6f);
             }
             else if(collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet")
             {

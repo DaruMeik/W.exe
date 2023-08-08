@@ -4199,7 +4199,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 57343
+    m_Bits: 122879
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -7789,6 +7789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da88739ed6df7644687f2fce820c0af1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  specialSpawn: 0
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
   playerStat: {fileID: 11400000, guid: 8a107fd139e91684d9ec2c13774160e6, type: 2}
   target: {fileID: 830652468}
@@ -17489,6 +17490,7 @@ GameObject:
   - component: {fileID: 2118305796}
   - component: {fileID: 2118305799}
   - component: {fileID: 2118305798}
+  - component: {fileID: 2118305800}
   m_Layer: 14
   m_Name: Target
   m_TagString: Untagged
@@ -17595,11 +17597,35 @@ MonoBehaviour:
   whiteFlashMat: {fileID: 2100000, guid: 4b87a34e87e1b9b40b0c3741884beeb5, type: 2}
   col: {fileID: 2118305798}
   defaultMat: {fileID: 0}
+  rb: {fileID: 2118305800}
   flashWhiteTimer: 0
   damagedAnimationTimer: 0
   show: 0
   currentHP: 0
+  firstHit: 1
+  eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
   hiddenPathAnimator: {fileID: 230250789}
+--- !u!50 &2118305800
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118305795}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &2142651228
 GameObject:
   m_ObjectHideFlags: 0

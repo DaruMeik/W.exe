@@ -65,9 +65,9 @@ public class UpgradeSelection : MonoBehaviour
             possibleReward.Clear();
 
 
-            foreach (Upgrade upgrade in UpgradeDatabase.upgradeList)
+            foreach (Upgrade upgrade in UpgradeDatabase.levelUpgradeList)
             {
-                if (upgrade.tier == rewardTier && !playerStat.upgradeRegister.Any(r => r == upgrade.id))
+                if (upgrade.tier == rewardTier && !playerStat.levelUpgradeRegister.Any(r => r == upgrade.id))
                 {
                     possibleReward.Add(upgrade.id);
                 }
@@ -102,16 +102,16 @@ public class UpgradeSelection : MonoBehaviour
 
         for (int inde = 0; inde < upgradeInfo.Count(); inde++)
         {
-            upgradeInfo[inde].text = UpgradeDatabase.upgradeList[upgradeList[inde]].upgradeName + ": "
-                + UpgradeDatabase.upgradeList[upgradeList[inde]].upgradeDescription + "(" + UpgradeDatabase.upgradeList[upgradeList[inde]].tier + "*)";
+            upgradeInfo[inde].text = UpgradeDatabase.levelUpgradeList[upgradeList[inde]].upgradeName + ": "
+                + UpgradeDatabase.levelUpgradeList[upgradeList[inde]].upgradeDescription + "(" + UpgradeDatabase.levelUpgradeList[upgradeList[inde]].tier + "*)";
         }
     }
     public void ChooseReward(int buttonIndex)
     {
-        Debug.Log(UpgradeDatabase.upgradeList[upgradeList[buttonIndex]].upgradeName);
-        if (UpgradeDatabase.upgradeList[upgradeList[buttonIndex]].upgradeBaseEffect != null)
-            UpgradeDatabase.upgradeList[upgradeList[buttonIndex]].upgradeBaseEffect.ApplyEffect(playerStat);
-        playerStat.upgradeRegister.Add(upgradeList[buttonIndex]);
+        Debug.Log(UpgradeDatabase.levelUpgradeList[upgradeList[buttonIndex]].upgradeName);
+        if (UpgradeDatabase.levelUpgradeList[upgradeList[buttonIndex]].upgradeBaseEffect != null)
+            UpgradeDatabase.levelUpgradeList[upgradeList[buttonIndex]].upgradeBaseEffect.ApplyEffect(playerStat);
+        playerStat.levelUpgradeRegister.Add(upgradeList[buttonIndex]);
         gameObject.SetActive(false);
     }
 }

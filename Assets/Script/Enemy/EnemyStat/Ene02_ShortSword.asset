@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Ene02_ShortSword
   m_EditorClassIdentifier: 
   enemyMaxHP: 100
-  enemyMovementSpeed: 4
-  isBoss: 0
+  enemyMovementSpeed: 6
+  enemyType: Default
   enemyRewardWeaponID: 2
   enemyBehavior: Melee
   enemyWeaponId: 02000000

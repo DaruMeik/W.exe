@@ -198,7 +198,7 @@ public class PlayerNormalState : PlayerBaseState
                 player.eventBroadcast.UpdateWeaponNoti();
                 if (player.playerStat.currentAmmo[player.playerStat.currentIndex] == 0)
                 {
-                    player.playerStat.currentWeapon[player.playerStat.currentIndex] = 0;
+                    player.playerStat.currentWeapon[player.playerStat.currentIndex] = player.playerStat.defaultWeapon;
                     player.playerStat.currentAmmo[player.playerStat.currentIndex] = -1;
                     player.eventBroadcast.UpdateWeaponNoti();
                     player.UpdateWeaponSprite();
@@ -214,7 +214,7 @@ public class PlayerNormalState : PlayerBaseState
             player.eventBroadcast.UpdateWeaponNoti();
             if (player.playerStat.currentAmmo[player.playerStat.currentIndex] == 0)
             {
-                player.playerStat.currentWeapon[player.playerStat.currentIndex] = 0;
+                player.playerStat.currentWeapon[player.playerStat.currentIndex] = player.playerStat.defaultWeapon;
                 player.playerStat.currentAmmo[player.playerStat.currentIndex] = -1;
                 player.eventBroadcast.UpdateWeaponNoti();
                 player.UpdateWeaponSprite();

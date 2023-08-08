@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Ene01_GatlingGun
   m_EditorClassIdentifier: 
   enemyMaxHP: 80
-  enemyMovementSpeed: 2.5
-  isBoss: 0
+  enemyMovementSpeed: 4
+  enemyType: Default
   enemyRewardWeaponID: 1
   enemyBehavior: Hold
   enemyWeaponId: 01000000
   enemyAtkRange:
-  - 5
+  - 8
   requireLOS: 01
   enemyCD:
   - 1.5

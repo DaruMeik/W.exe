@@ -140,6 +140,11 @@ MonoBehaviour:
   rb: {fileID: 5018115745439234528}
   bySelf: 0
   spawnPos: {x: 0, y: 0}
+  spawnTime: 0
   ready: 0
   atkPerc: 0
+  firstHit: 1
+  bulletSprite: {fileID: 5018115745439234533}
+  playerStat: {fileID: 11400000, guid: 8a107fd139e91684d9ec2c13774160e6, type: 2}
+  isBurning: 0
   chargeAmount: 0

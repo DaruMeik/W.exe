@@ -21,6 +21,7 @@ public class MapGenerator : MonoBehaviour
 
     [Header("Scene List")]
     public List<string> garageFightList = new List<string>();
+    public List<string> garageMinibossList = new List<string> ();
     public List<string> officeFightList = new List<string>();
     public List<string> randomFightList = new List<string>();
     public List<string> restList = new List<string>();
@@ -152,24 +153,56 @@ public class MapGenerator : MonoBehaviour
         {
             map.SetRoomType(x, y, "Upgrade");
         }
-        else
+        else if (x == Mathf.CeilToInt(map.width / 2f) - 1)
         {
             int dice = Random.Range(0, 100);
-            if (dice < 50)
+            if (dice < 80)
+            {
+                map.SetRoomType(x, y, "Miniboss");
+            }
+            else if (dice < 95)
             {
                 map.SetRoomType(x, y, "Fight");
             }
-            else if (dice < 85)
+            else
             {
                 map.SetRoomType(x, y, "Random");
             }
-            else if (dice < 90)
+        }
+        else if (x == 1 | x == 2)
+        {
+            int dice = Random.Range(0, 100);
+            if (dice < 75)
             {
-                map.SetRoomType(x, y, "Rest");
+                map.SetRoomType(x, y, "Fight");
             }
             else
             {
+                map.SetRoomType(x, y, "Random");
+            }
+        }
+        else
+        {
+            int dice = Random.Range(0, 100);
+            if (dice < 40)
+            {
+                map.SetRoomType(x, y, "Fight");
+            }
+            else if (dice < 70)
+            {
+                map.SetRoomType(x, y, "Random");
+            }
+            else if (dice < 82)
+            {
                 map.SetRoomType(x, y, "Shop");
+            }
+            else if (dice < 92)
+            {
+                map.SetRoomType(x, y, "Miniboss");
+            }
+            else
+            {
+                map.SetRoomType(x, y, "Rest");
             }
         }
 
@@ -209,6 +242,9 @@ public class MapGenerator : MonoBehaviour
                     case "Upgrade":
                         nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[5];
                         break;
+                    case "Miniboss":
+                        nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[6];
+                        break;
                     default:
                         nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = null;
                         break;
@@ -242,6 +278,9 @@ public class MapGenerator : MonoBehaviour
                 break;
             case "Upgrade":
                 SceneManager.LoadScene(upgradeList[Random.Range(0, upgradeList.Count)]);
+                break;
+            case "Miniboss":
+                SceneManager.LoadScene(garageMinibossList[Random.Range(0, garageMinibossList.Count)]);
                 break;
         }
     }

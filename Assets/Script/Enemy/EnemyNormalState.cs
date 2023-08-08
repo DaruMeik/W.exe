@@ -32,11 +32,11 @@ public class EnemyNormalState : EnemyBaseState
             {
                 enemy.rb.velocity = moveDir * enemy.enemyStat.enemyMovementSpeed;
             }
-            if (moveDir.x > 0.05f)
+            if (moveDir.x > 0.1f)
             {
                 enemy.enemySprite.transform.localScale =  new Vector3(Mathf.Abs(enemy.enemySprite.transform.localScale.x), enemy.enemySprite.transform.localScale.y, enemy.enemySprite.transform.localScale.z);
             }
-            else if (moveDir.x < -0.05f)
+            else if (moveDir.x < -0.1f)
             {
                 enemy.enemySprite.transform.localScale = new Vector3(-Mathf.Abs(enemy.enemySprite.transform.localScale.x), enemy.enemySprite.transform.localScale.y, enemy.enemySprite.transform.localScale.z);
             }
@@ -47,7 +47,10 @@ public class EnemyNormalState : EnemyBaseState
             if (distanceToTarget < enemy.enemyStat.enemyAtkRange[0] && Time.time > enemy.nextTimeToUseSkill && enemy.provoked)
             {
                 if (!enemy.enemyStat.requireLOS[0] || (enemy.enemyStat.requireLOS[0] && !Physics2D.Linecast(enemy.scanPoint.position, enemy.target.position, LayerMask.GetMask("Wall"))))
+                {
+                    enemy.skillState.fixedTarget = null;
                     enemy.SwitchState(enemy.skillState);
+                }
             }
             if (distanceToNextWayPoint < enemy.nextWayPointDistance)
             {

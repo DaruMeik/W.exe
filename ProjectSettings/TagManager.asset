@@ -30,8 +30,8 @@ TagManager:
   - Minimap
   - Obstacle
   - Enviroment
-  - 
-  - 
+  - EnemyCollision
+  - Border
   - 
   - 
   - 

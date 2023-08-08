@@ -13,9 +13,9 @@ public class ShopDatabase : MonoBehaviour
         {
             weaponList.Add(new ShopItem(i, WeaponDatabase.weaponList[i].weaponName, WeaponDatabase.weaponList[i].weaponDescription, WeaponDatabase.weaponList[i].price, WeaponDatabase.weaponList[i].weaponSprite));
         }
-        for (int i = 0; i < UpgradeDatabase.upgradeList.Count; i++)
+        for (int i = 0; i < UpgradeDatabase.levelUpgradeList.Count; i++)
         {
-            upgradeList.Add(new ShopItem(i, UpgradeDatabase.upgradeList[i].upgradeName, UpgradeDatabase.upgradeList[i].upgradeDescription, UpgradeDatabase.upgradeList[i].tier * 50, UpgradeDatabase.upgradeList[i].upgradeSprite));
+            upgradeList.Add(new ShopItem(i, UpgradeDatabase.levelUpgradeList[i].upgradeName, UpgradeDatabase.levelUpgradeList[i].upgradeDescription, UpgradeDatabase.levelUpgradeList[i].tier * 50, UpgradeDatabase.levelUpgradeList[i].upgradeSprite));
         }
     }
 }
