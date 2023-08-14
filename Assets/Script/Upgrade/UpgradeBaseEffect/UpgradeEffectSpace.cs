@@ -185,3 +185,55 @@ public class Upgrade_PHealing3 : UpgradeBaseEffect
     }
 }
 #endregion
+
+#region bullet mod
+public class Upgrade_BurnBullet : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.burningBullet = true;
+    }
+}
+public class Upgrade_FasterCharge : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.fasterCharge = true;
+    }
+}
+public class Upgrade_UnseenBlade : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.unseenBlade = true;
+    }
+}
+public class Upgrade_BEEG : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.BEEG = true;
+    }
+}
+public class Upgrade_CritBullet : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.critable = true;
+    }
+}
+public class Upgrade_GoodReflex : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.goodReflex = true;
+    }
+}
+public class Upgrade_SharpBullet : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.sharpBullet = true;
+    }
+}
+#endregion

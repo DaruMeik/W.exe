@@ -16,8 +16,6 @@ public class Wea04_SmallGrenadeEffect : WeaponBaseEffect
         instancedObj.transform.position = startPoint;
         Wea04_SmallGrenade temp = instancedObj.GetComponent<Wea04_SmallGrenade>();
         temp.bySelf = bySelf;
-        temp.warningTile.transform.parent = null;
-        temp.warningTile.transform.position = endPoint;
         temp.warningTile.SetActive(true);
         temp.endPoint = endPoint;
         temp.rb.velocity = (endPoint - startPoint) / 1.2f;
@@ -25,12 +23,15 @@ public class Wea04_SmallGrenadeEffect : WeaponBaseEffect
         if (bySelf)
         {
             temp.atkPerc = playerStat.atkPerc;
+            if (playerStat.BEEG)
+                instancedObj.transform.localScale *= 1.5f;
         }
         else
         {
             temp.atkPerc = 0;
         }
-
+        temp.warningTile.transform.parent = null;
+        temp.warningTile.transform.position = endPoint;
         temp.ready = true;
     }
     public override void Release(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj) { }

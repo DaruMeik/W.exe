@@ -2129,7 +2129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650020, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: m_text
-      value: 
+      value: The one here is a dummy, so no new weapon.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.size
@@ -2137,31 +2137,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[0]
-      value: Possessing will replace your current weapon.
-      objectReference: {fileID: 0}
-    - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
-      propertyPath: textBoxList.Array.data[1]
-      value: with the enemy's weapon.
-      objectReference: {fileID: 0}
-    - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
-      propertyPath: textBoxList.Array.data[2]
       value: You have two slot to hold weapon.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
+      propertyPath: textBoxList.Array.data[1]
+      value: The first slot will always be your default weapon.
+      objectReference: {fileID: 0}
+    - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
+      propertyPath: textBoxList.Array.data[2]
+      value: The second slot will be your sub weapon.
+      objectReference: {fileID: 0}
+    - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[3]
-      value: Press [1] for the first slot and [2] for the second one.
+      value: After possessing, enemy weapon
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[4]
-      value: Press [Q] to switch weapons between slots.
+      value: will become your sub weapons.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[5]
-      value: This is a simulation so no new weapon for now.
+      value: The one here is a dummy, so no new weapon.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[6]
-      value: You also recover a bit of health after possessing.
+      value: You also recover a bit of health.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[7]
@@ -3311,19 +3311,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[0]
-      value: Hold [Left Mouse] to shoot
+      value: Hold [Left Mouse] use your first weapon.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[1]
-      value: Try to hit the red target.
+      value: Hold [Right Mouse] use your second weapon.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[2]
-      value: You can dash through obstacles like barrels.
+      value: Try to hit the red target.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[3]
@@ -7809,19 +7809,14 @@ MonoBehaviour:
   - {fileID: 2142651229}
   - {fileID: 1009102847}
   - {fileID: 2094897676}
-  enemyStats:
-  - {fileID: 11400000, guid: 25f71c407f4cbc64f9f8cf9a3c87773e, type: 2}
-  - {fileID: 11400000, guid: 8b3bde9c65e705541870c2144a0581db, type: 2}
-  - {fileID: 11400000, guid: 25f71c407f4cbc64f9f8cf9a3c87773e, type: 2}
-  - {fileID: 11400000, guid: 8b3bde9c65e705541870c2144a0581db, type: 2}
-  enemyObj:
-  - {fileID: 1444199018464218540, guid: f3b1201d16edb924cb0107cd9f7d73b6, type: 3}
-  - {fileID: 2907142445422234571, guid: c736807400e237840af31f3cb44ee547, type: 3}
-  - {fileID: 1444199018464218540, guid: f3b1201d16edb924cb0107cd9f7d73b6, type: 3}
-  - {fileID: 2907142445422234571, guid: c736807400e237840af31f3cb44ee547, type: 3}
+  rangeEnemyObj: []
+  meleeEnemyObj: []
+  supportEnemyObj: []
+  specialEnemyObj: []
   spawnAmount: 0
   spawnWave: 0
   killedAmount: 0
+  rewards: []
 --- !u!4 &1486336581
 Transform:
   m_ObjectHideFlags: 0
@@ -17260,7 +17255,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650020, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: m_text
-      value: 
+      value: If you miss, press [Middle Mouse] to call the card back.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.size
@@ -17268,7 +17263,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[0]
-      value: Press [Right Mouse] to throw your bug card.
+      value: Press [Middle Mouse] to throw your bug card.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[1]
@@ -17276,15 +17271,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[2]
-      value: After defeating marked enemy, press [Right Mouse] again
+      value: After defeating marked enemy, press [Middle Mouse]
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[3]
-      value: to possess them.
+      value: again to possess them.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[4]
-      value: If you miss, hold [Right Mouse] to call the card back.
+      value: If you miss, press [Middle Mouse] to call the card back.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[5]

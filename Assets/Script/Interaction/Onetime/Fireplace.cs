@@ -11,7 +11,8 @@ public class Fireplace : Onetime
             return;
         hasBeenUsed = true;
         animator.SetTrigger("Use");
-        playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP + Mathf.FloorToInt(playerStat.maxHP * 30f/100f));
+        playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP + Mathf.FloorToInt(playerStat.maxHP * 50f/100f));
+        eventBroadcast.HealVFXNoti();
         playerStat.eventBroadcast.UpdateHPNoti();
         triggerCol.enabled = false;
         TurnOffHighlight();

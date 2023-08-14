@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyMaxHP: 50
   enemyMovementSpeed: 0
-  isBoss: 0
+  enemyType: Default
   enemyRewardWeaponID: 0
   enemyBehavior: Default
   enemyWeaponId: 00000000

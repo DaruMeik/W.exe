@@ -22,11 +22,14 @@ public class EnemyStateManager : MonoBehaviour
     public int currentHP;
     public bool marked;
     public bool provoked;
+    public bool isGolden;
+    public float spawnTime;
     public bool isInvincible;
     public bool isPossessed;
     public bool isExploding;
     public float burnTime = 0;
     public float burnTickTime = 0;
+    public float markedTime = 0;
 
     [Header("Enemy Skill")]
     public Transform enemyShootingPoint;
@@ -36,6 +39,7 @@ public class EnemyStateManager : MonoBehaviour
 
     [Header("EnemyUI")]
     public Slider HPSlider;
+    public Image HPFill;
     public GameObject mark;
     public GameObject burningVFX;
 
@@ -70,6 +74,16 @@ public class EnemyStateManager : MonoBehaviour
     {
         updatePathCourotine = UpdatePath();
         shootingCoroutine = Shooting();
+        if (Random.Range(0, 100) >= 95 && enemyStat.enemyType == "Default")
+        {
+            isGolden = true;
+            HPFill.color = new Color32(206, 206, 107, 255);
+        }
+        else
+        {
+            isGolden = false;
+        }
+        spawnTime = Time.time;
     }
     protected virtual void OnDisable()
     {
@@ -97,12 +111,13 @@ public class EnemyStateManager : MonoBehaviour
         isPossessed = false;
         isExploding = false;
         currentPathIndex = 0;
-        nextTimeToUseSkill = Time.time + enemyStat.enemyCD[0];
+        nextTimeToUseSkill = Time.time + enemyStat.enemyCD[0] * 0.25f;
 
         //Animation
         defaultMat = enemySprite.material;
         damagedAnimationTimer = 0f;
         flashWhiteTimer = 0f;
+        markedTime = 0f;
         StartCoroutine(updatePathCourotine);
         SwitchState(spawnState);
     }
@@ -132,13 +147,30 @@ public class EnemyStateManager : MonoBehaviour
         {
             if (Time.time > burnTickTime)
             {
-                TakeDamage(Mathf.FloorToInt(enemyStat.enemyMaxHP / 100f));
-                burnTickTime = Time.time + 0.5f;
+                Debug.Log(Mathf.Max(1, Mathf.FloorToInt(enemyStat.enemyMaxHP / 50f)));
+                TakeDamage(Mathf.Max(1, Mathf.FloorToInt(enemyStat.enemyMaxHP / 50f)));
+                burnTickTime = Time.time + 0.25f;
             }
         }
         else if (burningVFX.activeSelf)
         {
             burningVFX.SetActive(false);
+        }
+        if (Time.time - markedTime >= 10f && marked && !isPossessed && currentState != deadState)
+        {
+            marked = false;
+            mark.SetActive(false);
+            WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat, ref spawnedBullet);
+        }
+        if(isGolden && Time.time - spawnTime > 15f && currentState != deadState)
+        {
+            if (marked)
+            {
+                marked = false;
+                mark.SetActive(false);
+                WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat, ref spawnedBullet);
+            }
+            TakeDamage(99999);
         }
         currentState.UpdateState(this);
     }
@@ -151,7 +183,7 @@ public class EnemyStateManager : MonoBehaviour
     }
     public void TakeDamage(int damage)
     {
-        if (isInvincible)
+        if (isInvincible || currentState == deadState)
             return;
         if (damage > 0)
         {
@@ -214,6 +246,9 @@ public class EnemyStateManager : MonoBehaviour
                         condition = (tempPath.GetTotalLength() > path.GetTotalLength())
                     || Vector2.Distance(tempPath.vectorPath[tempPath.vectorPath.Count - 1], path.vectorPath[path.vectorPath.Count - 1]) > enemyStat.enemyAtkRange[0] * 2f;
                         break;
+                    case "Random":
+                        condition = false;
+                        break;
                     default:
                         condition = (tempPath.GetTotalLength() < path.GetTotalLength())
                     || Vector2.Distance(tempPath.vectorPath[tempPath.vectorPath.Count - 1], path.vectorPath[path.vectorPath.Count - 1]) > enemyStat.enemyAtkRange[0] * 2f;
@@ -239,7 +274,12 @@ public class EnemyStateManager : MonoBehaviour
             WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat, ref spawnedBullet);
         }
         eventBroadcast.EnemyKilledNoti();
-        if (Random.Range(0, 100) > 75)
+        if(isPossessed && isGolden)
+        {
+            playerStat.money += 50;
+            eventBroadcast.UpdateMoneyNoti();
+        }
+        if (Random.Range(0, 100) >= 75)
         {
             playerStat.money += 10;
             eventBroadcast.UpdateMoneyNoti();
@@ -255,7 +295,7 @@ public class EnemyStateManager : MonoBehaviour
             Weapon weapon = WeaponDatabase.weaponList[enemyStat.enemyWeaponId[0]];
             weapon.weaponBaseEffect.weaponPoint = enemyShootingPoint;
             weapon.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, (Vector2)aimPoint + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, false, null, ref spawnedBullet);
-            yield return new WaitForSeconds(5f / weapon.atkSpd);
+            yield return new WaitForSeconds(4f / weapon.atkSpd);
         }
     }
     protected virtual IEnumerator UpdatePath()
@@ -268,6 +308,9 @@ public class EnemyStateManager : MonoBehaviour
                 Vector3 temp;
                 switch (enemyStat.enemyBehavior)
                 {
+                    case "Station":
+                        seeker.StartPath(scanPoint.position, scanPoint.position, OnPathComplete);
+                        break;
                     case "Melee":
                         seeker.StartPath(scanPoint.position, target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0] * 0.5f, OnPathComplete);
                         break;
@@ -282,7 +325,7 @@ public class EnemyStateManager : MonoBehaviour
                         break;
                     case "Flee":
                         Vector3 dir = (scanPoint.position - target.position).normalized;
-                        Vector3 rotation = Quaternion.Euler(new Vector3(0f,0f,Random.Range(-60,60))) * dir;
+                        Vector3 rotation = Quaternion.Euler(new Vector3(0f, 0f, Random.Range(-60, 60))) * dir;
                         seeker.StartPath(scanPoint.position, target.position + rotation * enemyStat.enemyAtkRange[0] * 0.75f, OnPathComplete);
                         break;
                     case "Patrol":
@@ -320,6 +363,9 @@ public class EnemyStateManager : MonoBehaviour
                                 fail = true;
                         }
                         break;
+                    case "Random":
+                        seeker.StartPath(scanPoint.position, scanPoint.position + Random.onUnitSphere * 3f, OnPathComplete);
+                        break;
                     default:
                         temp = target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0];
                         if (!enemyStat.requireLOS[0] || (enemyStat.requireLOS[0] && !Physics2D.Linecast(temp, target.position, LayerMask.GetMask("Wall"))))
@@ -332,7 +378,7 @@ public class EnemyStateManager : MonoBehaviour
                 }
             }
             if (!fail)
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.25f);
             else
                 yield return new WaitForSeconds(0.1f);
         }

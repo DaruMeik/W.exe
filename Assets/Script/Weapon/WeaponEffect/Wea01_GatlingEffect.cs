@@ -26,6 +26,8 @@ public class Wea01_GatlingEffect : WeaponBaseEffect
         {
             temp.rb.velocity = (endPoint - startPoint).normalized * speed;
             temp.atkPerc = playerStat.atkPerc;
+            if (playerStat.BEEG)
+                instancedObj.transform.localScale *= 1.5f;
         }
         else
         {

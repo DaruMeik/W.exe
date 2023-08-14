@@ -30,7 +30,10 @@ public class Wea05_ZapCanonEffect : WeaponBaseEffect
         else
         {
             Wea05_ZapCanon temp = spawnObj.GetComponent<Wea05_ZapCanon>();
-            temp.chargeAmount = Mathf.Min(150, temp.chargeAmount + 10);
+            if(bySelf && playerStat.fasterCharge)
+                temp.chargeAmount = Mathf.Min(150, temp.chargeAmount + 12.5f);
+            else
+                temp.chargeAmount = Mathf.Min(150, temp.chargeAmount + 10);
             spawnObj.transform.localScale = Vector3.one * (100 + temp.chargeAmount) / 100f;
         }
     }
@@ -46,6 +49,8 @@ public class Wea05_ZapCanonEffect : WeaponBaseEffect
         {
             temp.rb.velocity = (endPoint - startPoint).normalized * speed;
             temp.atkPerc = playerStat.atkPerc;
+            if (playerStat.BEEG)
+                temp.gameObject.transform.localScale *= 1.5f;
         }
         else
         {

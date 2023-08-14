@@ -84,10 +84,8 @@ public class DestroyableObstacle : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.name);
         if (rb.isKinematic || !firstHit || collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
             return;
-        Debug.Log("Pass");
         firstHit = false;
         if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
         {
@@ -108,10 +106,8 @@ public class DestroyableObstacle : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject.name);
         if (rb.isKinematic || !firstHit || collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
             return;
-        Debug.Log("Pass");
         firstHit = false;
         if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
         {

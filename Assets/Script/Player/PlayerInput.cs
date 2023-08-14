@@ -55,21 +55,21 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Throw"",
+                    ""name"": ""SubWeapon"",
                     ""type"": ""Button"",
-                    ""id"": ""cd112d61-8b54-4590-bf4c-6759b5f3c872"",
+                    ""id"": ""c5d77066-2045-4814-884a-192c6a028767"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Retrieve"",
+                    ""name"": ""Throw"",
                     ""type"": ""Button"",
-                    ""id"": ""948001d6-dd0a-42c4-aec1-4d15f0e21f03"",
+                    ""id"": ""cd112d61-8b54-4590-bf4c-6759b5f3c872"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
@@ -98,42 +98,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Switch"",
-                    ""type"": ""Button"",
-                    ""id"": ""7631e6d3-8799-4b09-8bcb-cdf6041117bd"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""FirstWeapon"",
-                    ""type"": ""Button"",
-                    ""id"": ""24b5269b-c212-40a1-9756-a3523798bb9e"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""SecondWeapon"",
-                    ""type"": ""Button"",
-                    ""id"": ""c9831935-8ddc-43dd-aec2-2eb886fd921d"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Scroll"",
-                    ""type"": ""Value"",
-                    ""id"": ""89483a22-642f-4590-bc0a-31890daf5ea9"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -205,19 +169,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f409ef28-c2a6-402a-b176-fe4be852c8b9"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Shoot"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""84eaa827-0e0d-49b7-a243-ee623204769b"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Mouse>/middleButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -260,56 +213,23 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""acb29bf5-0c66-4406-83d3-b0de12dfa5f3"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Switch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e15373e1-82a9-4e80-a911-1c154c83f06e"",
+                    ""id"": ""881450a5-0897-49bb-8551-81076638dc1f"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Retrieve"",
+                    ""action"": ""SubWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""3fc8e246-94b0-463d-be9b-24f066526cdc"",
-                    ""path"": ""<Keyboard>/1"",
+                    ""id"": ""f409ef28-c2a6-402a-b176-fe4be852c8b9"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""FirstWeapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bf7399c0-ec31-415c-9018-beb3d45f216b"",
-                    ""path"": ""<Keyboard>/2"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SecondWeapon"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2a5ca358-5552-4969-a643-a9f919b3b44a"",
-                    ""path"": ""<Mouse>/scroll"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Scroll"",
+                    ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -390,15 +310,11 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
+        m_Player_SubWeapon = m_Player.FindAction("SubWeapon", throwIfNotFound: true);
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
-        m_Player_Retrieve = m_Player.FindAction("Retrieve", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Map = m_Player.FindAction("Map", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
-        m_Player_Switch = m_Player.FindAction("Switch", throwIfNotFound: true);
-        m_Player_FirstWeapon = m_Player.FindAction("FirstWeapon", throwIfNotFound: true);
-        m_Player_SecondWeapon = m_Player.FindAction("SecondWeapon", throwIfNotFound: true);
-        m_Player_Scroll = m_Player.FindAction("Scroll", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
     }
@@ -465,15 +381,11 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Shoot;
+    private readonly InputAction m_Player_SubWeapon;
     private readonly InputAction m_Player_Throw;
-    private readonly InputAction m_Player_Retrieve;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Map;
     private readonly InputAction m_Player_Interact;
-    private readonly InputAction m_Player_Switch;
-    private readonly InputAction m_Player_FirstWeapon;
-    private readonly InputAction m_Player_SecondWeapon;
-    private readonly InputAction m_Player_Scroll;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -481,15 +393,11 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
+        public InputAction @SubWeapon => m_Wrapper.m_Player_SubWeapon;
         public InputAction @Throw => m_Wrapper.m_Player_Throw;
-        public InputAction @Retrieve => m_Wrapper.m_Player_Retrieve;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @Map => m_Wrapper.m_Player_Map;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
-        public InputAction @Switch => m_Wrapper.m_Player_Switch;
-        public InputAction @FirstWeapon => m_Wrapper.m_Player_FirstWeapon;
-        public InputAction @SecondWeapon => m_Wrapper.m_Player_SecondWeapon;
-        public InputAction @Scroll => m_Wrapper.m_Player_Scroll;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -508,12 +416,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Shoot.started += instance.OnShoot;
             @Shoot.performed += instance.OnShoot;
             @Shoot.canceled += instance.OnShoot;
+            @SubWeapon.started += instance.OnSubWeapon;
+            @SubWeapon.performed += instance.OnSubWeapon;
+            @SubWeapon.canceled += instance.OnSubWeapon;
             @Throw.started += instance.OnThrow;
             @Throw.performed += instance.OnThrow;
             @Throw.canceled += instance.OnThrow;
-            @Retrieve.started += instance.OnRetrieve;
-            @Retrieve.performed += instance.OnRetrieve;
-            @Retrieve.canceled += instance.OnRetrieve;
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
@@ -523,18 +431,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
-            @Switch.started += instance.OnSwitch;
-            @Switch.performed += instance.OnSwitch;
-            @Switch.canceled += instance.OnSwitch;
-            @FirstWeapon.started += instance.OnFirstWeapon;
-            @FirstWeapon.performed += instance.OnFirstWeapon;
-            @FirstWeapon.canceled += instance.OnFirstWeapon;
-            @SecondWeapon.started += instance.OnSecondWeapon;
-            @SecondWeapon.performed += instance.OnSecondWeapon;
-            @SecondWeapon.canceled += instance.OnSecondWeapon;
-            @Scroll.started += instance.OnScroll;
-            @Scroll.performed += instance.OnScroll;
-            @Scroll.canceled += instance.OnScroll;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -548,12 +444,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Shoot.started -= instance.OnShoot;
             @Shoot.performed -= instance.OnShoot;
             @Shoot.canceled -= instance.OnShoot;
+            @SubWeapon.started -= instance.OnSubWeapon;
+            @SubWeapon.performed -= instance.OnSubWeapon;
+            @SubWeapon.canceled -= instance.OnSubWeapon;
             @Throw.started -= instance.OnThrow;
             @Throw.performed -= instance.OnThrow;
             @Throw.canceled -= instance.OnThrow;
-            @Retrieve.started -= instance.OnRetrieve;
-            @Retrieve.performed -= instance.OnRetrieve;
-            @Retrieve.canceled -= instance.OnRetrieve;
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
@@ -563,18 +459,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
-            @Switch.started -= instance.OnSwitch;
-            @Switch.performed -= instance.OnSwitch;
-            @Switch.canceled -= instance.OnSwitch;
-            @FirstWeapon.started -= instance.OnFirstWeapon;
-            @FirstWeapon.performed -= instance.OnFirstWeapon;
-            @FirstWeapon.canceled -= instance.OnFirstWeapon;
-            @SecondWeapon.started -= instance.OnSecondWeapon;
-            @SecondWeapon.performed -= instance.OnSecondWeapon;
-            @SecondWeapon.canceled -= instance.OnSecondWeapon;
-            @Scroll.started -= instance.OnScroll;
-            @Scroll.performed -= instance.OnScroll;
-            @Scroll.canceled -= instance.OnScroll;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -680,15 +564,11 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
+        void OnSubWeapon(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
-        void OnRetrieve(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnMap(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
-        void OnSwitch(InputAction.CallbackContext context);
-        void OnFirstWeapon(InputAction.CallbackContext context);
-        void OnSecondWeapon(InputAction.CallbackContext context);
-        void OnScroll(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

@@ -23,6 +23,8 @@ public class Wea06_KnockFistEffect : WeaponBaseEffect
         if (bySelf)
         {
             temp.atkPerc = playerStat.atkPerc;
+            if (playerStat.BEEG)
+                instancedObj.transform.localScale *= 1.5f;
         }
         else
         {

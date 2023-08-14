@@ -36,11 +36,13 @@ public class PlayerPossessState : PlayerBaseState
         {
             case "Miniboss":
                 playerStateManager.playerStat.defaultWeapon = enemy.enemyStat.enemyRewardWeaponID;
+                playerStateManager.playerStat.currentWeapon[0] = enemy.enemyStat.enemyRewardWeaponID;
+                playerStateManager.playerStat.currentAmmo[0] = -1;
                 break;
             default:
-                playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex] = enemy.enemyStat.enemyRewardWeaponID;
-                playerStateManager.playerStat.currentAmmo[playerStateManager.playerStat.currentIndex]
-                    = Mathf.FloorToInt(WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[playerStateManager.playerStat.currentIndex]].maxAmmo
+                playerStateManager.playerStat.currentWeapon[1] = enemy.enemyStat.enemyRewardWeaponID;
+                playerStateManager.playerStat.currentAmmo[1]
+                    = Mathf.CeilToInt(WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[1]].maxAmmo
                     * (100 + playerStateManager.playerStat.extraAmmoPerc) / 100f);
                 break;
         }

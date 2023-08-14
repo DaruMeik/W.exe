@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4397c174e2ab84d44bf4d5796516bc07, type: 3}
+  m_Name: Ene08_ProtectorLantern
+  m_EditorClassIdentifier: 
+  enemyMaxHP: 70
+  enemyMovementSpeed: 3
+  enemyType: Default
+  enemyRewardWeaponID: 8
+  enemyBehavior: Random
+  explosionImmunity: 0
+  poisonImmunity: 0
+  enemyWeaponId: 08000000
+  enemyAtkRange:
+  - 1000
+  requireLOS: 00
+  enemyCD:
+  - 7.6
+  enemyAimTime:
+  - 0

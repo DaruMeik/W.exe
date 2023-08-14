@@ -9,7 +9,7 @@ public abstract class Onetime : MonoBehaviour
     public PlayerStat playerStat;
     public EventBroadcast eventBroadcast;
     public Collider2D triggerCol;
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         hasBeenUsed = false;
         TurnOffHighlight();

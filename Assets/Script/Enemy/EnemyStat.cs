@@ -10,6 +10,8 @@ public class EnemyStat : ScriptableObject
     public string enemyType = "Default";
     public int enemyRewardWeaponID = 0;
     public string enemyBehavior = "Default";
+    public int explosionImmunity = 0;
+    public int poisonImmunity = 0;
     public List<int> enemyWeaponId = new List<int>();
     public List<float> enemyAtkRange = new List<float>();
     public List<bool> requireLOS = new List<bool>();

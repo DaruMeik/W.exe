@@ -122,7 +122,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 34
+        width: 35
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -141,9 +141,9 @@ TextureImporter:
       name: LevelUp_1
       rect:
         serializedVersion: 2
-        x: 34
+        x: 35
         y: 0
-        width: 34
+        width: 35
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -162,9 +162,9 @@ TextureImporter:
       name: LevelUp_2
       rect:
         serializedVersion: 2
-        x: 68
+        x: 70
         y: 0
-        width: 34
+        width: 35
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -183,9 +183,9 @@ TextureImporter:
       name: LevelUp_3
       rect:
         serializedVersion: 2
-        x: 102
+        x: 105
         y: 0
-        width: 34
+        width: 35
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -204,9 +204,9 @@ TextureImporter:
       name: LevelUp_4
       rect:
         serializedVersion: 2
-        x: 136
+        x: 140
         y: 0
-        width: 34
+        width: 35
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -225,9 +225,9 @@ TextureImporter:
       name: LevelUp_5
       rect:
         serializedVersion: 2
-        x: 170
+        x: 175
         y: 0
-        width: 34
+        width: 35
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}

@@ -33,21 +33,21 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Throw",
+                    "name": "SubWeapon",
                     "type": "Button",
-                    "id": "cd112d61-8b54-4590-bf4c-6759b5f3c872",
+                    "id": "c5d77066-2045-4814-884a-192c6a028767",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Retrieve",
+                    "name": "Throw",
                     "type": "Button",
-                    "id": "948001d6-dd0a-42c4-aec1-4d15f0e21f03",
+                    "id": "cd112d61-8b54-4590-bf4c-6759b5f3c872",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "initialStateCheck": false
                 },
                 {
@@ -76,42 +76,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Switch",
-                    "type": "Button",
-                    "id": "7631e6d3-8799-4b09-8bcb-cdf6041117bd",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "FirstWeapon",
-                    "type": "Button",
-                    "id": "24b5269b-c212-40a1-9756-a3523798bb9e",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SecondWeapon",
-                    "type": "Button",
-                    "id": "c9831935-8ddc-43dd-aec2-2eb886fd921d",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Scroll",
-                    "type": "Value",
-                    "id": "89483a22-642f-4590-bc0a-31890daf5ea9",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -183,19 +147,8 @@
                 },
                 {
                     "name": "",
-                    "id": "f409ef28-c2a6-402a-b176-fe4be852c8b9",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Shoot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "84eaa827-0e0d-49b7-a243-ee623204769b",
-                    "path": "<Mouse>/rightButton",
+                    "path": "<Mouse>/middleButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -238,56 +191,23 @@
                 },
                 {
                     "name": "",
-                    "id": "acb29bf5-0c66-4406-83d3-b0de12dfa5f3",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Switch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e15373e1-82a9-4e80-a911-1c154c83f06e",
+                    "id": "881450a5-0897-49bb-8551-81076638dc1f",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Retrieve",
+                    "action": "SubWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "3fc8e246-94b0-463d-be9b-24f066526cdc",
-                    "path": "<Keyboard>/1",
+                    "id": "f409ef28-c2a6-402a-b176-fe4be852c8b9",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "FirstWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "bf7399c0-ec31-415c-9018-beb3d45f216b",
-                    "path": "<Keyboard>/2",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SecondWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2a5ca358-5552-4969-a643-a9f919b3b44a",
-                    "path": "<Mouse>/scroll",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Scroll",
+                    "action": "Shoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

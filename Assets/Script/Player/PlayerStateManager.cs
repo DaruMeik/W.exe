@@ -71,6 +71,7 @@ public class PlayerStateManager : MonoBehaviour
         UpdateWeaponSprite();
         isInUI = false;
         eventBroadcast.updateWeaponSprite += UpdateWeaponSprite;
+        eventBroadcast.healVFX += PlayHealingVFX;
         eventBroadcast.enterUI += EnterUI;
         eventBroadcast.exitUI += ExitUI;
         eventBroadcast.gainExp += GainEXP;
@@ -82,6 +83,7 @@ public class PlayerStateManager : MonoBehaviour
     private void OnDisable()
     {
         eventBroadcast.updateWeaponSprite -= UpdateWeaponSprite;
+        eventBroadcast.healVFX -= PlayHealingVFX;
         eventBroadcast.enterUI -= EnterUI;
         eventBroadcast.exitUI -= ExitUI;
         eventBroadcast.gainExp -= GainEXP;
@@ -148,8 +150,8 @@ public class PlayerStateManager : MonoBehaviour
         {
             if (Time.time > burnTickTime)
             {
-                TakeDamage(Mathf.FloorToInt(playerStat.maxHP / 100f), true);
-                burnTickTime = Time.time + 0.5f;
+                TakeDamage(Mathf.Max(1,Mathf.FloorToInt(playerStat.maxHP / 50f)), true);
+                burnTickTime = Time.time + 0.25f;
             }
         }
         else if (burningVFX.activeSelf)
@@ -167,21 +169,20 @@ public class PlayerStateManager : MonoBehaviour
     }
 
     #region health
-    public void TakeDamage(int damage, bool trueDamage = false)
+    public void TakeDamage(int damage, bool byEnvironment = false)
     {
-        if (isInvincible && !trueDamage)
+        if (isInvincible && !byEnvironment)
             return;
 
-        if(damage > 0)
+        if(damage >= 0)
         {
             damagedAnimationTimer = Time.time;
             playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - Mathf.CeilToInt(damage * (100 - playerStat.defPerc) / 100f));
         }
         else
         {
+            eventBroadcast.HealVFXNoti();
             playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - damage);
-            healingVFX.SetActive(false);
-            healingVFX.SetActive(true);
         }
         eventBroadcast.UpdateHPNoti();
 
@@ -189,6 +190,11 @@ public class PlayerStateManager : MonoBehaviour
         {
             SwitchState(deadState);
         }
+    }
+    public void PlayHealingVFX()
+    {
+        healingVFX.SetActive(false);
+        healingVFX.SetActive(true);
     }
     public void SelfDestruct()
     {
@@ -234,7 +240,7 @@ public class PlayerStateManager : MonoBehaviour
     }
     IEnumerator CannotPossess()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2.5f);
         enemy = null;
         canPossessMarker.SetActive(false);
     }
@@ -269,12 +275,12 @@ public class PlayerStateManager : MonoBehaviour
         for(int i = 0; i < ammount; i++)
         {
             playerStat.exp++;
+            LevelUpVFX.SetActive(false);
+            LevelUpVFX.SetActive(true);
             if (playerStat.exp >= (playerStat.level * (playerStat.level + 1)) / 2)
             {
                 playerStat.level++;
                 playerStat.luck += 10;
-                LevelUpVFX.SetActive(false);
-                LevelUpVFX.SetActive(true);
                 upgradeSelection.SetActive(true);
             }
             eventBroadcast.UpdateLvlNoti();

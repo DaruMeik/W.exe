@@ -21,11 +21,20 @@ public class EnemySkillState : EnemyBaseState
         if(Time.time > nextAimTime && fixedTarget == null)
         {
             enemy.aimPoint = enemy.target.position;
+            if (enemy.aimPoint.x - enemy.transform.position.x > 0.1f)
+            {
+                enemy.enemySprite.transform.localScale = new Vector3(Mathf.Abs(enemy.enemySprite.transform.localScale.x), enemy.enemySprite.transform.localScale.y, enemy.enemySprite.transform.localScale.z);
+            }
+            else if (enemy.aimPoint.x - enemy.transform.position.x < -0.1f)
+            {
+                enemy.enemySprite.transform.localScale = new Vector3(-Mathf.Abs(enemy.enemySprite.transform.localScale.x), enemy.enemySprite.transform.localScale.y, enemy.enemySprite.transform.localScale.z);
+            }
             nextAimTime = Time.time + enemy.enemyStat.enemyAimTime[0];
         }
     }
     public override void ExitState(EnemyStateManager enemy)
     {
+        enemy.StopSkill();
         enemy.nextTimeToUseSkill = Time.time + enemy.enemyStat.enemyCD[0];
     }
 }

@@ -10,7 +10,8 @@ public class WeaponTrigger : MonoBehaviour
     public void Trigger()
     {
         weapon.weaponBaseEffect.ApplyEffect(player.weaponPivotPoint.position, aimPos + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, true, player.playerStat, ref player.spawnedBullet);
-        player.playerStat.currentAmmo[player.playerStat.currentIndex]--;
+        if (player.playerStat.currentAmmo[player.playerStat.currentIndex] > 0) 
+            player.playerStat.currentAmmo[player.playerStat.currentIndex]--;
         player.eventBroadcast.UpdateWeaponNoti();
         if (player.playerStat.currentAmmo[player.playerStat.currentIndex] == 0)
         {
@@ -18,7 +19,7 @@ public class WeaponTrigger : MonoBehaviour
             player.playerStat.currentAmmo[player.playerStat.currentIndex] = -1;
             player.eventBroadcast.UpdateWeaponNoti();
             player.UpdateWeaponSprite();
-            player.normalState.isShooting = false;
+            player.normalState.isShooting1 = false;
         }
     }
 }

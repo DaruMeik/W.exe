@@ -28,6 +28,8 @@ public class Wea03_ShotgunEffect : WeaponBaseEffect
             {
                 temp.rb.velocity = temp.rb.transform.right.normalized * speed;
                 temp.atkPerc = playerStat.atkPerc;
+                if (playerStat.BEEG)
+                    instancedObj.transform.localScale *= 1.5f;
             }
             else
             {

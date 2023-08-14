@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GarageRest.unity
     guid: 8ff8cb74942a1ff489d83153d745cecd
+  - enabled: 1
+    path: Assets/Scenes/GarageUpgrade.unity
+    guid: 92948b5f9cbfbd3478e4ad6a7bc7b60f
   m_configObjects: {}

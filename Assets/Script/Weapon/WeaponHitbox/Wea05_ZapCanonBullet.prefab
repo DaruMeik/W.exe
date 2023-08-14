@@ -123,7 +123,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: -0.025, y: -0.025}
   serializedVersion: 2
-  m_Radius: 0.3
+  m_Radius: 0.2
 --- !u!114 &9187782013476401576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,7 +144,11 @@ MonoBehaviour:
   ready: 0
   atkPerc: 0
   firstHit: 1
-  bulletSprite: {fileID: 5018115745439234533}
+  isDestroyable: 0
+  isBlockable: 1
+  bulletSprites:
+  - {fileID: 5018115745439234533}
   playerStat: {fileID: 11400000, guid: 8a107fd139e91684d9ec2c13774160e6, type: 2}
+  eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
   isBurning: 0
   chargeAmount: 0

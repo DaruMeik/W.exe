@@ -13,15 +13,20 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private GameObject target;
     [SerializeField] private Transform[] spawnPos;
     [SerializeField] private Transform[] patrolPos;
-    [SerializeField] public EnemyStat[] enemyStats;
-    [SerializeField] private GameObject[] enemyObj;
+    [SerializeField] private GameObject[] rangeEnemyObj;
+    [SerializeField] private GameObject[] meleeEnemyObj;
+    [SerializeField] private GameObject[] supportEnemyObj;
+    [SerializeField] private GameObject[] specialEnemyObj;
 
     private List<float[]> EnemyField = new List<float[]> { };
     private int mapPointer = 0;
-    private List<int> enemyIDList = new List<int>();
+    private List<int[]> enemyIDList = new List<int[]>();
     [SerializeField] private int spawnAmount = 0;
     [SerializeField] private int spawnWave = 0;
     [SerializeField] private int killedAmount = 0;
+
+    // Reward
+    [SerializeField] private GameObject[] rewards;
 
     private void OnEnable()
     {
@@ -47,7 +52,7 @@ public class EnemySpawner : MonoBehaviour
     }
     private void Update()
     {
-        if(specialSpawn && Time.time > nextSpawnTime && killedAmount == spawnAmount)
+        if (specialSpawn && Time.time > nextSpawnTime && killedAmount == spawnAmount)
         {
             killedAmount = 0;
             SpawnNewEnemy();
@@ -58,9 +63,25 @@ public class EnemySpawner : MonoBehaviour
         if (stageFinished)
             return;
         RefreshMap();
-        if(specialSpawn)
+        if (specialSpawn)
         {
-            GenerateEnemyID();
+            enemyIDList.Clear();
+            List<int> type = new List<int> { 0, 1, 2, 3 };
+            switch (type[Random.Range(0, type.Count)])
+            {
+                case 0:
+                    enemyIDList.Add( new int[] { Random.Range(0, rangeEnemyObj.Length), 0 });
+                    break;
+                case 1:
+                    enemyIDList.Add(new int[] { Random.Range(0, meleeEnemyObj.Length), 1 });
+                    break;
+                case 2:
+                    enemyIDList.Add(new int[] { Random.Range(0, supportEnemyObj.Length), 2 });
+                    break;
+                case 3:
+                    enemyIDList.Add(new int[] { Random.Range(0, specialEnemyObj.Length), 3 });
+                    break;
+            }
             spawnAmount = 1;
         }
         else
@@ -77,12 +98,12 @@ public class EnemySpawner : MonoBehaviour
                     possibleField.Add(fl);
                 }
             }
-            int enemyID;
+            int[] enemyID;
             if (i < 2)
             {
                 enemyID = enemyIDList[0];
             }
-            else if (i < 3) 
+            else if (i < 3)
             {
                 enemyID = enemyIDList[1];
             }
@@ -97,12 +118,28 @@ public class EnemySpawner : MonoBehaviour
             mapPointer = Random.Range(0, possibleField.Count);
             EnemyField.First(r => r.SequenceEqual(possibleField[mapPointer]))[2] = 1;
             GameObject spawnedEne;
-            spawnedEne = Instantiate(enemyObj[enemyID]);
+            switch (enemyID[1])
+            {
+                case 0:
+                    spawnedEne = Instantiate(rangeEnemyObj[enemyID[0]]);
+                    break;
+                case 1:
+                    spawnedEne = Instantiate(meleeEnemyObj[enemyID[0]]);
+                    break;
+                case 2:
+                    spawnedEne = Instantiate(supportEnemyObj[enemyID[0]]);
+                    break;
+                case 3:
+                    spawnedEne = Instantiate(specialEnemyObj[enemyID[0]]);
+                    break;
+                default:
+                    spawnedEne = Instantiate(rangeEnemyObj[enemyID[0]]);
+                    break;
+            }
             spawnedEne.transform.position = new Vector3(possibleField[mapPointer][0], possibleField[mapPointer][1], 0f);
             EnemyStateManager enemyStateManager = spawnedEne.GetComponent<EnemyStateManager>();
             enemyStateManager.eventBroadcast = eventBroadcast;
             enemyStateManager.playerStat = playerStat;
-            enemyStateManager.enemyStat = enemyStats[enemyID];
             enemyStateManager.target = target.transform;
             enemyStateManager.patrolPath = patrolPos;
         }
@@ -111,19 +148,62 @@ public class EnemySpawner : MonoBehaviour
 
     private void GenerateEnemyID()
     {
-        if(enemyObj.Length < 3)
+        if (rangeEnemyObj.Length + meleeEnemyObj.Length + supportEnemyObj.Length + specialEnemyObj.Length < 3)
         {
             Debug.LogError("Not enough enemy!");
             return;
         }
         enemyIDList.Clear();
-        int i = 0;
+        int[] i = new int[] { 0, 0 };
+        List<int> type = new List<int> { 0, 1, 2, 3 };
         do
         {
-            i = Random.Range(0, enemyObj.Length);
+            switch (enemyIDList.Count)
+            {
+                case 0:
+                    switch (Random.Range(0, 2))
+                    {
+                        case 0:
+                            i = new int[] { Random.Range(0, rangeEnemyObj.Length), 0 };
+                            type.Remove(0);
+                            break;
+                        case 1:
+                            i = new int[] { Random.Range(0, meleeEnemyObj.Length), 1 };
+                            type.Remove(1);
+                            break;
+                    }
+                    break;
+                case 1:
+                    switch (Random.Range(0, 2))
+                    {
+                        case 0:
+                            i = new int[] { Random.Range(0, supportEnemyObj.Length), 2 };
+                            type.Remove(2);
+                            break;
+                        case 1:
+                            i = new int[] { Random.Range(0, specialEnemyObj.Length), 3 };
+                            type.Remove(3);
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (type[Random.Range(0, type.Count)])
+                    {
+                        case 0:
+                            i = new int[] { Random.Range(0, rangeEnemyObj.Length), 0 };
+                            break;
+                        case 1:
+                            i = new int[] { Random.Range(0, meleeEnemyObj.Length), 1 };
+                            break;
+                    }
+                    break;
+                default:
+                    i = new int[] { Random.Range(0, rangeEnemyObj.Length), 0 };
+                    break;
+            }
             if (enemyIDList.Count > 0)
             {
-                if (!enemyIDList.Contains(i))
+                if (!enemyIDList.Any(x => x[0] == i[0] && x[1] == i[1]))
                 {
                     enemyIDList.Add(i);
                 }
@@ -162,12 +242,45 @@ public class EnemySpawner : MonoBehaviour
             }
             else
             {
+                int temp = Random.Range(0, 100);
+                if (playerStat.currentHP < playerStat.maxHP * 10 / 100f)
+                {
+                    Instantiate(rewards[1]);
+                }
+                else if(playerStat.currentHP < playerStat.maxHP * 25 / 100f)
+                {
+                    if(temp >= 80)
+                        Instantiate(rewards[0]);
+                    else
+                        Instantiate(rewards[1]);
+                }
+                else if (playerStat.currentHP < playerStat.maxHP * 75 / 100f)
+                {
+
+                    if (temp >= 50)
+                        Instantiate(rewards[0]);
+                    else
+                        Instantiate(rewards[1]);
+                }
+                else if (playerStat.currentHP < playerStat.maxHP)
+                {
+                    if (temp >= 40)
+                        Instantiate(rewards[0]);
+                    else
+                        Instantiate(rewards[2]);
+                }
+                else
+                {
+                    if (temp >= 80)
+                        Instantiate(rewards[0]);
+                    else
+                        Instantiate(rewards[2]);
+                }
                 eventBroadcast.AllDeadNoti();
                 eventBroadcast.GainEXPNoti(1);
             }
         }
     }
-
     private void StopSpawning()
     {
         stageFinished = true;

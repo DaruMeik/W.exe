@@ -144,6 +144,10 @@ MonoBehaviour:
   ready: 0
   atkPerc: 0
   firstHit: 1
-  bulletSprite: {fileID: 5739646585579655992}
+  isDestroyable: 1
+  isBlockable: 1
+  bulletSprites:
+  - {fileID: 5739646585579655992}
   playerStat: {fileID: 11400000, guid: 8a107fd139e91684d9ec2c13774160e6, type: 2}
+  eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
   isBurning: 0

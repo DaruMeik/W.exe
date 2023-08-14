@@ -30,7 +30,8 @@ public class Toxic : MonoBehaviour
                 }
                 else if (insideColObjs[i].layer == LayerMask.NameToLayer("EnemyHurtBox"))
                 {
-                    insideColObjs[i].GetComponent<EnemyStateManager>().TakeDamage(Mathf.FloorToInt(damageStack[i]));
+                    EnemyStateManager temp = insideColObjs[i].GetComponent<EnemyStateManager>();
+                    temp.TakeDamage(Mathf.Max(0,Mathf.FloorToInt(damageStack[i]*(100-temp.enemyStat.poisonImmunity)/100f)));
                     damageStack[i] += Mathf.Min(15, Mathf.FloorToInt(damageStack[i]) * 25 / 100f);
                 }
             }

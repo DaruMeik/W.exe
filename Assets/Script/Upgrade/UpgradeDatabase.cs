@@ -6,7 +6,7 @@ public class UpgradeDatabase : MonoBehaviour
 {
     public static List<Upgrade> levelUpgradeList = new List<Upgrade>();
     public Sprite[] levelUpUpgradeSprite;
-    public static List<Upgrade> stageUpgradeList = new List<Upgrade>();
+    public static List<Upgrade> bulletModList = new List<Upgrade>();
     public Sprite[] stageUpgradeSprite;
     private void Awake()
     {
@@ -35,13 +35,16 @@ public class UpgradeDatabase : MonoBehaviour
         levelUpgradeList.Add(new Upgrade(levelUpgradeList.Count, 2, "Unstable system", "Shock wave now deals damage equal to your card damage", levelUpUpgradeSprite[21], new Upgrade_ShockWaveDamage()));
         levelUpgradeList.Add(new Upgrade(levelUpgradeList.Count, 3, "Buggy card", "Card will create shockwave on impact", levelUpUpgradeSprite[22], new Upgrade_CardShockWave()));
 
-        stageUpgradeList.Clear();
-        stageUpgradeList.Add(new Upgrade(stageUpgradeList.Count, 0, "More money", "Receive 100P", levelUpUpgradeSprite[0], new Upgrade_Money()));
-        stageUpgradeList.Add(new Upgrade(stageUpgradeList.Count, 2, "Pyromancer", "All weapon has 15% to burn enemy.", levelUpUpgradeSprite[0], null));
-        stageUpgradeList.Add(new Upgrade(stageUpgradeList.Count, 1, "Good cable", "Charge weapon charges faster by 25%.", levelUpUpgradeSprite[0], null));
-        stageUpgradeList.Add(new Upgrade(stageUpgradeList.Count, 3, "Blacksmith", "Melee weapon has infinite ammo.", levelUpUpgradeSprite[0], null));
-        stageUpgradeList.Add(new Upgrade(stageUpgradeList.Count, 1, "BEEG", "Increase weapon size by 25%.", levelUpUpgradeSprite[0], null));
-        stageUpgradeList.Add(new Upgrade(stageUpgradeList.Count, 1, "Sharpshooter", "Weapon has 10% crit rate (dealing triple damage).", levelUpUpgradeSprite[0], null));
+        bulletModList.Clear();
+        bulletModList.Add(new Upgrade(bulletModList.Count, 0, "More money", "Receive 100P", levelUpUpgradeSprite[0], new Upgrade_Money()));
+        bulletModList.Add(new Upgrade(bulletModList.Count, 2, "Pyromancer", "All weapon has 25% to shoot burn bullet.", levelUpUpgradeSprite[1], new Upgrade_BurnBullet()));
+        bulletModList.Add(new Upgrade(bulletModList.Count, 1, "Good cable", "Charge weapon charges faster by 25%.", levelUpUpgradeSprite[2], new Upgrade_FasterCharge()));
+        bulletModList.Add(new Upgrade(bulletModList.Count, 2, "Unseen blade", "Melee weapon deals 150% damage when attack behind.", levelUpUpgradeSprite[3], new Upgrade_UnseenBlade()));
+        bulletModList.Add(new Upgrade(bulletModList.Count, 2, "BEEG", "Increase weapon size by 50%.", levelUpUpgradeSprite[4], new Upgrade_BEEG()));
+        bulletModList.Add(new Upgrade(bulletModList.Count, 1, "Sharpshooter", "Any instance of damage done by you has 10% of dealing triple damage.", levelUpUpgradeSprite[5], new Upgrade_CritBullet()));
+        bulletModList.Add(new Upgrade(bulletModList.Count, 3, "Good reflex", "Melee weapon now reflect enemey bullet.", levelUpUpgradeSprite[6], new Upgrade_GoodReflex()));
+        bulletModList.Add(new Upgrade(bulletModList.Count, 2, "Sharp bullet", "Bullet has 50% to pierce enemy.", levelUpUpgradeSprite[7], null));
+
     }
 }
 

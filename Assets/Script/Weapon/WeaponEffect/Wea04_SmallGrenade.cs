@@ -33,11 +33,11 @@ public class Wea04_SmallGrenade : Bullet
     {
         rb.velocity = Vector3.zero;
         rb.MovePosition(endPoint);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
         theBomb.SetActive(false);
         col.enabled = true;
         fireObj.SetActive(true);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
         warningTile.transform.parent = gameObject.transform;
         Destroy(gameObject);
     }
@@ -45,6 +45,40 @@ public class Wea04_SmallGrenade : Bullet
     {
         if (!ready || collision.gameObject.layer == LayerMask.NameToLayer("Bullet") || collision.tag == "Low")
             return;
-        base.OnTriggerEnter2D(collision);
+        if (bySelf && collision.gameObject.layer != LayerMask.NameToLayer("PlayerHurtBox"))
+        {
+            firstHit = false;
+            if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
+            {
+                EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
+                float attackModifier = 0f;
+                if (playerStat.critable && Random.Range(0, 100) >= 90)
+                    attackModifier += 200;
+                if (isBurning)
+                    temp.GetBurn(2.5f);
+                temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
+            }
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+            {
+                DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
+                if (temp != null)
+                    temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+            }
+        }
+        else if (!bySelf && collision.gameObject.layer != LayerMask.NameToLayer("EnemyHurtBox"))
+        {
+            firstHit = false;
+            if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
+            {
+                PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();
+                temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+            }
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+            {
+                DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
+                if (temp != null)
+                    temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+            }
+        }
     }
 }

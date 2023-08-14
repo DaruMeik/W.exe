@@ -8,7 +8,7 @@ public class Wea01_Gatling : Bullet
     {
         if (!ready)
             return;
-        if (Vector2.Distance(spawnPos, transform.position) > 10f)
+        if (Vector2.Distance(spawnPos, transform.position) > 20f)
         {
             Destroy(gameObject);
         }

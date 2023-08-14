@@ -32,16 +32,16 @@ public class ExplosiveBarrel : DestroyableObstacle
                 if (enemy.currentState != enemy.deadState)
                 {
                     enemy.GetStun(1f, false);
-                    enemy.GetBurn(6f);
+                    enemy.GetBurn(2.5f);
                     enemy.rb.AddForce((enemy.transform.position - gameObject.transform.position).normalized * 10f, ForceMode2D.Impulse);
-                    enemy.TakeDamage(50);
+                    enemy.TakeDamage(Mathf.Max(0,Mathf.FloorToInt(50*(100-enemy.enemyStat.explosionImmunity)/100f)));
                 }
             }
             else if (obj.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
             {
                 PlayerStateManager player = obj.GetComponent<PlayerStateManager>();
                 player.GetStun(1f);
-                player.GetBurn(6f);
+                player.GetBurn(2.5f);
                 player.TakeDamage(25);
                 player.rb.AddForce((player.transform.position - gameObject.transform.position).normalized * 10f, ForceMode2D.Impulse);
             }

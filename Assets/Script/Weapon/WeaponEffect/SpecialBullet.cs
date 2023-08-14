@@ -2,46 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpecialBullet : MonoBehaviour
+public class SpecialBullet : Bullet
 {
-    public int ID = -1;
-    public Rigidbody2D rb;
-    public bool bySelf;
-    public Vector2 spawnPos;
-    public bool ready = false;
-    public int atkPerc;
-    private bool firstHit = true;
-    private void OnEnable()
+    protected override void Start()
     {
-        ready = false;
-        firstHit = true;
+        base.Start();
+        atkPerc = 1000;
     }
-    private void Update()
+    protected override void Update()
     {
         if (!ready)
             return;
-        if (Vector2.Distance(spawnPos, transform.position) > 10f)
+        if (Vector2.Distance(spawnPos, transform.position) > 30f)
         {
             Destroy(gameObject);
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!ready || !firstHit || collision.gameObject.layer == LayerMask.NameToLayer("Bullet") || collision.tag == "Low")
-            return;
         if (bySelf && collision.gameObject.layer != LayerMask.NameToLayer("PlayerHurtBox"))
         {
             firstHit = false;
             if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
-                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.tutorialSpecialBullet.power * (100 + atkPerc) / 100f));
+                float attackModifier = 0f;
+                if (playerStat.critable && Random.Range(0, 100) >= 90)
+                    attackModifier += 200;
+                if (isBurning)
+                    temp.GetBurn(2.5f);
+                temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[0].power * (100 + atkPerc + attackModifier) / 100f)));
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
                 DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
                 if (temp != null)
-                    temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.tutorialSpecialBullet.power * (100 + atkPerc) / 100f));
+                    temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[0].power * (100 + atkPerc) / 100f)));
+            }
+            if (playerStat.sharpBullet && Random.Range(0, 100) >= 50)
+            {
+                firstHit = true;
+                return;
             }
             Destroy(gameObject);
         }
@@ -51,13 +52,13 @@ public class SpecialBullet : MonoBehaviour
             if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
             {
                 PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();
-                temp.TakeDamage(WeaponDatabase.tutorialSpecialBullet.power);
+                temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[0].power * (100 + atkPerc) / 100f)));
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
                 DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
                 if (temp != null)
-                    temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.tutorialSpecialBullet.power * (100 + atkPerc) / 100f));
+                    temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[0].power * (100 + atkPerc) / 100f)));
             }
             Destroy(gameObject);
         }

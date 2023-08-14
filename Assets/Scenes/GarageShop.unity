@@ -1650,7 +1650,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 8.4375
+  orthographic size: 7.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -3829,7 +3829,7 @@ PrefabInstance:
     - target: {fileID: 5599995932222154862, guid: 0d97f404ec599ea47ad005c4c66f92d3, type: 3}
       propertyPath: cam
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 236883452}
     - target: {fileID: 7161902818193952234, guid: 0d97f404ec599ea47ad005c4c66f92d3, type: 3}
       propertyPath: m_Name
       value: Minimap

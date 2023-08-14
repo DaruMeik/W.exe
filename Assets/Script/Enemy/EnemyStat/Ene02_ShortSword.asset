@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Ene02_ShortSword
   m_EditorClassIdentifier: 
   enemyMaxHP: 100
-  enemyMovementSpeed: 6
+  enemyMovementSpeed: 5.5
   enemyType: Default
   enemyRewardWeaponID: 2
   enemyBehavior: Melee
+  explosionImmunity: 0
+  poisonImmunity: 0
   enemyWeaponId: 02000000
   enemyAtkRange:
   - 2.5
@@ -24,4 +26,4 @@ MonoBehaviour:
   enemyCD:
   - 0.75
   enemyAimTime:
-  - 0.2
+  - 0.3

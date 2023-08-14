@@ -9,13 +9,13 @@ public class ShopDatabase : MonoBehaviour
 
     private void OnEnable()
     {
-        for (int i = 1; i < WeaponDatabase.weaponList.Count; i++)
+        for (int i = 0; i < WeaponDatabase.weaponList.Count; i++)
         {
-            weaponList.Add(new ShopItem(i, WeaponDatabase.weaponList[i].weaponName, WeaponDatabase.weaponList[i].weaponDescription, WeaponDatabase.weaponList[i].price, WeaponDatabase.weaponList[i].weaponSprite));
+            weaponList.Add(new ShopItem(i, WeaponDatabase.weaponList[i].weaponName, WeaponDatabase.weaponList[i].weaponDescription, 100, WeaponDatabase.weaponList[i].weaponSprite));
         }
         for (int i = 0; i < UpgradeDatabase.levelUpgradeList.Count; i++)
         {
-            upgradeList.Add(new ShopItem(i, UpgradeDatabase.levelUpgradeList[i].upgradeName, UpgradeDatabase.levelUpgradeList[i].upgradeDescription, UpgradeDatabase.levelUpgradeList[i].tier * 50, UpgradeDatabase.levelUpgradeList[i].upgradeSprite));
+            upgradeList.Add(new ShopItem(i, UpgradeDatabase.levelUpgradeList[i].upgradeName, UpgradeDatabase.levelUpgradeList[i].upgradeDescription, UpgradeDatabase.levelUpgradeList[i].tier * 125, UpgradeDatabase.levelUpgradeList[i].upgradeSprite));
         }
     }
 }

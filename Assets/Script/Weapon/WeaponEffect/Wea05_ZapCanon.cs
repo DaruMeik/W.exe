@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Wea05_ZapCanon : Bullet
 {
-    public int chargeAmount = 0;
+    public float chargeAmount = 0;
     protected override void Update()
     {
         if (!ready)
@@ -20,23 +20,30 @@ public class Wea05_ZapCanon : Bullet
             return;
         if (bySelf && collision.gameObject.layer != LayerMask.NameToLayer("PlayerHurtBox"))
         {
-            if (chargeAmount < 100)
-                firstHit = false;
+            firstHit = false;
             if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
+                float attackModifier = 0;
                 collision.gameObject.GetComponent<EnemyStateManager>().GetStun(0.5f * (100 + 2 * chargeAmount) / 100f, false);
-                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f * (100 + 3 * chargeAmount) / 100f));
                 if (isBurning)
-                    temp.GetBurn(6f);
+                    temp.GetBurn(2.5f);
+                if (playerStat.critable && Random.Range(0, 100) >= 90)
+                    attackModifier += 200;
+                temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f * (100 + 3 * chargeAmount) / 100f)));
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
                 DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
                 if (temp != null)
-                    temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
+                    temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f * (100 + 3 * chargeAmount) / 100f)));
             }
-            if (collision.gameObject.layer == LayerMask.NameToLayer("Wall") || chargeAmount < 100)
+            if ((playerStat.sharpBullet && Random.Range(0, 100) >= 50) || chargeAmount >= 100)
+            {
+                firstHit = true;
+                return;
+            }
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
             {
                 Destroy(gameObject);
             }
@@ -48,13 +55,13 @@ public class Wea05_ZapCanon : Bullet
             {
                 PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();
                 collision.gameObject.GetComponent<PlayerStateManager>().GetStun(0.5f * (100 + 1.5f * chargeAmount) / 100f);
-                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f * (100 + 2 * chargeAmount) / 100f));
+                temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f * (100 + 2 * chargeAmount) / 100f)));
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
                 DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
                 if (temp != null)
-                    temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
+                    temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f * (100 + 2 * chargeAmount) / 100f)));
             }
             Destroy(gameObject);
         }

@@ -18,7 +18,11 @@ public class ShockWave : MonoBehaviour
     {
         if (collision.gameObject.tag == "EnemyBullet" && collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
         {
-            GameObject.Destroy(collision.gameObject);
+            Bullet temp = collision.GetComponentInChildren<Bullet>();
+            if (temp != null && temp.isDestroyable)
+            {
+                Destroy(collision.gameObject);
+            }
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
         {

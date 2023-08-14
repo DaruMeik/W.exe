@@ -716,15 +716,19 @@ MonoBehaviour:
   currentHP: 0
   marked: 0
   provoked: 0
+  isGolden: 0
+  spawnTime: 0
   isInvincible: 0
   isPossessed: 0
   isExploding: 0
   burnTime: 0
   burnTickTime: 0
+  markedTime: 0
   enemyShootingPoint: {fileID: 4177614642682456031}
   nextTimeToUseSkill: 0
   spawnedBullet: {fileID: 0}
   HPSlider: {fileID: 4177614643766516421}
+  HPFill: {fileID: 4177614643576897743}
   mark: {fileID: 4177614642156943075}
   burningVFX: {fileID: 2273381524915388774}
   whiteFlashMat: {fileID: 2100000, guid: 4b87a34e87e1b9b40b0c3741884beeb5, type: 2}

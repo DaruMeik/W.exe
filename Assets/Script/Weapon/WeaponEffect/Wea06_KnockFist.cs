@@ -29,15 +29,49 @@ public class Wea06_KnockFist : Bullet
             if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
+                float attackModifier = 0f;
                 temp.GetStun(0.25f, false);
                 temp.rb.AddForce(dir * 9f, ForceMode2D.Impulse);
-                temp.TakeDamage(Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f));
                 if (isBurning)
-                    temp.GetBurn(6f);
+                    temp.GetBurn(2.5f);
+                if (playerStat.unseenBlade &&
+                    Vector3.Dot((temp.transform.position - (Vector3)spawnPos).normalized, new Vector3(temp.enemySprite.transform.localScale.x, 0f, 0f)) > 0)
+                {
+                    attackModifier += 50;
+                }
+                if (playerStat.critable && Random.Range(0, 100) > 90)
+                    attackModifier += 200;
+                temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
             }
-            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet")
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
             {
-                Destroy(collision.gameObject);
+                Bullet temp = collision.GetComponentInChildren<Bullet>();
+                if (temp != null)
+                {
+                    if (temp.isPushable)
+                    {
+                        collision.tag = "PlayerBullet";
+                        temp.bySelf = bySelf;
+                        temp.rb.velocity = dir * Mathf.Max(9f, temp.rb.velocity.magnitude);
+                    }
+                    else if (collision.tag == "EnemyBullet")
+                    {
+                        if (temp.isDestroyable)
+                        {
+                            if (playerStat.goodReflex)
+                            {
+                                temp.rb.velocity = -temp.rb.velocity;
+                                temp.bySelf = true;
+                                collision.tag = "PlayerBullet";
+                                temp.firstHit = true;
+                            }
+                            else
+                            {
+                                Destroy(collision.gameObject);
+                            }
+                        }
+                    }
+                }
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
@@ -56,11 +90,23 @@ public class Wea06_KnockFist : Bullet
                 PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();
                 temp.GetStun(0.25f);
                 temp.rb.AddForce(dir * 9f, ForceMode2D.Impulse);
-                temp.TakeDamage(WeaponDatabase.weaponList[ID].power);
+                temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
             }
-            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "PlayerBullet")
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
             {
-                Destroy(collision.gameObject);
+                Bullet temp = collision.GetComponentInChildren<Bullet>();
+                if (temp != null && temp.isPushable)
+                {
+                    collision.tag = "EnemyBullet";
+                    temp.bySelf = bySelf;
+                    temp.rb.velocity = dir * Mathf.Max(9f, temp.rb.velocity.magnitude);
+                }
+                else
+                if (collision.tag == "PlayerBullet")
+                {
+                    if (temp.isDestroyable)
+                        Destroy(collision.gameObject);
+                }
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {

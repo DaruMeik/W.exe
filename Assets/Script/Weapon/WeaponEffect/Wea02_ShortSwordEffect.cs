@@ -24,6 +24,8 @@ public class Wea02_ShortSwordEffect : WeaponBaseEffect
         if (bySelf)
         {
             temp.atkPerc = playerStat.atkPerc;
+            if (playerStat.BEEG)
+                instancedObj.transform.localScale *= 1.5f;
         }
         else
         {

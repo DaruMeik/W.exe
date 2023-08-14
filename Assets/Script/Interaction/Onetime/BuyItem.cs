@@ -10,13 +10,19 @@ public class BuyItem : Onetime
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private SpriteRenderer highlightRenderer;
     [SerializeField] private TextAnimation textAnim;
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        TurnOffHighlight();
+        base.OnEnable();
         textAnim.textBoxList.Clear();
         string temp = "";
         switch (itemType)
         {
+            case "StarterWeapon":
+                temp += ShopDatabase.weaponList[itemId].name + "\n" + ShopDatabase.weaponList[itemId].description;
+                itemPrice = 0;
+                spriteRenderer.sprite = ShopDatabase.weaponList[itemId].sprite;
+                highlightRenderer.sprite = ShopDatabase.weaponList[itemId].sprite;
+                break;
             case "Weapon":
                 temp += ShopDatabase.weaponList[itemId].name + "\n" + ShopDatabase.weaponList[itemId].description + "\nPrice: " + ShopDatabase.weaponList[itemId].price + "P";
                 itemPrice = ShopDatabase.weaponList[itemId].price;
@@ -42,9 +48,14 @@ public class BuyItem : Onetime
             eventBroadcast.UpdateMoneyNoti();
             switch (itemType)
             {
+                case "StarterWeapon":
+                    playerStat.currentWeapon[1] = WeaponDatabase.weaponList[ShopDatabase.weaponList[itemId].id].id;
+                    playerStat.currentAmmo[1] = WeaponDatabase.weaponList[ShopDatabase.weaponList[itemId].id].maxAmmo;
+                    eventBroadcast.UpdateWeaponSpriteNoti();
+                    break;
                 case "Weapon":
-                    playerStat.currentWeapon[playerStat.currentIndex] = WeaponDatabase.weaponList[ShopDatabase.weaponList[itemId].id].id;
-                    playerStat.currentAmmo[playerStat.currentIndex] = WeaponDatabase.weaponList[ShopDatabase.weaponList[itemId].id].maxAmmo * 3;
+                    playerStat.currentWeapon[0] = WeaponDatabase.weaponList[ShopDatabase.weaponList[itemId].id].id;
+                    playerStat.currentAmmo[0] = WeaponDatabase.weaponList[ShopDatabase.weaponList[itemId].id].maxAmmo * 3;
                     eventBroadcast.UpdateWeaponSpriteNoti();
                     break;
                 case "Upgrade":

@@ -17,6 +17,8 @@ MonoBehaviour:
   enemyType: Default
   enemyRewardWeaponID: 3
   enemyBehavior: Default
+  explosionImmunity: 0
+  poisonImmunity: 0
   enemyWeaponId: 03000000
   enemyAtkRange:
   - 5

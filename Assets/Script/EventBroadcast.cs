@@ -14,6 +14,7 @@ public class EventBroadcast : ScriptableObject
     public event GameEvent generateMap;
     public event GameEvent finishStage;
     public event GameEvent updateHP;
+    public event GameEvent healVFX;
     public event GameEvent updateLvl;
     public event GameEvent updateWeapon;
     public event GameEvent updateMoney;
@@ -21,7 +22,8 @@ public class EventBroadcast : ScriptableObject
     public event GameEvent enterUI;
     public event GameEvent exitUI;
 
-    public event GameEvent upgradePicked;
+    public event GameEvent bulletModPicked;
+
 
     public delegate void IntGameEvent(int i);
     public event IntGameEvent gainExp;
@@ -76,6 +78,11 @@ public class EventBroadcast : ScriptableObject
         if (updateHP != null)
             updateHP.Invoke();
     }
+    public void HealVFXNoti()
+    {
+        if(healVFX != null)
+            healVFX.Invoke();
+    }
     public void UpdateLvlNoti()
     {
         if (updateLvl != null)
@@ -108,10 +115,10 @@ public class EventBroadcast : ScriptableObject
     }
     
 
-    public void UpgradePickedNoti()
+    public void BulletModPickedNoti()
     {
-        if (upgradePicked != null)
-            upgradePicked.Invoke();
+        if (bulletModPicked != null)
+            bulletModPicked.Invoke();
     }
     public void GainEXPNoti(int ammount)
     {

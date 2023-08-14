@@ -34,7 +34,7 @@ public class FishingMail : MonoBehaviour
             isPickupable = true;
             rb.velocity = Vector2.zero;
         }
-        if (!flyingBack && isPickupable && PlayerControl.Instance.pInput.Player.Retrieve.WasPerformedThisFrame())
+        if (!flyingBack && isPickupable && PlayerControl.Instance.pInput.Player.Throw.IsPressed())
         {
             flyingBack = true;
         }
@@ -67,6 +67,7 @@ public class FishingMail : MonoBehaviour
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 temp.marked = true;
+                temp.markedTime = Time.time;
                 temp.mark.SetActive(true);
                 temp.TakeDamage(Mathf.FloorToInt((WeaponDatabase.fishingMail.power + playerStat.extraCardDamage) * (100 + playerStat.atkPerc) / 100f));
                 Destroy(gameObject);

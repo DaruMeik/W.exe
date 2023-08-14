@@ -17,6 +17,8 @@ MonoBehaviour:
   enemyType: Default
   enemyRewardWeaponID: 1
   enemyBehavior: Hold
+  explosionImmunity: 0
+  poisonImmunity: 0
   enemyWeaponId: 01000000
   enemyAtkRange:
   - 8
