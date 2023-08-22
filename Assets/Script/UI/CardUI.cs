@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class CardUI : MonoBehaviour
 {
+    [SerializeField] private Slider slider;
     [SerializeField] private Image cardImage;
     [SerializeField] private EventBroadcast eventBroadcast;
     [SerializeField] private PlayerStat playerStat;
@@ -19,6 +20,14 @@ public class CardUI : MonoBehaviour
     }
     private void UpdateCard()
     {
-        cardImage.enabled = playerStat.hasCard;
+        slider.value = playerStat.cardReadyPerc;
+        if(playerStat.cardReadyPerc == 100)
+        {
+            cardImage.enabled = true;
+        }
+        else
+        {
+            cardImage.enabled = false;
+        }
     }
 }

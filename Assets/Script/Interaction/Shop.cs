@@ -23,13 +23,13 @@ public class Shop : MonoBehaviour
         }
         //Roll for weapon
         items[0].itemType = "Weapon";
-        items[0].itemId = Random.Range(0, possibleId.Count);
+        items[0].itemId = possibleId[Random.Range(0, possibleId.Count)];
         possibleId.Remove(items[0].itemId);
         items[1].itemType = "Weapon";
-        items[1].itemId = Random.Range(0, possibleId.Count);
+        items[1].itemId = possibleId[Random.Range(0, possibleId.Count)];
         possibleId.Remove(items[1].itemId);
         items[2].itemType = "Weapon";
-        items[2].itemId = Random.Range(0, possibleId.Count);
+        items[2].itemId = possibleId[Random.Range(0, possibleId.Count)];
 
         //Roll for upgrade
         possibleId = new List<int>();

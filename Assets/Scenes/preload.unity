@@ -208,13 +208,15 @@ MonoBehaviour:
   - {fileID: -920806299, guid: ebc47ed9b1ed3e64e938aab30fbdd0e8, type: 3}
   - {fileID: 2133417056, guid: ebc47ed9b1ed3e64e938aab30fbdd0e8, type: 3}
   currentPos: 
-  width: 8
+  width: 10
   height: 6
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
   garageFightList:
   - Garage1
+  - Garage2
   garageMinibossList:
   - GarageKnockFist
+  - GaragePaintGun
   officeFightList: []
   randomFightList:
   - Garage1
@@ -335,6 +337,9 @@ MonoBehaviour:
   - {fileID: 1849611692696421481, guid: 9297576740f9b1a468bf86c68f9d71e1, type: 3}
   - {fileID: 5817981627404758430, guid: 1d682197df585f940930c5d3a4649f8d, type: 3}
   - {fileID: 7149695462119372226, guid: 31761113370122548ac71015cfe01cfc, type: 3}
+  - {fileID: 1095496407466012219, guid: 7096fb1f78e6d2548b231585f4d6a4e6, type: 3}
+  - {fileID: 2605219079291662522, guid: 7e57ac500cf87f842b5d779397977dcf, type: 3}
+  - {fileID: 2032625736125076450, guid: f8c39eaa9ddf69343b9a9d41b387b083, type: 3}
   weaponSprite:
   - {fileID: -786441382, guid: d3bdec1ef904d5346985fc31a237a932, type: 3}
   - {fileID: 803223617, guid: 7b1412eb009f1c74fb27a0cbbc1c85fb, type: 3}
@@ -345,6 +350,9 @@ MonoBehaviour:
   - {fileID: -1361028701, guid: 964a8b25c561b0240be7f735e89731e6, type: 3}
   - {fileID: 626057586, guid: cd5f9e876f2b6a44aa62e3f316fc8730, type: 3}
   - {fileID: -1879677287, guid: 7c37ee363685e944982226ac34a2f471, type: 3}
+  - {fileID: 1890743783, guid: 08fc4fddf18a5e145ad52a58ccba342f, type: 3}
+  - {fileID: 21300000, guid: 130179e3c0857b24b89f0e9e4529c791, type: 3}
+  - {fileID: 733947355, guid: 5adcf1fcd442f5d4b9e151b67ad3e112, type: 3}
   fishingMailObj: {fileID: 7165194877689153758, guid: 1f540717625b9d446a6c87444c4f60b3, type: 3}
   tutorialSpecialBulletObj: {fileID: 6145814789740876415, guid: fd470e1defd948a4ead23880b4fb8587, type: 3}
 --- !u!4 &644024528
@@ -499,7 +507,7 @@ MonoBehaviour:
   - {fileID: 736711416, guid: 805467fdd89c41741831552c11be116d, type: 3}
   - {fileID: -1540867640, guid: 805467fdd89c41741831552c11be116d, type: 3}
   - {fileID: -2140361776, guid: 805467fdd89c41741831552c11be116d, type: 3}
-  stageUpgradeSprite:
+  bulletModSprite:
   - {fileID: 1818494438, guid: 805467fdd89c41741831552c11be116d, type: 3}
   - {fileID: -1232743641, guid: e954c379918ca2342a8d0d428b13f76c, type: 3}
   - {fileID: -479885427, guid: e954c379918ca2342a8d0d428b13f76c, type: 3}
@@ -508,6 +516,9 @@ MonoBehaviour:
   - {fileID: -2076757719, guid: e954c379918ca2342a8d0d428b13f76c, type: 3}
   - {fileID: 1651486500, guid: e954c379918ca2342a8d0d428b13f76c, type: 3}
   - {fileID: -924529055, guid: e954c379918ca2342a8d0d428b13f76c, type: 3}
+  - {fileID: 1474761245, guid: e954c379918ca2342a8d0d428b13f76c, type: 3}
+  - {fileID: 137309321, guid: e954c379918ca2342a8d0d428b13f76c, type: 3}
+  - {fileID: 2132583046, guid: e954c379918ca2342a8d0d428b13f76c, type: 3}
 --- !u!4 &1237149745
 Transform:
   m_ObjectHideFlags: 0

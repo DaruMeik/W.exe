@@ -7,6 +7,7 @@ public class BuyItem : Onetime
     public int itemId;
     public string itemType;
     public int itemPrice;
+    public WeaponSlotSelection weaponSlotSelection;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private SpriteRenderer highlightRenderer;
     [SerializeField] private TextAnimation textAnim;
@@ -49,14 +50,9 @@ public class BuyItem : Onetime
             switch (itemType)
             {
                 case "StarterWeapon":
-                    playerStat.currentWeapon[1] = WeaponDatabase.weaponList[ShopDatabase.weaponList[itemId].id].id;
-                    playerStat.currentAmmo[1] = WeaponDatabase.weaponList[ShopDatabase.weaponList[itemId].id].maxAmmo;
-                    eventBroadcast.UpdateWeaponSpriteNoti();
-                    break;
                 case "Weapon":
-                    playerStat.currentWeapon[0] = WeaponDatabase.weaponList[ShopDatabase.weaponList[itemId].id].id;
-                    playerStat.currentAmmo[0] = WeaponDatabase.weaponList[ShopDatabase.weaponList[itemId].id].maxAmmo * 3;
-                    eventBroadcast.UpdateWeaponSpriteNoti();
+                    weaponSlotSelection.weaponID = ShopDatabase.weaponList[itemId].id;
+                    weaponSlotSelection.gameObject.SetActive(true);
                     break;
                 case "Upgrade":
                     UpgradeDatabase.levelUpgradeList[itemId].upgradeBaseEffect.ApplyEffect(playerStat);

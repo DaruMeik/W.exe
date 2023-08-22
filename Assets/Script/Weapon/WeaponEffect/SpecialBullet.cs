@@ -27,10 +27,13 @@ public class SpecialBullet : Bullet
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 float attackModifier = 0f;
-                if (playerStat.critable && Random.Range(0, 100) >= 90)
+                if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                {
                     attackModifier += 200;
+                    Instantiate(critVFX).transform.position = collision.transform.position;
+                }
                 if (isBurning)
-                    temp.GetBurn(2.5f);
+                    temp.GetBurn(1);
                 temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[0].power * (100 + atkPerc + attackModifier) / 100f)));
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))

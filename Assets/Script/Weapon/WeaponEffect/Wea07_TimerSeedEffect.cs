@@ -5,7 +5,7 @@ using UnityEngine;
 public class Wea07_TimerSeedEffect : WeaponBaseEffect
 {
     private int weaponId = 7;
-    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj)
+    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, Rigidbody2D userRigid, ref GameObject spawnObj)
     {
         startPoint.z = 0;
         endPoint.z = 0;
@@ -19,13 +19,18 @@ public class Wea07_TimerSeedEffect : WeaponBaseEffect
         temp.bySelf = bySelf;
         if (bySelf)
         {
-            instancedObj.transform.position = endPoint;
+            float HPModifier = 0f;
+            if (playerStat.sturdyBuild)
+            {
+                HPModifier += 100;
+            }
+            temp.HP = Mathf.CeilToInt(25 * (100 + HPModifier)/100f);
+            instancedObj.transform.position = startPoint - new Vector3(0f, 0.5f, 0f);
             temp.atkPerc = playerStat.atkPerc;
-            if (playerStat.BEEG)
-                instancedObj.transform.localScale *= 1.5f;
         }
         else
         {
+            temp.HP = 25;
             instancedObj.transform.position = endPoint + Random.onUnitSphere * 0.5f;
             temp.atkPerc = 0;
         }

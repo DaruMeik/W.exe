@@ -32,22 +32,40 @@ public class ExplosiveBarrel : DestroyableObstacle
                 if (enemy.currentState != enemy.deadState)
                 {
                     enemy.GetStun(1f, false);
-                    enemy.GetBurn(2.5f);
+                    enemy.GetBurn(2);
+                    if (enemy.beingControlledBy != null)
+                    {
+                        enemy.rb.isKinematic = false;
+                        enemy.transform.parent = null;
+                        Destroy(enemy.beingControlledBy);
+                        enemy.beingControlledBy = null;
+                        enemy.animator.SetTrigger("Stop");
+                        enemy.GetStun(2f, false);
+                    }
                     enemy.rb.AddForce((enemy.transform.position - gameObject.transform.position).normalized * 10f, ForceMode2D.Impulse);
-                    enemy.TakeDamage(Mathf.Max(0,Mathf.FloorToInt(50*(100-enemy.enemyStat.explosionImmunity)/100f)));
+                    enemy.TakeDamage(Mathf.Max(0,Mathf.FloorToInt(25*(100-enemy.enemyStat.explosionImmunity)/100f)));
                 }
             }
             else if (obj.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
             {
                 PlayerStateManager player = obj.GetComponent<PlayerStateManager>();
                 player.GetStun(1f);
-                player.GetBurn(2.5f);
-                player.TakeDamage(25);
+                player.GetBurn(2);
+                player.TakeDamage(20);
+                if(player.beingControlledBy != null)
+                {
+                    player.rb.isKinematic = false;
+                    player.transform.parent = null;
+                    Destroy(player.beingControlledBy);
+                    player.beingControlledBy = null;
+                }
                 player.rb.AddForce((player.transform.position - gameObject.transform.position).normalized * 10f, ForceMode2D.Impulse);
             }
             else if (obj.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
-                obj.GetComponent<DestroyableObstacle>().TakeDamage(100);
+                DestroyableObstacle temp = obj.GetComponent<DestroyableObstacle>();
+                if(temp!=null)
+                    temp.TakeDamage(100);
             }
         }
     }
@@ -69,7 +87,9 @@ public class ExplosiveBarrel : DestroyableObstacle
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
         {
-            collision.gameObject.GetComponent<DestroyableObstacle>().TakeDamage(100);
+            DestroyableObstacle temp = collision.gameObject.GetComponent<DestroyableObstacle>();
+            if(temp != null)
+                temp.TakeDamage(100);
         }
         Explode();
     }
@@ -91,7 +111,9 @@ public class ExplosiveBarrel : DestroyableObstacle
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
         {
-            collision.gameObject.GetComponent<DestroyableObstacle>().TakeDamage(100);
+            DestroyableObstacle temp = collision.gameObject.GetComponent<DestroyableObstacle>();
+            if(temp != null)
+                temp.TakeDamage(100);
         }
         Explode();
     }

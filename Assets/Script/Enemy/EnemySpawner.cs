@@ -82,7 +82,11 @@ public class EnemySpawner : MonoBehaviour
                     enemyIDList.Add(new int[] { Random.Range(0, specialEnemyObj.Length), 3 });
                     break;
             }
-            spawnAmount = 1;
+            spawnAmount = 2;
+        }
+        else if (MapGenerator.Instance.currentPos[0] <= 2)
+        {
+            spawnAmount = 2 + spawnWave;
         }
         else
         {
@@ -143,7 +147,7 @@ public class EnemySpawner : MonoBehaviour
             enemyStateManager.target = target.transform;
             enemyStateManager.patrolPath = patrolPos;
         }
-        nextSpawnTime = Time.time + 6f;
+        nextSpawnTime = Time.time + 12f;
     }
 
     private void GenerateEnemyID()
@@ -195,6 +199,12 @@ public class EnemySpawner : MonoBehaviour
                         case 1:
                             i = new int[] { Random.Range(0, meleeEnemyObj.Length), 1 };
                             break;
+                        case 2:
+                            i = new int[] { Random.Range(0, supportEnemyObj.Length), 2 };
+                            break;
+                        case 3:
+                            i = new int[] { Random.Range(0, specialEnemyObj.Length), 3 };
+                            break;
                     }
                     break;
                 default:
@@ -243,38 +253,31 @@ public class EnemySpawner : MonoBehaviour
             else
             {
                 int temp = Random.Range(0, 100);
-                if (playerStat.currentHP < playerStat.maxHP * 10 / 100f)
+                if(playerStat.currentHP < playerStat.maxHP * 25 / 100f)
                 {
-                    Instantiate(rewards[1]);
-                }
-                else if(playerStat.currentHP < playerStat.maxHP * 25 / 100f)
-                {
-                    if(temp >= 80)
-                        Instantiate(rewards[0]);
-                    else
-                        Instantiate(rewards[1]);
+                    Instantiate(rewards[1]).transform.position = target.transform.position;
                 }
                 else if (playerStat.currentHP < playerStat.maxHP * 75 / 100f)
                 {
 
-                    if (temp >= 50)
-                        Instantiate(rewards[0]);
+                    if (temp >= 40)
+                        Instantiate(rewards[0]).transform.position = target.transform.position;
                     else
-                        Instantiate(rewards[1]);
+                        Instantiate(rewards[1]).transform.position = target.transform.position;
                 }
                 else if (playerStat.currentHP < playerStat.maxHP)
                 {
                     if (temp >= 40)
-                        Instantiate(rewards[0]);
+                        Instantiate(rewards[0]).transform.position = target.transform.position;
                     else
-                        Instantiate(rewards[2]);
+                        Instantiate(rewards[2]).transform.position = target.transform.position;
                 }
                 else
                 {
                     if (temp >= 80)
-                        Instantiate(rewards[0]);
+                        Instantiate(rewards[0]).transform.position = target.transform.position;
                     else
-                        Instantiate(rewards[2]);
+                        Instantiate(rewards[2]).transform.position = target.transform.position;
                 }
                 eventBroadcast.AllDeadNoti();
                 eventBroadcast.GainEXPNoti(1);

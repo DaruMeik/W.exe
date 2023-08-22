@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 using UnityEngine.UI;
+using TMPro;
 
 public class EnemyStateManager : MonoBehaviour
 {
@@ -27,9 +28,15 @@ public class EnemyStateManager : MonoBehaviour
     public bool isInvincible;
     public bool isPossessed;
     public bool isExploding;
+    public int burnStack = 0;
     public float burnTime = 0;
     public float burnTickTime = 0;
-    public float markedTime = 0;
+    public int poisonStack = 0;
+    public float poisonTime = 0;
+    public float poisonTickTime = 0;
+    public float speedModifier = 0;
+    private IEnumerator speedCoroutine;
+    public GameObject beingControlledBy;
 
     [Header("Enemy Skill")]
     public Transform enemyShootingPoint;
@@ -40,8 +47,13 @@ public class EnemyStateManager : MonoBehaviour
     [Header("EnemyUI")]
     public Slider HPSlider;
     public Image HPFill;
+    public TextMeshProUGUI statusText;
     public GameObject mark;
     public GameObject burningVFX;
+    public GameObject poisonVFX;
+    public GameObject healingVFX;
+    public GameObject speedUpVFX;
+    public GameObject speedDownVFX;
 
     [Header("Sprite Effect")]
     public Material whiteFlashMat;
@@ -84,9 +96,11 @@ public class EnemyStateManager : MonoBehaviour
             isGolden = false;
         }
         spawnTime = Time.time;
+        eventBroadcast.sendingCard += StopBug;
     }
     protected virtual void OnDisable()
     {
+        eventBroadcast.sendingCard -= StopBug;
         StopCoroutine(updatePathCourotine);
     }
     protected virtual void Start()
@@ -97,6 +111,10 @@ public class EnemyStateManager : MonoBehaviour
         HPSlider.value = HPSlider.maxValue;
         marked = false;
         burningVFX.SetActive(false);
+        healingVFX.SetActive(false);
+        speedUpVFX.SetActive(false);
+        speedUpVFX.SetActive(false);
+        speedModifier = 0;
         switch (enemyStat.enemyBehavior)
         {
             case "Patrol":
@@ -117,7 +135,6 @@ public class EnemyStateManager : MonoBehaviour
         defaultMat = enemySprite.material;
         damagedAnimationTimer = 0f;
         flashWhiteTimer = 0f;
-        markedTime = 0f;
         StartCoroutine(updatePathCourotine);
         SwitchState(spawnState);
     }
@@ -143,32 +160,51 @@ public class EnemyStateManager : MonoBehaviour
         {
             enemySprite.material = defaultMat;
         }
+
+        #region status update
+        string status = "";
         if (burnTime > Time.time)
         {
+            if (status != "")
+                status += " ";
+            status += "<sprite=\"StatusEffect\" index=0> x" + burnStack.ToString();
             if (Time.time > burnTickTime)
             {
-                Debug.Log(Mathf.Max(1, Mathf.FloorToInt(enemyStat.enemyMaxHP / 50f)));
-                TakeDamage(Mathf.Max(1, Mathf.FloorToInt(enemyStat.enemyMaxHP / 50f)));
-                burnTickTime = Time.time + 0.25f;
+                TakeDamage(burnStack);
+                burnTickTime = Time.time + 0.5f;
             }
         }
         else if (burningVFX.activeSelf)
         {
+            burnStack = 0;
             burningVFX.SetActive(false);
         }
-        if (Time.time - markedTime >= 10f && marked && !isPossessed && currentState != deadState)
+        if (poisonTime > Time.time)
         {
-            marked = false;
-            mark.SetActive(false);
-            WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat, ref spawnedBullet);
+            if(status != "")
+                status += " ";
+            status += "<sprite=\"StatusEffect\" index=1> x" + poisonStack.ToString();
+            if (Time.time > poisonTickTime)
+            {
+                Debug.Log(poisonStack);
+                TakeDamage(poisonStack);
+                poisonTickTime = Time.time + 0.2f;
+            }
         }
-        if(isGolden && Time.time - spawnTime > 15f && currentState != deadState)
+        else if (poisonVFX.activeSelf)
+        {
+            poisonStack = 0;
+            poisonVFX.SetActive(false);
+        }
+        statusText.text = status;
+        #endregion
+
+        if (isGolden && Time.time - spawnTime > 15f && currentState != deadState)
         {
             if (marked)
             {
-                marked = false;
-                mark.SetActive(false);
-                WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat, ref spawnedBullet);
+                StopBug();
+                WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat, rb, ref spawnedBullet);
             }
             TakeDamage(99999);
         }
@@ -199,17 +235,63 @@ public class EnemyStateManager : MonoBehaviour
             SwitchState(deadState);
         }
     }
+    public void StopBug()
+    {
+        marked = false;
+        mark.SetActive(false);
+    }
     #region status effect
     public void GetStun(float duration, bool resetAtk)
     {
+        if (currentState == deadState)
+            return;
         stunState.stunDuration = duration;
         stunState.resetAtk = resetAtk;
         SwitchState(stunState);
     }
-    public void GetBurn(float duration)
+    public void GetBurn(int stack = 1)
     {
-        burnTime = Time.time + duration;
+        burnStack = Mathf.Min(10, burnStack + stack);
+        burnTime = Time.time + 5f;
         burningVFX.SetActive(true);
+    }
+    public void GetPoison(int stack = 1)
+    {
+        if(Random.Range(0,100) > enemyStat.poisonImmunity)
+        {
+            poisonStack = Mathf.Min(5, poisonStack + stack);
+            poisonTime = Time.time + 2.5f;
+            poisonVFX.SetActive(false);
+            poisonVFX.SetActive(true);
+        }
+    }
+    public void GetSpeedChange(float ammount, float duration)
+    {
+        if(speedCoroutine != null)
+            StopCoroutine(speedCoroutine);
+        speedCoroutine = SpeedChange(ammount, duration);
+        StartCoroutine(speedCoroutine);
+    }
+    IEnumerator SpeedChange(float ammount, float duration)
+    {
+        if(ammount > 0)
+        {
+            speedUpVFX.SetActive(false);
+            speedDownVFX.SetActive(false);
+            speedUpVFX.SetActive(true);
+            speedModifier = ammount;
+        }
+        else
+        {
+            speedUpVFX.SetActive(false);
+            speedDownVFX.SetActive(false);
+            speedDownVFX.SetActive(true);
+            speedModifier = ammount;
+        }
+        yield return new WaitForSeconds(duration);
+        speedUpVFX.SetActive(false);
+        speedDownVFX.SetActive(false);
+        speedModifier = 0;
     }
     #endregion
     public void UsingSkill()
@@ -271,10 +353,10 @@ public class EnemyStateManager : MonoBehaviour
     {
         if (marked && !isPossessed)
         {
-            WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat, ref spawnedBullet);
+            WeaponDatabase.fishingMail.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, enemyShootingPoint.position, false, playerStat, rb, ref spawnedBullet);
         }
         eventBroadcast.EnemyKilledNoti();
-        if(isPossessed && isGolden)
+        if (isPossessed && isGolden)
         {
             playerStat.money += 50;
             eventBroadcast.UpdateMoneyNoti();
@@ -294,7 +376,7 @@ public class EnemyStateManager : MonoBehaviour
         {
             Weapon weapon = WeaponDatabase.weaponList[enemyStat.enemyWeaponId[0]];
             weapon.weaponBaseEffect.weaponPoint = enemyShootingPoint;
-            weapon.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, (Vector2)aimPoint + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, false, null, ref spawnedBullet);
+            weapon.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, (Vector2)aimPoint + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, false, null, rb, ref spawnedBullet);
             yield return new WaitForSeconds(4f / weapon.atkSpd);
         }
     }
@@ -312,7 +394,7 @@ public class EnemyStateManager : MonoBehaviour
                         seeker.StartPath(scanPoint.position, scanPoint.position, OnPathComplete);
                         break;
                     case "Melee":
-                        seeker.StartPath(scanPoint.position, target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0] * 0.5f, OnPathComplete);
+                        seeker.StartPath(scanPoint.position, target.position + Random.insideUnitSphere * enemyStat.enemyAtkRange[0] * 0.25f, OnPathComplete);
                         break;
                     case "Hold":
                         temp = target.position + Random.onUnitSphere * enemyStat.enemyAtkRange[0] * 0.5f;

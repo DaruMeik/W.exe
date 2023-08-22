@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bac29c49779e624997d7a74842fdb73, type: 3}
   m_Name: PlayerStat
   m_EditorClassIdentifier: 
-  currentHP: 100
+  currentHP: 150
   currentIndex: 0
-  currentWeapon: 0000000000000000
+  currentWeapon: 030000000a000000
   currentAmmo: ffffffffffffffff
-  hasCard: 1
+  cardReadyPerc: 100
   level: 1
   exp: 0
-  defaultMaxHP: 100
+  defaultMaxHP: 150
   defaultPlayerSpeed: 5
-  defaultMaxDash: 2
+  defaultMaxDash: 1
   defaultShockWaveRange: 2.5
   defaultShockWaveStunTime: 0.5
   defaultMoney: 0
@@ -30,9 +30,9 @@ MonoBehaviour:
   defaultDefPerc: 0
   defaultWeapon: 0
   defaultWeaponAtkUpPerc: 0
-  maxHP: 100
+  maxHP: 150
   playerSpeed: 5
-  maxDash: 2
+  maxDash: 1
   shockWaveRange: 2.5
   shockWaveStunTime: 0.5
   money: 0
@@ -48,9 +48,10 @@ MonoBehaviour:
   fasterCharge: 0
   unseenBlade: 0
   BEEG: 0
-  critable: 0
+  critable: 1
   goodReflex: 0
   sharpBullet: 0
+  unsellableWeapon: 000000000600000009000000
   levelUpgradeRegister: 
-  stageUpgradeRegister: 
+  bulletModRegister: 
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4397c174e2ab84d44bf4d5796516bc07, type: 3}
   m_Name: Ene06_KnockFist
   m_EditorClassIdentifier: 
-  enemyMaxHP: 300
+  enemyMaxHP: 350
   enemyMovementSpeed: 4.25
   enemyType: Miniboss
   enemyRewardWeaponID: 6

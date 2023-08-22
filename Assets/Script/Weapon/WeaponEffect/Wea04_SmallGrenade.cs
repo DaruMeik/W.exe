@@ -32,7 +32,6 @@ public class Wea04_SmallGrenade : Bullet
     IEnumerator WaitForDestroy()
     {
         rb.velocity = Vector3.zero;
-        rb.MovePosition(endPoint);
         yield return new WaitForSeconds(0.1f);
         theBomb.SetActive(false);
         col.enabled = true;
@@ -43,7 +42,7 @@ public class Wea04_SmallGrenade : Bullet
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!ready || collision.gameObject.layer == LayerMask.NameToLayer("Bullet") || collision.tag == "Low")
+        if (!ready || collision.tag == "Low")
             return;
         if (bySelf && collision.gameObject.layer != LayerMask.NameToLayer("PlayerHurtBox"))
         {
@@ -52,11 +51,35 @@ public class Wea04_SmallGrenade : Bullet
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 float attackModifier = 0f;
-                if (playerStat.critable && Random.Range(0, 100) >= 90)
+                if (ID == playerStat.currentWeapon[0])
+                    attackModifier += playerStat.defaultWeaponAtkUpPerc;
+                if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                {
                     attackModifier += 200;
+                    Instantiate(critVFX).transform.position = collision.transform.position;
+                }
                 if (isBurning)
-                    temp.GetBurn(2.5f);
+                    temp.GetBurn(1);
                 temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
+            }
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet")
+            {
+                Bullet temp = collision.GetComponentInParent<Bullet>();
+                if (temp != null)
+                {
+                    if (temp.HP > 0)
+                    {
+                        float attackModifier = 0f;
+                        if (ID == playerStat.currentWeapon[0])
+                            attackModifier += playerStat.defaultWeaponAtkUpPerc;
+                        if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                        {
+                            attackModifier += 200;
+                            Instantiate(critVFX).transform.position = collision.transform.position;
+                        }
+                        temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
+                    }
+                }
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
@@ -72,6 +95,17 @@ public class Wea04_SmallGrenade : Bullet
             {
                 PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();
                 temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+            }
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "PlayerBullet")
+            {
+                Bullet temp = collision.GetComponentInParent<Bullet>();
+                if (temp != null)
+                {
+                    if (temp.HP > 0)
+                    {
+                        temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+                    }
+                }
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {

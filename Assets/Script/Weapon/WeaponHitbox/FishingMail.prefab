@@ -128,6 +128,7 @@ MonoBehaviour:
   playerStat: {fileID: 0}
   player: {fileID: 0}
   shockWave: {fileID: 5243595182394385085, guid: 164af534685792d46a7fdea689a14fbe, type: 3}
+  eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
 --- !u!61 &5482076931832912258
 BoxCollider2D:
   m_ObjectHideFlags: 0

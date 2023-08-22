@@ -19,7 +19,7 @@ public class StartShop : MonoBehaviour
         }
         //Roll for weapon
         item.itemType = "StarterWeapon";
-        item.itemId = Random.Range(0, possibleId.Count);
+        item.itemId = possibleId[Random.Range(0, possibleId.Count)];
 
         item.gameObject.SetActive(true);
     }

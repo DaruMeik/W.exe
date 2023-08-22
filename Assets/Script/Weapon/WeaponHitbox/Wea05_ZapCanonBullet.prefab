@@ -144,11 +144,15 @@ MonoBehaviour:
   ready: 0
   atkPerc: 0
   firstHit: 1
+  HP: 0
+  damagedAnimationTimer: 0
   isDestroyable: 0
   isBlockable: 1
+  isPushable: 0
   bulletSprites:
   - {fileID: 5018115745439234533}
   playerStat: {fileID: 11400000, guid: 8a107fd139e91684d9ec2c13774160e6, type: 2}
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
+  critVFX: {fileID: 510411677040249560, guid: f0e26a66c7eee4240bb7ae0fe8d4eccb, type: 3}
   isBurning: 0
   chargeAmount: 0

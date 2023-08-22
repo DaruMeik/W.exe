@@ -50,7 +50,9 @@ public class PoisonBarrel : DestroyableObstacle
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
         {
-            collision.gameObject.GetComponent<DestroyableObstacle>().TakeDamage(100);
+            DestroyableObstacle temp = collision.gameObject.GetComponent<DestroyableObstacle>();
+            if (temp != null)
+                temp.TakeDamage(100);
         }
         ReleaseToxic();
     }
@@ -72,7 +74,9 @@ public class PoisonBarrel : DestroyableObstacle
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
         {
-            collision.gameObject.GetComponent<DestroyableObstacle>().TakeDamage(100);
+            DestroyableObstacle temp = collision.gameObject.GetComponent<DestroyableObstacle>();
+            if (temp != null)
+                temp.TakeDamage(100);
         }
         ReleaseToxic();
     }

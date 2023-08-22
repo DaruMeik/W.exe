@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerPossessState : PlayerBaseState
 {
     public EnemyStateManager enemy;
+    public int index;
     private PlayerStateManager playerStateManager;
     public override void EnterState(PlayerStateManager player)
     {
@@ -27,27 +28,72 @@ public class PlayerPossessState : PlayerBaseState
         player.isInvincible = false;
         GameObject.Instantiate(player.shockWave, player.transform);
         player.TakeDamage(-Mathf.FloorToInt(player.playerStat.maxHP * (5 * (100 + player.playerStat.extraPossessHealingPerc) / 100f) / 100f));
-        player.playerStat.UpdateCard(true);
+        player.playerStat.cardReadyPerc = 100;
+        player.eventBroadcast.UpdateCardUINoti();
     }
 
     public void Teleport()
     {
-        switch (enemy.enemyStat.enemyType)
+        if (!playerStateManager.playerStat.wildCard)
         {
-            case "Miniboss":
-                playerStateManager.playerStat.defaultWeapon = enemy.enemyStat.enemyRewardWeaponID;
-                playerStateManager.playerStat.currentWeapon[0] = enemy.enemyStat.enemyRewardWeaponID;
-                playerStateManager.playerStat.currentAmmo[0] = -1;
-                break;
-            default:
-                playerStateManager.playerStat.currentWeapon[1] = enemy.enemyStat.enemyRewardWeaponID;
-                playerStateManager.playerStat.currentAmmo[1]
-                    = Mathf.CeilToInt(WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[1]].maxAmmo
-                    * (100 + playerStateManager.playerStat.extraAmmoPerc) / 100f);
-                break;
+            switch (enemy.enemyStat.enemyType)
+            {
+                case "Miniboss":
+                    playerStateManager.playerStat.defaultWeapon = enemy.enemyStat.enemyRewardWeaponID;
+                    playerStateManager.playerStat.currentWeapon[index] = enemy.enemyStat.enemyRewardWeaponID;
+                    playerStateManager.playerStat.currentAmmo[index] = -1;
+                    break;
+                default:
+                    playerStateManager.playerStat.currentWeapon[index] = enemy.enemyStat.enemyRewardWeaponID;
+                    float ammoModifier = 0f;
+                    switch (WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[index]].weaponType)
+                    {
+                        case "Gun":
+                            if (playerStateManager.playerStat.fireBullet)
+                            {
+                                ammoModifier += 200;
+                            }
+                            else if (playerStateManager.playerStat.sharpBullet)
+                            {
+                                ammoModifier += 200;
+                            }
+                            break;
+                        case "Melee":
+                            if (playerStateManager.playerStat.unseenBlade)
+                            {
+                                ammoModifier += 200;
+                            }
+                            if (playerStateManager.playerStat.reflectSword)
+                            {
+                                ammoModifier += 200;
+                            }
+                            break;
+                        case "Charge":
+                            if (playerStateManager.playerStat.fasterCharge)
+                            {
+                                ammoModifier += 200;
+                            }
+                            break;
+                        case "Special":
+                            if (playerStateManager.playerStat.sturdyBuild)
+                            {
+                                ammoModifier += 200;
+                            }
+                            if (playerStateManager.playerStat.goldBuild)
+                            {
+                                ammoModifier += 200;
+                            }
+                            break;
+                    }
+                    playerStateManager.playerStat.currentAmmo[index]
+                        = Mathf.CeilToInt(WeaponDatabase.weaponList[playerStateManager.playerStat.currentWeapon[index]].maxAmmo
+                        * (100 + playerStateManager.playerStat.extraAmmoPerc + ammoModifier) / 100f);
+                    break;
+            }
+            playerStateManager.eventBroadcast.UpdateWeaponNoti();
+            playerStateManager.UpdateWeaponSprite();
         }
-        playerStateManager.eventBroadcast.UpdateWeaponNoti();
-        playerStateManager.UpdateWeaponSprite();
+
         playerStateManager.playerSprites[1].enabled = true;
         playerStateManager.weaponSprite.enabled = true;
         playerStateManager.transform.position = enemy.transform.position;

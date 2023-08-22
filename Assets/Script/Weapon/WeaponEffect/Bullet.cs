@@ -12,6 +12,8 @@ public class Bullet : MonoBehaviour
     public bool ready = false;
     public int atkPerc;
     public bool firstHit = true;
+    public int HP = 0;
+    public float damagedAnimationTimer = 0;
     public bool isDestroyable;
     public bool isBlockable;
     public bool isPushable;
@@ -19,8 +21,12 @@ public class Bullet : MonoBehaviour
     [SerializeField] public PlayerStat playerStat;
     [SerializeField] public EventBroadcast eventBroadcast;
 
+    [Header("VFX")]
+    public GameObject critVFX;
+
     // Status effect
     public bool isBurning = false;
+    public bool isCrit = false;
     protected virtual void OnEnable()
     {
         ready = false;
@@ -31,12 +37,20 @@ public class Bullet : MonoBehaviour
     {
         if (bySelf )
         {
-            if(playerStat.burningBullet && Random.Range(0, 100) >= 75)
+            if(playerStat.fireBullet && WeaponDatabase.weaponList[ID].weaponType == "Gun" && Random.Range(0, 100) >= 75)
             {
                 isBurning = true;
                 foreach (SpriteRenderer bulletSprite in bulletSprites)
                 {
                     bulletSprite.color = Color.red;
+                }
+            }
+            else if (playerStat.critableGun && WeaponDatabase.weaponList[ID].weaponType == "Gun" && Random.Range(0, 100) >= 90)
+            {
+                isCrit = true;
+                foreach (SpriteRenderer bulletSprite in bulletSprites)
+                {
+                    bulletSprite.color = Color.yellow;
                 }
             }
             else
@@ -62,6 +76,22 @@ public class Bullet : MonoBehaviour
     protected virtual void Update()
     {
     }
+
+    public virtual void TakeDamage(int damage)
+    {
+        Debug.Log("OUch");
+        HP = Mathf.Max(0, HP - damage);
+        damagedAnimationTimer = Time.time;
+        if (HP <= 0)
+        {
+            if (playerStat.goldBuild)
+            {
+                playerStat.money += 2;
+                eventBroadcast.UpdateMoneyNoti();
+            }
+            Destroy(gameObject);
+        }
+    }
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (bySelf && collision.gameObject.layer != LayerMask.NameToLayer("PlayerHurtBox"))
@@ -71,11 +101,41 @@ public class Bullet : MonoBehaviour
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 float attackModifier = 0f;
-                if (playerStat.critable && Random.Range(0,100) >= 90)
+                if (ID == playerStat.currentWeapon[0])
+                    attackModifier += playerStat.defaultWeaponAtkUpPerc;
+                if (isCrit)
+                {
                     attackModifier += 200;
+                    Instantiate(critVFX).transform.position = collision.transform.position;
+                }
                 if(isBurning)
-                    temp.GetBurn(2.5f);
+                    temp.GetBurn(1);
                 temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
+            }
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet")
+            {
+                Bullet temp = collision.GetComponentInParent<Bullet>();
+                Debug.Log(temp);
+                if(temp != null)
+                {
+                    if (temp.HP > 0)
+                    {
+                        float attackModifier = 0f;
+                        if (ID == playerStat.currentWeapon[0])
+                            attackModifier += playerStat.defaultWeaponAtkUpPerc;
+                        if (isCrit)
+                        {
+                            attackModifier += 200;
+                            Instantiate(critVFX).transform.position = collision.transform.position;
+                        }
+                        temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
+                    }
+                    else
+                    {
+                        firstHit = true;
+                        return;
+                    }
+                }
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
@@ -88,6 +148,7 @@ public class Bullet : MonoBehaviour
                 firstHit = true;
                 return;
             }
+            Debug.Log(collision.name);
             Destroy(gameObject);
         }
         else if (!bySelf && collision.gameObject.layer != LayerMask.NameToLayer("EnemyHurtBox"))
@@ -98,12 +159,29 @@ public class Bullet : MonoBehaviour
                 PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();
                 temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
             }
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "PlayerBullet")
+            {
+                Bullet temp = collision.GetComponentInParent<Bullet>();
+                if (temp != null)
+                {
+                    if (temp.HP > 0)
+                    {
+                        temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+                    }
+                    else
+                    {
+                        firstHit = true;
+                        return;
+                    }
+                }
+            }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
                 DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
                 if (temp != null)
                     temp.TakeDamage(Mathf.Max(0,Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
             }
+            Debug.Log(collision.name);
             Destroy(gameObject);
         }
     }

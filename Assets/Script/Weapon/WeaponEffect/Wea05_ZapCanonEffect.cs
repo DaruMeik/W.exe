@@ -6,7 +6,7 @@ public class Wea05_ZapCanonEffect : WeaponBaseEffect
 {
     private int weaponId = 5;
     float speed = 20f;
-    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj)
+    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, Rigidbody2D userRigid, ref GameObject spawnObj)
     {
         startPoint.z = 0;
         endPoint.z = 0;
@@ -49,7 +49,7 @@ public class Wea05_ZapCanonEffect : WeaponBaseEffect
         {
             temp.rb.velocity = (endPoint - startPoint).normalized * speed;
             temp.atkPerc = playerStat.atkPerc;
-            if (playerStat.BEEG)
+            if (playerStat.BEEGBomb)
                 temp.gameObject.transform.localScale *= 1.5f;
         }
         else

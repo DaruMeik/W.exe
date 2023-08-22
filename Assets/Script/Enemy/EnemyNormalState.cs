@@ -26,11 +26,11 @@ public class EnemyNormalState : EnemyBaseState
             Vector2 moveDir = ((Vector2)enemy.path.vectorPath[enemy.currentWayPoint] - enemy.rb.position).normalized;
             if(enemy.enemyStat.enemyBehavior == "Patrol" && enemy.provoked)
             {
-                enemy.rb.velocity = moveDir * enemy.enemyStat.enemyMovementSpeed * 2f;
+                enemy.rb.velocity = moveDir * enemy.enemyStat.enemyMovementSpeed * 2f * (100+enemy.speedModifier)/100f;
             }
             else
             {
-                enemy.rb.velocity = moveDir * enemy.enemyStat.enemyMovementSpeed;
+                enemy.rb.velocity = moveDir * enemy.enemyStat.enemyMovementSpeed * (100 + enemy.speedModifier) / 100f;
             }
             if (moveDir.x > 0.1f)
             {
@@ -46,7 +46,8 @@ public class EnemyNormalState : EnemyBaseState
 
             if (distanceToTarget < enemy.enemyStat.enemyAtkRange[0] && Time.time > enemy.nextTimeToUseSkill && enemy.provoked)
             {
-                if (!enemy.enemyStat.requireLOS[0] || (enemy.enemyStat.requireLOS[0] && !Physics2D.Linecast(enemy.scanPoint.position, enemy.target.position, LayerMask.GetMask("Wall"))))
+                if (!enemy.enemyStat.requireLOS[0] || 
+                    (enemy.enemyStat.requireLOS[0] && !Physics2D.CircleCast(enemy.enemyShootingPoint.position, 0.25f, (enemy.target.position - enemy.enemyShootingPoint.position).normalized, (enemy.target.position - enemy.enemyShootingPoint.position).magnitude, LayerMask.GetMask("Wall"))))
                 {
                     enemy.skillState.fixedTarget = null;
                     enemy.SwitchState(enemy.skillState);

@@ -16,7 +16,7 @@ public class Wea05_ZapCanon : Bullet
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!ready || !firstHit || collision.gameObject.layer == LayerMask.NameToLayer("Bullet") || collision.tag == "Low")
+        if (!ready || !firstHit || (bySelf && collision.tag == "PlayerBullet") || (!bySelf && collision.tag == "EnemyBullet") || collision.tag == "Low")
             return;
         if (bySelf && collision.gameObject.layer != LayerMask.NameToLayer("PlayerHurtBox"))
         {
@@ -25,12 +25,41 @@ public class Wea05_ZapCanon : Bullet
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 float attackModifier = 0;
-                collision.gameObject.GetComponent<EnemyStateManager>().GetStun(0.5f * (100 + 2 * chargeAmount) / 100f, false);
+                temp.GetStun(0.5f * (100 + 1.25f * chargeAmount) / 100f, false);
                 if (isBurning)
-                    temp.GetBurn(2.5f);
-                if (playerStat.critable && Random.Range(0, 100) >= 90)
+                    temp.GetBurn(1);
+                if (ID == playerStat.currentWeapon[0])
+                    attackModifier += playerStat.defaultWeaponAtkUpPerc;
+                if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                {
                     attackModifier += 200;
+                    Instantiate(critVFX).transform.position = collision.transform.position;
+                }
                 temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f * (100 + 3 * chargeAmount) / 100f)));
+            }
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet")
+            {
+                Bullet temp = collision.GetComponentInParent<Bullet>();
+                if (temp != null)
+                {
+                    if (temp.HP > 0)
+                    {
+                        float attackModifier = 0f;
+                        if (ID == playerStat.currentWeapon[0])
+                            attackModifier += playerStat.defaultWeaponAtkUpPerc;
+                        if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                        {
+                            attackModifier += 200;
+                            Instantiate(critVFX).transform.position = collision.transform.position;
+                        }
+                        temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
+                    }
+                    else
+                    {
+                        firstHit = true;
+                        return;
+                    }
+                }
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
@@ -43,6 +72,10 @@ public class Wea05_ZapCanon : Bullet
                 firstHit = true;
                 return;
             }
+            else
+            {
+                Destroy(gameObject);
+            }
             if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
             {
                 Destroy(gameObject);
@@ -54,8 +87,24 @@ public class Wea05_ZapCanon : Bullet
             if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
             {
                 PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();
-                collision.gameObject.GetComponent<PlayerStateManager>().GetStun(0.5f * (100 + 1.5f * chargeAmount) / 100f);
+                temp.GetStun(0.5f * (100 + 1.25f*chargeAmount) / 100f);
                 temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f * (100 + 2 * chargeAmount) / 100f)));
+            }
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "PlayerBullet")
+            {
+                Bullet temp = collision.GetComponentInParent<Bullet>();
+                if (temp != null)
+                {
+                    if (temp.HP > 0)
+                    {
+                        temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+                    }
+                    else
+                    {
+                        firstHit = true;
+                        return;
+                    }
+                }
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {

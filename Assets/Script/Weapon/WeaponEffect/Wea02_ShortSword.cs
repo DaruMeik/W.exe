@@ -8,11 +8,11 @@ public class Wea02_ShortSword : Bullet
     {
         if (!ready)
             return;
-        if(Time.time - spawnTime > 0.1f)
+        if (Time.time - spawnTime > 0.1f)
         {
             Destroy(gameObject);
         }
-        
+
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
@@ -24,37 +24,61 @@ public class Wea02_ShortSword : Bullet
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 float attackModifier = 0f;
+                if (ID == playerStat.currentWeapon[0])
+                    attackModifier += playerStat.defaultWeaponAtkUpPerc;
                 if (isBurning)
-                    temp.GetBurn(2.5f);
-                if(playerStat.unseenBlade && 
-                    Vector3.Dot((temp.transform.position - (Vector3)spawnPos).normalized, new Vector3(temp.enemySprite.transform.localScale.x,0f,0f)) > 0)
+                    temp.GetBurn(1);
+                if (playerStat.unseenBlade &&
+                    Vector3.Dot((temp.transform.position - (Vector3)spawnPos).normalized, new Vector3(temp.enemySprite.transform.localScale.x, 0f, 0f)) > 0)
                 {
                     attackModifier += 50;
                 }
-                if (playerStat.critable && Random.Range(0, 100) >= 90)
+                if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                {
                     attackModifier += 200;
+                    Instantiate(critVFX).transform.position = collision.transform.position;
+                }
+                temp.GetStun(0.1f, false);
                 temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
             }
-            else if(collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet" && collision.GetComponent<Bullet>().isDestroyable)
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet")
             {
-                Bullet temp = collision.GetComponent<Bullet>();
-                if (temp != null && playerStat.goodReflex)
+                Bullet temp = collision.GetComponentInParent<Bullet>();
+                if (temp != null)
                 {
-                    temp.rb.velocity = -temp.rb.velocity;
-                    temp.bySelf = true;
-                    collision.tag = "PlayerBullet";
-                    temp.firstHit = true;
-                }
-                else
-                {
-                    Destroy(collision.gameObject);
+                    if (temp.HP > 0)
+                    {
+                        float attackModifier = 0f;
+                        if (ID == playerStat.currentWeapon[0])
+                            attackModifier += playerStat.defaultWeaponAtkUpPerc;
+                        if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                        {
+                            attackModifier += 200;
+                            Instantiate(critVFX).transform.position = collision.transform.position;
+                        }
+                        temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
+                    }
+                    else if (temp.isDestroyable)
+                    {
+                        if (playerStat.reflectSword)
+                        {
+                            temp.rb.velocity = -temp.rb.velocity;
+                            temp.bySelf = true;
+                            collision.tag = "PlayerBullet";
+                            temp.firstHit = true;
+                        }
+                        else
+                        {
+                            Destroy(collision.gameObject);
+                        }
+                    }
                 }
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
                 DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
                 if (temp != null)
-                    temp.TakeDamage(Mathf.Max(0,Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+                    temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
             }
         }
         else if (!bySelf && collision.gameObject.layer != LayerMask.NameToLayer("EnemyHurtBox"))
@@ -66,13 +90,24 @@ public class Wea02_ShortSword : Bullet
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "PlayerBullet")
             {
-                Destroy(collision.gameObject);
+                Bullet temp = collision.GetComponentInParent<Bullet>();
+                if (temp != null)
+                {
+                    if (temp.HP > 0)
+                    {
+                        temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+                    }
+                    else if (temp.isDestroyable)
+                    {
+                        Destroy(collision.gameObject);
+                    }
+                }
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
                 DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
                 if (temp != null)
-                    temp.TakeDamage(Mathf.Max(0,Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+                    temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
             }
         }
     }

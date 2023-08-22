@@ -125,7 +125,7 @@ TextureImporter:
         width: 80
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -146,7 +146,7 @@ TextureImporter:
         width: 80
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -183,27 +183,6 @@ TextureImporter:
       name: HPBar_3
       rect:
         serializedVersion: 2
-        x: 96
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a084dd758a2543f42a954c1f9b7b8b41
-      internalID: 1909715513
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: HPBar_4
-      rect:
-        serializedVersion: 2
         x: 80
         y: 0
         width: 16
@@ -235,8 +214,7 @@ TextureImporter:
       HPBar_0: -1341452814
       HPBar_1: -1244549159
       HPBar_2: -1626161626
-      HPBar_3: 1909715513
-      HPBar_4: -1441057525
+      HPBar_3: -1441057525
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

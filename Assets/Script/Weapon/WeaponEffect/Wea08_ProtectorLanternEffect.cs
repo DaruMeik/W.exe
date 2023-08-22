@@ -6,7 +6,7 @@ public class Wea08_ProtectorLanternEffect : WeaponBaseEffect
 {
 
     private int weaponId = 8;
-    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj)
+    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, Rigidbody2D userRigid, ref GameObject spawnObj)
     {
         startPoint.z = 0;
         endPoint.z = 0;
@@ -31,6 +31,7 @@ public class Wea08_ProtectorLanternEffect : WeaponBaseEffect
                 }
             }
             GameObject instancedObj = GameObject.Instantiate(WeaponDatabase.weaponList[weaponId].weaponHitBox) as GameObject;
+            instancedObj.tag = (bySelf) ? "PlayerBullet" : "EnemyBullet";
             // Rotate Skill
             Vector3 lookDir = endPoint - col.gameObject.transform.position;
             float lookAngle = -Mathf.Atan2(lookDir.x, lookDir.y) * Mathf.Rad2Deg + 90f;
@@ -64,9 +65,14 @@ public class Wea08_ProtectorLanternEffect : WeaponBaseEffect
             if (bySelf)
             {
                 temp.atkPerc = playerStat.atkPerc;
-                temp.HP = WeaponDatabase.weaponList[temp.ID].power;
-                if (playerStat.BEEG)
-                    instancedObj.transform.localScale *= 1.5f;
+                int HPModifier = 0;
+                if (temp.ID == playerStat.currentWeapon[0])
+                    HPModifier += playerStat.defaultWeaponAtkUpPerc;
+                if (playerStat.sturdyBuild)
+                {
+                    HPModifier += 100;
+                }
+                temp.HP = Mathf.FloorToInt(WeaponDatabase.weaponList[temp.ID].power *(100+HPModifier)/100f);
             }
             else
             {

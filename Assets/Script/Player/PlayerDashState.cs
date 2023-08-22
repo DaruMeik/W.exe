@@ -6,17 +6,19 @@ public class PlayerDashState : PlayerBaseState
 {
     private float dashStartTime = 0f;
     Vector2 playerDir;
+    private float afterImageSpawnTime = 0f;
     public override void EnterState(PlayerStateManager player)
     {
+        afterImageSpawnTime = 0f;
         player.hurtBoxCol.enabled = false;
         if (player.IFrameCoroutine != null)
             player.StopCoroutine(player.IFrameCoroutine);
         player.IFrameCoroutine = player.InvulnerableFrame();
         player.StartCoroutine(player.IFrameCoroutine);
         player.dashNumber++;
-        player.nextDashResetTime = Time.time + 0.75f;
+        player.nextDashResetTime = Time.time + 0.6f;
         playerDir = PlayerControl.Instance.pInput.Player.Move.ReadValue<Vector2>();
-        if(playerDir.magnitude < 0.01f)
+        if (playerDir.magnitude < 0.01f)
         {
             if (player.playerSprites[0].flipX)
             {
@@ -28,11 +30,18 @@ public class PlayerDashState : PlayerBaseState
             }
         }
         dashStartTime = Time.time;
-        player.rb.velocity = playerDir * player.playerStat.playerSpeed * 4f;
+        player.rb.velocity = playerDir * player.playerStat.playerSpeed * 3f * (100f + player.speedModifier) / 100f;
     }
     public override void UpdateState(PlayerStateManager player)
     {
-        if(Time.time - dashStartTime >= 0.1f)
+        if (Time.time > afterImageSpawnTime)
+        {
+            afterImageSpawnTime = Time.time + 0.05f;
+            GameObject temp = GameObject.Instantiate(player.afterImageVFX);
+            temp.transform.position = player.transform.position;
+            temp.GetComponent<SpriteRenderer>().sprite = player.playerSprites[0].sprite;
+        }
+        if (Time.time - dashStartTime >= 0.2f)
         {
             player.SwitchState(player.normalState);
         }

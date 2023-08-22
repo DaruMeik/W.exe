@@ -15,7 +15,7 @@ public class BulletRain : MonoBehaviour
     {
         while (true)
         {
-            WeaponDatabase.tutorialSpecialBullet.weaponBaseEffect.ApplyEffect(transform.position, new Vector3(transform.position.x, -transform.position.y, transform.position.z), false, playerStat, ref empty);
+            WeaponDatabase.tutorialSpecialBullet.weaponBaseEffect.ApplyEffect(transform.position, new Vector3(transform.position.x, -transform.position.y, transform.position.z), false, playerStat, null, ref empty);
             yield return new WaitForSeconds(0.2f);
         }
     }

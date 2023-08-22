@@ -10,6 +10,6 @@ public class OffHand : MonoBehaviour
     {
         WeaponBaseEffect temp = WeaponDatabase.fishingMail.weaponBaseEffect;
         temp.weaponPoint = player.transform;
-        temp.ApplyEffect(player.weaponPivotPoint.position, mousePos, true, player.playerStat, ref player.spawnedBullet);
+        temp.ApplyEffect(player.weaponPivotPoint.position, mousePos, true, player.playerStat, player.rb, ref player.spawnedBullet);
     }
 }

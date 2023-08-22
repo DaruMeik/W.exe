@@ -7,15 +7,49 @@ public class Wea07_TimerSeed : Bullet
     public Collider2D col;
     public Animator animator;
     private bool isBloom = false;
+    //VFX
+    [SerializeField] private SpriteRenderer flowerSprite;
+    [SerializeField] private Material whiteFlashMat;
+    private Material defaultMat;
+    private float flashWhiteTimer = 0;
+    private bool show;
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        flashWhiteTimer = 0;
+        damagedAnimationTimer = 0;
+        defaultMat = flowerSprite.material;
+    }
     protected  override void Update()
     {
+        if (!ready)
+            return;
+        if (Time.time - damagedAnimationTimer < 0.6f)
+        {
+            if (Time.time - flashWhiteTimer >= 0.1f)
+            {
+                if (show)
+                {
+                    flowerSprite.material = defaultMat;
+                }
+                else
+                {
+                    flowerSprite.material = whiteFlashMat;
+                }
+                show = !show;
+                flashWhiteTimer = Time.time;
+            }
+        }
+        else if (show && flowerSprite != null)
+        {
+            flowerSprite.material = defaultMat;
+        }
         if (rb.velocity.magnitude > 0.25f && Physics2D.OverlapCircle(transform.position, 0.1f, LayerMask.GetMask("Wall")))
         {
             rb.velocity = Vector2.zero;
             rb.isKinematic = true;
             animator.SetTrigger("Trigger");
         }
-        base.Update();
     }
     public void Bloom()
     {
@@ -46,25 +80,46 @@ public class Wea07_TimerSeed : Bullet
                 if (enemy.currentState != enemy.deadState)
                 {
                     enemy.GetStun(1f, false);
-                    enemy.GetBurn(6f);
-                    enemy.rb.AddForce((enemy.transform.position - gameObject.transform.position).normalized * 10f, ForceMode2D.Impulse);
                     float attackModifier = 0;
-                    if (playerStat.critable && Random.Range(0, 100) > 90)
+                    if (ID == playerStat.currentWeapon[0])
+                        attackModifier += playerStat.defaultWeaponAtkUpPerc;
+                    if (playerStat.critableGun && Random.Range(0, 100) > 90)
+                    {
                         attackModifier += 200;
+                        Instantiate(critVFX).transform.position = enemy.transform.position;
+                    }
                     enemy.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
+                    if (enemy.beingControlledBy != null)
+                    {
+                        enemy.rb.isKinematic = false;
+                        enemy.transform.parent = null;
+                        Destroy(enemy.beingControlledBy);
+                        enemy.beingControlledBy = null;
+                        enemy.animator.SetTrigger("Stop");
+                        enemy.GetStun(2f, false);
+                    }
+                    enemy.rb.AddForce((enemy.transform.position - gameObject.transform.position).normalized * 10f, ForceMode2D.Impulse);
                 }
             }
             else if (obj.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
             {
                 PlayerStateManager player = obj.GetComponent<PlayerStateManager>();
                 player.GetStun(1f);
-                player.GetBurn(6f);
                 player.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+                if (player.beingControlledBy != null)
+                {
+                    player.rb.isKinematic = false;
+                    player.transform.parent = null;
+                    Destroy(player.beingControlledBy);
+                    player.beingControlledBy = null;
+                }
                 player.rb.AddForce((player.transform.position - gameObject.transform.position).normalized * 10f, ForceMode2D.Impulse);
             }
             else if (obj.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {
-                obj.GetComponent<DestroyableObstacle>().TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
+                DestroyableObstacle temp = obj.GetComponent<DestroyableObstacle>();
+                if (temp != null)
+                    temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
             }
         }
     }

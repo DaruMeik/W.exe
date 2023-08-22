@@ -100,7 +100,10 @@ public class DestroyableObstacle : MonoBehaviour
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
         {
-            collision.gameObject.GetComponent<DestroyableObstacle>().TakeDamage(100);
+
+            DestroyableObstacle temp = collision.gameObject.GetComponent<DestroyableObstacle>();
+            if (temp != null)
+                temp.TakeDamage(100);
         }
         SelfDestruct();
     }
@@ -122,7 +125,9 @@ public class DestroyableObstacle : MonoBehaviour
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
         {
-            collision.gameObject.GetComponent<DestroyableObstacle>().TakeDamage(100);
+            DestroyableObstacle temp = collision.gameObject.GetComponent<DestroyableObstacle>();
+            if (temp != null)
+                temp.TakeDamage(100);
         }
         SelfDestruct();
     }

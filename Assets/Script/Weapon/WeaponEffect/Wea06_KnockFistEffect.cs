@@ -5,7 +5,7 @@ using UnityEngine;
 public class Wea06_KnockFistEffect : WeaponBaseEffect
 {
     private int weaponId = 6;
-    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, ref GameObject spawnObj)
+    public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, Rigidbody2D userRigid, ref GameObject spawnObj)
     {
         startPoint.z = 0;
         endPoint.z = 0;
@@ -23,8 +23,6 @@ public class Wea06_KnockFistEffect : WeaponBaseEffect
         if (bySelf)
         {
             temp.atkPerc = playerStat.atkPerc;
-            if (playerStat.BEEG)
-                instancedObj.transform.localScale *= 1.5f;
         }
         else
         {

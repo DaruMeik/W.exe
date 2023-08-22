@@ -5,16 +5,13 @@ using UnityEngine;
 public class Toxic : MonoBehaviour
 {
     private List<GameObject> insideColObjs = new List<GameObject>();
-    private List<float> damageStack = new List<float>();
     private float nextTriggerTime = 0;
-    private float nextStackTime = 0;
     private bool ready = false;
 
     private void OnEnable()
     {
         insideColObjs.Clear();
         nextTriggerTime = Time.time;
-        nextStackTime = Time.time;
     }
     private void Update()
     {
@@ -23,26 +20,24 @@ public class Toxic : MonoBehaviour
             for (int i = 0; i < insideColObjs.Count; i++)
             {
                 ready = false;
-                if (insideColObjs[i].layer == LayerMask.NameToLayer("PlayerCollision"))
+                if (insideColObjs[i].layer == LayerMask.NameToLayer("PlayerHurtBox"))
                 {
-                    insideColObjs[i].GetComponentInParent<PlayerStateManager>().TakeDamage(Mathf.FloorToInt(damageStack[i]), true);
-                    damageStack[i] += Mathf.Min(25, Mathf.FloorToInt(damageStack[i]) * 25 / 100f);
+                    insideColObjs[i].GetComponent<PlayerStateManager>().GetPoison(1);
                 }
                 else if (insideColObjs[i].layer == LayerMask.NameToLayer("EnemyHurtBox"))
                 {
                     EnemyStateManager temp = insideColObjs[i].GetComponent<EnemyStateManager>();
-                    temp.TakeDamage(Mathf.Max(0,Mathf.FloorToInt(damageStack[i]*(100-temp.enemyStat.poisonImmunity)/100f)));
-                    damageStack[i] += Mathf.Min(15, Mathf.FloorToInt(damageStack[i]) * 25 / 100f);
+                    temp.GetPoison(1);
                 }
             }
             ready = true;
-            nextTriggerTime = Time.time + 0.25f;
+            nextTriggerTime = Time.time + 0.5f;
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log(collision.name);
         insideColObjs.Add(collision.gameObject);
-        damageStack.Add(1);
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -56,6 +51,10 @@ public class Toxic : MonoBehaviour
         }
         int temp = insideColObjs.IndexOf(collision.gameObject);
         insideColObjs.RemoveAt(temp);
-        damageStack.RemoveAt(temp);
+    }
+    public IEnumerator SelfDestruct(float time)
+    {
+        yield return new WaitForSeconds(time);
+        Destroy(gameObject);
     }
 }

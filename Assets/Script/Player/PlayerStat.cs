@@ -10,7 +10,7 @@ public class PlayerStat : ScriptableObject
     public int currentIndex;
     public int[] currentWeapon;
     public int[] currentAmmo;
-    public bool hasCard;
+    public int cardReadyPerc;
     public int level;
     public int exp;
 
@@ -27,6 +27,7 @@ public class PlayerStat : ScriptableObject
 
     [Header("Stat")]
     public int defaultWeapon = 0;
+    public int defaultWeaponAtkUpPerc = 0;
     public int maxHP;
     public float playerSpeed;
     public int maxDash;
@@ -45,13 +46,16 @@ public class PlayerStat : ScriptableObject
     public bool cardShockWave;
 
     [Header("WeaponUpgrade")]
-    public bool burningBullet;
+    public bool fireBullet;
     public bool fasterCharge;
     public bool unseenBlade;
-    public bool BEEG;
-    public bool critable;
-    public bool goodReflex;
+    public bool BEEGBomb;
+    public bool critableGun;
+    public bool reflectSword;
     public bool sharpBullet;
+    public bool wildCard;
+    public bool sturdyBuild;
+    public bool goldBuild;
 
     // Regis stuffs
     public List<int> unsellableWeapon = new List<int>();
@@ -62,9 +66,9 @@ public class PlayerStat : ScriptableObject
     public EventBroadcast eventBroadcast;
     private void OnEnable()
     {
-        defaultMaxHP = 100;
+        defaultMaxHP = 200;
         defaultPlayerSpeed = 5f;
-        defaultMaxDash = 2;
+        defaultMaxDash = 1;
         defaultShockWaveRange = 2.5f;
         defaultShockWaveStunTime = 0.5f;
         defaultMoney = 0;
@@ -78,7 +82,7 @@ public class PlayerStat : ScriptableObject
         level = 1;
         exp = 0;
 
-        hasCard = true;
+        cardReadyPerc = 100;
         maxHP = defaultMaxHP;
         playerSpeed = defaultPlayerSpeed;
         maxDash = defaultMaxDash;
@@ -97,29 +101,28 @@ public class PlayerStat : ScriptableObject
         cardShockWave = false;
 
         // Weapon Upgrade
-        burningBullet = false;
+        fireBullet = false;
         fasterCharge = false;
         unseenBlade = false;
-        BEEG = false;
-        critable = false;
-        goodReflex = false;
+        BEEGBomb = false;
+        critableGun = false;
+        reflectSword = false;
         sharpBullet = false;
+        wildCard = false;
+        sturdyBuild = false;
+        goldBuild = false;
 
         defaultWeapon = 0;
+        defaultWeaponAtkUpPerc = 0;
         currentHP = maxHP;
         currentIndex = 0;
-        currentWeapon = new int[2] { 0, 0 };
+        currentWeapon = new int[2] { 11, 0 };
         currentAmmo = new int[2] { -1, -1 };
-        unsellableWeapon = new List<int> { 0, 6 };
+        unsellableWeapon = new List<int> { 0, 6, 9 };
         levelUpgradeRegister.Clear();
         bulletModRegister.Clear();
         eventBroadcast.UpdateWeaponSpriteNoti();
         eventBroadcast.UpdateCardUINoti();
         Time.timeScale = 1f;
-    }
-    public void UpdateCard(bool hasCard)
-    {
-        this.hasCard = hasCard;
-        eventBroadcast.UpdateCardUINoti();
     }
 }

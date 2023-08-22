@@ -32,8 +32,16 @@ public class PlayerStateManager : MonoBehaviour
     public bool isInvincible = false;
     public bool isInUI = false;
     public IEnumerator IFrameCoroutine;
+    public int burnStack = 0;
     public float burnTime = 0;
     public float burnTickTime = 0;
+    public int poisonStack = 0;
+    public float poisonTime = 0;
+    public float poisonTickTime = 0;
+    public float speedModifier = 0f;
+    private IEnumerator speedCoroutine;
+    public GameObject beingControlledBy;
+
 
     [Header("Interact")]
     public List<GameObject> interactableObj = new List<GameObject>();
@@ -50,8 +58,12 @@ public class PlayerStateManager : MonoBehaviour
     private bool show;
     public Material whiteFlashMat;
     public Material defaultMat;
-    public GameObject healingVFX;
+    public GameObject afterImageVFX;
     public GameObject burningVFX;
+    public GameObject poisonVFX;
+    public GameObject healingVFX;
+    public GameObject speedUpVFX;
+    public GameObject speedDownVFX;
 
     [Header("Dashing")]
     public int dashNumber = 0;
@@ -67,6 +79,10 @@ public class PlayerStateManager : MonoBehaviour
     public EventBroadcast eventBroadcast;
     private void OnEnable()
     {
+        if (playerStat.wildCard)
+        {
+            StartCoroutine(WildShuffle());
+        }
         bodyAnimator.updateMode = AnimatorUpdateMode.Normal;
         UpdateWeaponSprite();
         isInUI = false;
@@ -95,8 +111,8 @@ public class PlayerStateManager : MonoBehaviour
     private void Start()
     {
         // Status
-        playerStat.hasCard = true;
         eventBroadcast.UpdateHPNoti();
+        eventBroadcast.UpdateCardUINoti();
         eventBroadcast.UpdateLvlNoti();
         eventBroadcast.UpdateMoneyNoti();
         eventBroadcast.UpdateWeaponNoti();
@@ -150,13 +166,27 @@ public class PlayerStateManager : MonoBehaviour
         {
             if (Time.time > burnTickTime)
             {
-                TakeDamage(Mathf.Max(1,Mathf.FloorToInt(playerStat.maxHP / 50f)), true);
-                burnTickTime = Time.time + 0.25f;
+                TakeDamage(burnStack, true);
+                burnTickTime = Time.time + 0.5f;
             }
         }
         else if (burningVFX.activeSelf)
         {
+            burnStack = 0;
             burningVFX.SetActive(false);
+        }
+        if (poisonTime > Time.time)
+        {
+            if (Time.time > poisonTickTime)
+            {
+                TakeDamage(poisonStack, true);
+                poisonTickTime = Time.time + 0.2f;
+            }
+        }
+        else if (poisonVFX.activeSelf)
+        {
+            poisonStack = 0;
+            poisonVFX.SetActive(false);
         }
         currentState.UpdateState(this);
     }
@@ -246,11 +276,12 @@ public class PlayerStateManager : MonoBehaviour
     }
     public IEnumerator InvulnerableFrame()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.6f);
         hurtBoxCol.enabled = true;
         IFrameCoroutine = null;
     }
     #endregion
+
     public void TeleportToNextStage()
     {
         if(interactingObj.name == "Tutorial")
@@ -304,16 +335,163 @@ public class PlayerStateManager : MonoBehaviour
             SwitchState(normalState);
     }
     #endregion
+
     #region status effect
     public void GetStun(float duration)
     {
         stunState.stunDuration = duration;
         SwitchState(stunState);
     }
-    public void GetBurn(float duration)
+    public void GetBurn(int stack)
     {
-        burnTime = Time.time + duration;
+        burnStack = Mathf.Min(10, burnStack + stack);
+        burnTime = Time.time + 5f;
         burningVFX.SetActive(true);
+    }
+    public void GetPoison(int stack = 1)
+    {
+        Debug.Log(poisonStack);
+        poisonStack = Mathf.Min(5, poisonStack + stack);
+        poisonTime = Time.time + 2.5f;
+        poisonVFX.SetActive(false);
+        poisonVFX.SetActive(true);
+    }
+    public void GetSpeedChange(float ammount, float duration)
+    {
+        if (speedCoroutine != null)
+            StopCoroutine(speedCoroutine);
+        speedCoroutine = SpeedChange(ammount, duration);
+        StartCoroutine(speedCoroutine);
+    }
+    IEnumerator SpeedChange(float ammount, float duration)
+    {
+        if (ammount > 0)
+        {
+            speedUpVFX.SetActive(false);
+            speedDownVFX.SetActive(false);
+            speedUpVFX.SetActive(true);
+            speedModifier = ammount;
+        }
+        else
+        {
+            speedUpVFX.SetActive(false);
+            speedDownVFX.SetActive(false);
+            speedDownVFX.SetActive(true);
+            speedModifier = ammount;
+        }
+        yield return new WaitForSeconds(duration);
+        speedUpVFX.SetActive(false);
+        speedDownVFX.SetActive(false);
+        speedModifier = 0;
+    }
+    #endregion
+
+    #region wild card
+    IEnumerator WildShuffle()
+    {
+        while (true)
+        {
+            playerStat.currentWeapon[0] = Random.Range(0, WeaponDatabase.weaponList.Count);
+            float ammoModifier = 0f;
+            switch (WeaponDatabase.weaponList[playerStat.currentWeapon[0]].weaponType)
+            {
+                case "Gun":
+                    if (playerStat.fireBullet)
+                    {
+                        ammoModifier += 200;
+                    }
+                    else if (playerStat.sharpBullet)
+                    {
+                        ammoModifier += 200;
+                    }
+                    break;
+                case "Melee":
+                    if (playerStat.unseenBlade)
+                    {
+                        ammoModifier += 200;
+                    }
+                    if (playerStat.reflectSword)
+                    {
+                        ammoModifier += 200;
+                    }
+                    break;
+                case "Charge":
+                    if (playerStat.fasterCharge)
+                    {
+                        ammoModifier += 200;
+                    }
+                    break;
+                case "Special":
+                    if (playerStat.sturdyBuild)
+                    {
+                        ammoModifier += 200;
+                    }
+                    if (playerStat.goldBuild)
+                    {
+                        ammoModifier += 200;
+                    }
+                    break;
+            }
+            playerStat.currentAmmo[0]
+                = Mathf.CeilToInt(WeaponDatabase.weaponList[playerStat.currentWeapon[0]].maxAmmo
+                * (100 + ammoModifier) / 100f);
+
+
+            playerStat.currentWeapon[1] = Random.Range(0, WeaponDatabase.weaponList.Count);
+            ammoModifier = 0f;
+            switch (WeaponDatabase.weaponList[playerStat.currentWeapon[1]].weaponType)
+            {
+                case "Gun":
+                    if (playerStat.fireBullet)
+                    {
+                        ammoModifier += 200;
+                    }
+                    else if (playerStat.sharpBullet)
+                    {
+                        ammoModifier += 200;
+                    }
+                    break;
+                case "Melee":
+                    if (playerStat.unseenBlade)
+                    {
+                        ammoModifier += 200;
+                    }
+                    if (playerStat.reflectSword)
+                    {
+                        ammoModifier += 200;
+                    }
+                    break;
+                case "Charge":
+                    if (playerStat.fasterCharge)
+                    {
+                        ammoModifier += 200;
+                    }
+                    break;
+                case "Special":
+                    if (playerStat.sturdyBuild)
+                    {
+                        ammoModifier += 200;
+                    }
+                    if (playerStat.goldBuild)
+                    {
+                        ammoModifier += 200;
+                    }
+                    break;
+            }
+            playerStat.currentAmmo[1]
+                = Mathf.CeilToInt(WeaponDatabase.weaponList[playerStat.currentWeapon[1]].maxAmmo
+                * (100 + ammoModifier) / 100f);
+
+            normalState.nextTimeToShoot1 = Time.time + 1f;
+            normalState.nextTimeToShoot2 = Time.time + 1f;
+            normalState.isShooting1 = false;
+            normalState.isShooting2 = false;
+
+            eventBroadcast.UpdateWeaponNoti();
+            UpdateWeaponSprite();
+
+            yield return new WaitForSeconds(10f);
+        }
     }
     #endregion
 

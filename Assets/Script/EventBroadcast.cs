@@ -9,10 +9,14 @@ public class EventBroadcast : ScriptableObject
     public event GameEvent finishPossessionAnimation;
     public event GameEvent updateWeaponSprite;
     public event GameEvent updateCardUI;
+
+    public event GameEvent sendingCard;
     public event GameEvent enemyKilled;
     public event GameEvent allDead;
+
     public event GameEvent generateMap;
     public event GameEvent finishStage;
+
     public event GameEvent updateHP;
     public event GameEvent healVFX;
     public event GameEvent updateLvl;
@@ -52,6 +56,11 @@ public class EventBroadcast : ScriptableObject
     {
         if (updateCardUI != null)
             updateCardUI.Invoke();
+    }
+    public void SendingCardNoti()
+    {
+        if(sendingCard != null)  
+            sendingCard.Invoke();
     }
     public void EnemyKilledNoti()
     {

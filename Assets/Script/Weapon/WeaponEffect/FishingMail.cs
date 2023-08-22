@@ -14,12 +14,18 @@ public class FishingMail : MonoBehaviour
     private bool flyingBack = false;
     public Transform player;
     public GameObject shockWave;
+    public EventBroadcast eventBroadcast;
     private void OnEnable()
     {
         isPickupable = false;
         ready = false;
         firstHit = true;
         flyingBack = false;
+        eventBroadcast.sendingCard += SelfDestruct;
+    }
+    private void OnDisable()
+    {
+        eventBroadcast.sendingCard -= SelfDestruct;
     }
     private void Update()
     {
@@ -34,7 +40,7 @@ public class FishingMail : MonoBehaviour
             isPickupable = true;
             rb.velocity = Vector2.zero;
         }
-        if (!flyingBack && isPickupable && PlayerControl.Instance.pInput.Player.Throw.IsPressed())
+        if (!flyingBack && isPickupable && PlayerControl.Instance.pInput.Player.Throw.IsPressed() && playerStat.cardReadyPerc != 100)
         {
             flyingBack = true;
         }
@@ -45,6 +51,10 @@ public class FishingMail : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, 0f, lookAngle - 15f);
             rb.velocity = 12f * (player.position - transform.position).normalized * Mathf.Max(0.5f, (player.position - transform.position).magnitude);
         }
+    }
+    private void SelfDestruct()
+    {
+        Destroy(gameObject);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -67,7 +77,6 @@ public class FishingMail : MonoBehaviour
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 temp.marked = true;
-                temp.markedTime = Time.time;
                 temp.mark.SetActive(true);
                 temp.TakeDamage(Mathf.FloorToInt((WeaponDatabase.fishingMail.power + playerStat.extraCardDamage) * (100 + playerStat.atkPerc) / 100f));
                 Destroy(gameObject);
@@ -76,7 +85,8 @@ public class FishingMail : MonoBehaviour
         else if (isPickupable && collision.tag == "Player")
         {
             firstHit = false;
-            playerStat.UpdateCard(true);
+            playerStat.cardReadyPerc = 100;
+            playerStat.eventBroadcast.UpdateCardUINoti();
             Destroy(gameObject);
         }
     }

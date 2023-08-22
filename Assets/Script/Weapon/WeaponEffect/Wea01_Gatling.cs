@@ -15,7 +15,7 @@ public class Wea01_Gatling : Bullet
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!ready || !firstHit ||collision.gameObject.layer == LayerMask.NameToLayer("Bullet") || collision.tag == "Low")
+        if (!ready || !firstHit || (bySelf && collision.tag == "PlayerBullet") || (!bySelf && collision.tag == "EnemyBullet") || collision.tag == "Low")
             return;
         base.OnTriggerEnter2D(collision);
     }

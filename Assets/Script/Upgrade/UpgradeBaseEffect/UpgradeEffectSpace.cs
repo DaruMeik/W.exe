@@ -16,8 +16,8 @@ public class Upgrade_HP1 : UpgradeBaseEffect
 {
     public override void ApplyEffect(PlayerStat playerStat)
     {
-        playerStat.maxHP += 25;
-        playerStat.currentHP += 25;
+        playerStat.maxHP += 50;
+        playerStat.currentHP += 50;
         playerStat.eventBroadcast.UpdateHPNoti();
     }
 }
@@ -25,8 +25,8 @@ public class Upgrade_HP2 : UpgradeBaseEffect
 {
     public override void ApplyEffect(PlayerStat playerStat)
     {
-        playerStat.maxHP += 50;
-        playerStat.currentHP += 50;
+        playerStat.maxHP += 75;
+        playerStat.currentHP += 75;
         playerStat.eventBroadcast.UpdateHPNoti();
     }
 }
@@ -34,8 +34,8 @@ public class Upgrade_HP3 : UpgradeBaseEffect
 {
     public override void ApplyEffect(PlayerStat playerStat)
     {
-        playerStat.maxHP += 100;
-        playerStat.currentHP += 100;
+        playerStat.maxHP += 125;
+        playerStat.currentHP += 125;
         playerStat.eventBroadcast.UpdateHPNoti();
     }
 }
@@ -191,7 +191,7 @@ public class Upgrade_BurnBullet : UpgradeBaseEffect
 {
     public override void ApplyEffect(PlayerStat playerStat)
     {
-        playerStat.burningBullet = true;
+        playerStat.fireBullet = true;
     }
 }
 public class Upgrade_FasterCharge : UpgradeBaseEffect
@@ -208,25 +208,25 @@ public class Upgrade_UnseenBlade : UpgradeBaseEffect
         playerStat.unseenBlade = true;
     }
 }
-public class Upgrade_BEEG : UpgradeBaseEffect
+public class Upgrade_BEEGBomb : UpgradeBaseEffect
 {
     public override void ApplyEffect(PlayerStat playerStat)
     {
-        playerStat.BEEG = true;
+        playerStat.BEEGBomb = true;
     }
 }
 public class Upgrade_CritBullet : UpgradeBaseEffect
 {
     public override void ApplyEffect(PlayerStat playerStat)
     {
-        playerStat.critable = true;
+        playerStat.critableGun = true;
     }
 }
-public class Upgrade_GoodReflex : UpgradeBaseEffect
+public class Upgrade_ReflectSword : UpgradeBaseEffect
 {
     public override void ApplyEffect(PlayerStat playerStat)
     {
-        playerStat.goodReflex = true;
+        playerStat.reflectSword = true;
     }
 }
 public class Upgrade_SharpBullet : UpgradeBaseEffect
@@ -234,6 +234,27 @@ public class Upgrade_SharpBullet : UpgradeBaseEffect
     public override void ApplyEffect(PlayerStat playerStat)
     {
         playerStat.sharpBullet = true;
+    }
+}
+public class Upgrade_WildCard : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.wildCard = true;
+    }
+}
+public class Upgrade_SturdyBuild : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.sturdyBuild = true;
+    }
+}
+public class Upgrade_GoldBuild : UpgradeBaseEffect
+{
+    public override void ApplyEffect(PlayerStat playerStat)
+    {
+        playerStat.goldBuild = true;
     }
 }
 #endregion

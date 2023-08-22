@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Wea08_ProtectorLantern : Bullet
 {
-    public int HP;
     public GameObject[] spawnedShield;
     public int activeShield;
     public GameObject laternLight;
@@ -13,7 +12,6 @@ public class Wea08_ProtectorLantern : Bullet
     [SerializeField] private Material whiteFlashMat;
     private Material defaultMat;
     private float flashWhiteTimer = 0;
-    private float damagedAnimationTimer = 0;
     private bool show;
 
     protected override void OnEnable()
@@ -46,7 +44,7 @@ public class Wea08_ProtectorLantern : Bullet
         {
             shieldSprite.material = defaultMat;
         }
-        if (HP < 0 || (!bySelf && Time.time - spawnTime > 5f))
+        if (!bySelf && Time.time - spawnTime > 5f)
             Destroy(gameObject);
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
@@ -58,13 +56,7 @@ public class Wea08_ProtectorLantern : Bullet
             if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet")
             {
                 Bullet temp = collision.GetComponent<Bullet>();
-                if (!temp.isBlockable)
-                    return;
-                HP -= Mathf.FloorToInt(WeaponDatabase.weaponList[temp.ID].power * (100 + temp.atkPerc) / 100f);
-                damagedAnimationTimer = Time.time;
-                if (temp.isDestroyable)
-                    Destroy(collision.gameObject);
-                else
+                if(temp != null && temp.isBlockable)
                     temp.atkPerc = -1000;
             }
         }
@@ -73,13 +65,7 @@ public class Wea08_ProtectorLantern : Bullet
             if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "PlayerBullet")
             {
                 Bullet temp = collision.GetComponent<Bullet>();
-                if (!temp.isBlockable)
-                    return;
-                HP -= Mathf.FloorToInt(WeaponDatabase.weaponList[temp.ID].power * (100 + temp.atkPerc) / 100f);
-                damagedAnimationTimer = Time.time;
-                if (temp.isDestroyable)
-                    Destroy(collision.gameObject);
-                else
+                if (temp != null)
                     temp.atkPerc = -1000;
             }
         }
@@ -87,6 +73,7 @@ public class Wea08_ProtectorLantern : Bullet
     public void TurnOnShield()
     {
         spawnedShield[activeShield].SetActive(true);
+        spawnedShield[activeShield].tag = gameObject.tag;
         shieldSprite = spawnedShield[activeShield].GetComponent<SpriteRenderer>();
         defaultMat = shieldSprite.material;
     }
