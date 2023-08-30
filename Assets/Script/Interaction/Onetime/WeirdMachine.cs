@@ -9,33 +9,39 @@ public class WeirdMachine : Onetime
         if (hasBeenUsed)
             return;
         hasBeenUsed = true;
-        int buff = Random.Range(0, 3);
-        int nerf = Random.Range(0, 3);
-        switch (buff)
+        int buffIndex = Random.Range(0, 3);
+        for(int i = 0; i < 3; i++)
+        {
+            if(i != buffIndex)
+            {
+                switch (i)
+                {
+                    case 0:
+                        eventBroadcast.GainExpNoti(1, "Red");
+                        break;
+                    case 1:
+                        eventBroadcast.GainExpNoti(1, "Green");
+                        break;
+                    case 2:
+                        eventBroadcast.GainExpNoti(1, "Blue");
+                        break;
+                }
+            }
+        }
+        int curesIndex = Random.Range(0, 3);
+        switch (curesIndex)
         {
             case 0:
-                playerStat.atkPerc += 10;
+                playerStat.curseOfOffense = 3;
                 break;
             case 1:
-                playerStat.defPerc += 10;
+                playerStat.curseOfDefense = 3;
                 break;
             case 2:
-                playerStat.luck += 10;
+                playerStat.curseOfMobility = 3;
                 break;
         }
-        switch (nerf)
-        {
-            case 0:
-                playerStat.atkPerc -= 10;
-                break;
-            case 1:
-                playerStat.defPerc -= 10;
-                break;
-            case 2:
-                playerStat.luck -= 10;
-                break;
-        }
-        eventBroadcast.FinishNewMachineNoti(buff, nerf);
+        eventBroadcast.FinishNewMachineNoti(curesIndex);
         triggerCol.enabled = false;
         TurnOffHighlight();
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PGStateManager : EnemyStateManager
 {
-    public PGBarrelSummonState poisonState = new PGBarrelSummonState();
+    public PGPoisonThrowingState poisonState = new PGPoisonThrowingState();
     public float nextTimeToThrowPoison = 0f;
     protected override void OnEnable()
     {
@@ -27,10 +27,14 @@ public class PGStateManager : EnemyStateManager
     }
     public void ThrowPoison()
     {
-        aimPoint = target.position;
+        aimPoint = target.position + new Vector3(0f, 0.5f, 0f);
 
-        // Summon barrel
-        Weapon weapon = WeaponDatabase.weaponList[10];
+        // Throw bomb
+        Weapon weapon;
+        if (Random.Range(0,100) < 25)
+            weapon = WeaponDatabase.weaponList[10];
+        else
+            weapon = WeaponDatabase.weaponList[4];
         weapon.weaponBaseEffect.weaponPoint = enemyShootingPoint;
         weapon.weaponBaseEffect.ApplyEffect(enemyShootingPoint.position, (Vector2)aimPoint + Random.insideUnitCircle * 1.5f * (100 - weapon.accuracy) / 100f, false, null, rb, ref spawnedBullet);
     }
@@ -122,7 +126,7 @@ public class PGSkillState : EnemySkillState
     }
 }
 
-public class PGBarrelSummonState : EnemyBaseState
+public class PGPoisonThrowingState : EnemyBaseState
 {
     PGStateManager PGstate;
     public override void EnterState(EnemyStateManager enemy)

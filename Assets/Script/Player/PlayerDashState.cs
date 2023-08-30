@@ -30,7 +30,10 @@ public class PlayerDashState : PlayerBaseState
             }
         }
         dashStartTime = Time.time;
-        player.rb.velocity = playerDir * player.playerStat.playerSpeed * 3f * (100f + player.speedModifier) / 100f;
+        if(player.playerStat.curseOfMobility == 0)
+            player.rb.velocity = playerDir * player.playerStat.playerSpeed * 3f * (100f + player.speedModifier) / 100f;
+        else
+            player.rb.velocity = playerDir * player.playerStat.playerSpeed * 1.5f * (100f + player.speedModifier) / 100f;
     }
     public override void UpdateState(PlayerStateManager player)
     {
@@ -53,5 +56,13 @@ public class PlayerDashState : PlayerBaseState
     public override void ExitState(PlayerStateManager player)
     {
         player.hurtBoxCol.enabled = true;
+        if (player.playerStat.swiftMovement)
+        {
+            player.GetSpeedChange(50, 1f);
+        }
+        if (player.playerStat.movingFort)
+        {
+            player.GetDefChange(50, 1f);
+        }
     }
 }

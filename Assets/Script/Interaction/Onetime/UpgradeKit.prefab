@@ -111,7 +111,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8980037617129586469}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -278,7 +278,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650020, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: m_text
-      value: Increase your max health by 25 (does not heal).
+      value: Increase your max health by 25.
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650020, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: m_margin.w
@@ -294,7 +294,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[0]
-      value: Increase your max health by 25 (does not heal).
+      value: Increase your max health by 25.
       objectReference: {fileID: 0}
     - target: {fileID: 3453592409188408222, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: m_IsActive

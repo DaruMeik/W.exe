@@ -10,7 +10,7 @@ public class EnemySkillState : EnemyBaseState
     {
         enemy.rb.velocity = Vector2.zero;
         if(fixedTarget == null)
-            enemy.aimPoint = enemy.target.position;
+            enemy.aimPoint = enemy.target.position + new Vector3(0f, 0.5f, 0f);
         else
             enemy.aimPoint = fixedTarget.position;
         nextAimTime = Time.time + enemy.enemyStat.enemyAimTime[0];
@@ -20,7 +20,7 @@ public class EnemySkillState : EnemyBaseState
     {
         if(Time.time > nextAimTime && fixedTarget == null)
         {
-            enemy.aimPoint = enemy.target.position;
+            enemy.aimPoint = enemy.target.position + new Vector3(0f,0.5f,0f);
             if (enemy.aimPoint.x - enemy.transform.position.x > 0.1f)
             {
                 enemy.enemySprite.transform.localScale = new Vector3(Mathf.Abs(enemy.enemySprite.transform.localScale.x), enemy.enemySprite.transform.localScale.y, enemy.enemySprite.transform.localScale.z);

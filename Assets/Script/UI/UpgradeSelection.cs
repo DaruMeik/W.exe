@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class UpgradeSelection : MonoBehaviour
@@ -9,20 +10,20 @@ public class UpgradeSelection : MonoBehaviour
     [SerializeField] private PlayerStat playerStat;
     [SerializeField] private EventBroadcast eventBroadcast;
     public TextMeshProUGUI[] upgradeInfo;
+    public Image[] upgradeImage;
+    public string rewardType;
 
     private List<int> upgradeList = new List<int>();
-    private float previousTimeScale;
     private void OnEnable()
     {
         eventBroadcast.EnterUINoti();
-        previousTimeScale = Time.timeScale;
-        Time.timeScale = 0f;
+        Time.timeScale = Mathf.Max(0, Time.timeScale - 1f);
         GenerateReward();
     }
     private void OnDisable()
     {
         eventBroadcast.ExitUINoti();
-        Time.timeScale = previousTimeScale;
+        Time.timeScale = Mathf.Min(1f, Time.timeScale + 1f);
     }
     private void GenerateReward()
     {
@@ -37,6 +38,20 @@ public class UpgradeSelection : MonoBehaviour
         bool firstTime = true;
         bool startIncrease = false;
 
+        List<Upgrade> colorUpgradeList;
+        switch (rewardType)
+        {
+            case "Red":
+            default:
+                colorUpgradeList = UpgradeDatabase.redUpgradeList;
+                break;
+            case "Green":
+                colorUpgradeList = UpgradeDatabase.greenUpgradeList;
+                break;
+            case "Blue":
+                colorUpgradeList = UpgradeDatabase.blueUpgradeList;
+                break;
+        }
 
         while (upgradeList.Count < 3)
         {
@@ -44,6 +59,21 @@ public class UpgradeSelection : MonoBehaviour
             {
                 firstTime = false;
                 randVal = Random.Range(0, 100) + playerStat.luck;
+                switch (rewardType)
+                {
+                    case "Red":
+                    default:
+                        randVal += 2*playerStat.redLevel * (playerStat.redLevel - 1);
+                        break;
+                    case "Green":
+                        randVal += 2 * playerStat.greenLevel * (playerStat.greenLevel - 1);
+                        break;
+                    case "Blue":
+                        randVal += 2 * playerStat.blueLevel * (playerStat.blueLevel - 1);
+                        break;
+                }
+                Debug.Log("Roll the dice: ");
+                Debug.Log(randVal);
                 if (randVal < 60)
                 {
                     rewardTier = 1;
@@ -65,11 +95,29 @@ public class UpgradeSelection : MonoBehaviour
             possibleReward.Clear();
 
 
-            foreach (Upgrade upgrade in UpgradeDatabase.levelUpgradeList)
+            foreach (Upgrade upgrade in colorUpgradeList)
             {
-                if (upgrade.tier == rewardTier && !playerStat.levelUpgradeRegister.Any(r => r == upgrade.id))
+                switch (rewardType)
                 {
-                    possibleReward.Add(upgrade.id);
+                    case "Red":
+                    default:
+                        if (upgrade.tier == rewardTier && !playerStat.redUpgradeRegister.Any(r => r == upgrade.id))
+                        {
+                            possibleReward.Add(upgrade.id);
+                        }
+                        break;
+                    case "Green":
+                        if (upgrade.tier == rewardTier && !playerStat.greenUpgradeRegister.Any(r => r == upgrade.id))
+                        {
+                            possibleReward.Add(upgrade.id);
+                        }
+                        break;
+                    case "Blue":
+                        if (upgrade.tier == rewardTier && !playerStat.blueUpgradeRegister.Any(r => r == upgrade.id))
+                        {
+                            possibleReward.Add(upgrade.id);
+                        }
+                        break;
                 }
             }
 
@@ -102,16 +150,30 @@ public class UpgradeSelection : MonoBehaviour
 
         for (int inde = 0; inde < upgradeInfo.Count(); inde++)
         {
-            upgradeInfo[inde].text = UpgradeDatabase.levelUpgradeList[upgradeList[inde]].upgradeName + ": "
-                + UpgradeDatabase.levelUpgradeList[upgradeList[inde]].upgradeDescription + "(" + UpgradeDatabase.levelUpgradeList[upgradeList[inde]].tier + "*)";
+            upgradeInfo[inde].text = colorUpgradeList[upgradeList[inde]].upgradeName + ": "
+                + colorUpgradeList[upgradeList[inde]].upgradeDescription + "(" + colorUpgradeList[upgradeList[inde]].tier + "*)";
+            upgradeImage[inde].sprite = colorUpgradeList[upgradeList[inde]].upgradeSprite;
         }
     }
     public void ChooseReward(int buttonIndex)
     {
-        Debug.Log(UpgradeDatabase.levelUpgradeList[upgradeList[buttonIndex]].upgradeName);
-        if (UpgradeDatabase.levelUpgradeList[upgradeList[buttonIndex]].upgradeBaseEffect != null)
-            UpgradeDatabase.levelUpgradeList[upgradeList[buttonIndex]].upgradeBaseEffect.ApplyEffect(playerStat);
-        playerStat.levelUpgradeRegister.Add(upgradeList[buttonIndex]);
+        List<Upgrade> colorUpgradeList;
+        switch (rewardType)
+        {
+            case "Red":
+            default:
+                colorUpgradeList = UpgradeDatabase.redUpgradeList;
+                break;
+            case "Green":
+                colorUpgradeList = UpgradeDatabase.greenUpgradeList;
+                break;
+            case "Blue":
+                colorUpgradeList = UpgradeDatabase.blueUpgradeList;
+                break;
+        }
+        if (colorUpgradeList[upgradeList[buttonIndex]].upgradeBaseEffect != null)
+            colorUpgradeList[upgradeList[buttonIndex]].upgradeBaseEffect.ApplyEffect(playerStat);
+        playerStat.redUpgradeRegister.Add(upgradeList[buttonIndex]);
         gameObject.SetActive(false);
     }
 }

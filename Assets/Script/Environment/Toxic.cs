@@ -36,7 +36,6 @@ public class Toxic : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.name);
         insideColObjs.Add(collision.gameObject);
     }
     private void OnTriggerExit2D(Collider2D collision)

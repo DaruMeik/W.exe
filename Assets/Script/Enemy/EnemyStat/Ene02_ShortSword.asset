@@ -21,7 +21,7 @@ MonoBehaviour:
   poisonImmunity: 0
   enemyWeaponId: 02000000
   enemyAtkRange:
-  - 2.5
+  - 1.75
   requireLOS: 01
   enemyCD:
   - 0.75

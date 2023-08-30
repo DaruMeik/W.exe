@@ -14,5 +14,9 @@ public class EnemySpawnState : EnemyBaseState
     public override void ExitState(EnemyStateManager enemy)
     {
         enemy.enemyCollider.enabled = true;
+        if(enemy.enemyStat.enemyType == "Boss")
+        {
+            enemy.eventBroadcast.BossSpawnNoti();
+        }
     }
 }

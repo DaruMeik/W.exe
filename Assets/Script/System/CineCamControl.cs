@@ -23,8 +23,6 @@ public class CineCamControl : MonoBehaviour
         if (startTime + b > Time.time)
         {
             float intensity = a * (Time.time - startTime) * (Time.time - startTime - b);
-            Debug.Log(intensity);
-            Debug.LogWarning(cinemachineBasicMultiChannelPerlin == null);
             cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = intensity;
         }
         else if (cinemachineBasicMultiChannelPerlin.m_AmplitudeGain != 0)

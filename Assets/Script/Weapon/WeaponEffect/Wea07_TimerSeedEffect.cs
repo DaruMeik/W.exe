@@ -24,14 +24,21 @@ public class Wea07_TimerSeedEffect : WeaponBaseEffect
             {
                 HPModifier += 100;
             }
-            temp.HP = Mathf.CeilToInt(25 * (100 + HPModifier)/100f);
+            temp.HP = Mathf.CeilToInt(35 * (100 + HPModifier)/100f);
             instancedObj.transform.position = startPoint - new Vector3(0f, 0.5f, 0f);
             temp.atkPerc = playerStat.atkPerc;
         }
         else
         {
             temp.HP = 25;
-            instancedObj.transform.position = endPoint + Random.onUnitSphere * 0.5f;
+            Vector2 aimPos = endPoint + (Vector3)Random.insideUnitCircle * 2.5f;
+            if (!Physics2D.OverlapPoint(aimPos, LayerMask.GetMask("Ground")))
+            {
+                RaycastHit2D[] results = Physics2D.RaycastAll(startPoint, aimPos - (Vector2)startPoint, (aimPos - (Vector2)startPoint).magnitude, LayerMask.GetMask("Wall"));
+                if(results.Length > 0)
+                    aimPos = results[results.Length - 1].point;
+            }
+            instancedObj.transform.position = aimPos;
             temp.atkPerc = 0;
         }
 

@@ -29,6 +29,8 @@ public class Wea04_SmallGrenadeEffect : WeaponBaseEffect
         else
         {
             temp.atkPerc = 0;
+            if(userRigid.GetComponent<EnemyStateManager>().enemyStat.enemyType == "Boss" || userRigid.GetComponent<EnemyStateManager>().enemyStat.enemyType == "Miniboss")
+                instancedObj.transform.localScale *= 1.5f;
         }
         temp.warningTile.transform.parent = null;
         temp.warningTile.transform.position = endPoint;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,8 +40,13 @@ public class PlayerStateManager : MonoBehaviour
     public float poisonTime = 0;
     public float poisonTickTime = 0;
     public float speedModifier = 0f;
+    private int hitTaken = 0;
     private IEnumerator speedCoroutine;
+    private IEnumerator defCoroutine;
+    public IEnumerator possessCoroutine;
     public GameObject beingControlledBy;
+
+    private Queue<string> queue = new Queue<string>();
 
 
     [Header("Interact")]
@@ -58,12 +64,17 @@ public class PlayerStateManager : MonoBehaviour
     private bool show;
     public Material whiteFlashMat;
     public Material defaultMat;
+
+    [Header("UI")]
+    public TextMeshProUGUI statusText;
     public GameObject afterImageVFX;
     public GameObject burningVFX;
     public GameObject poisonVFX;
     public GameObject healingVFX;
     public GameObject speedUpVFX;
     public GameObject speedDownVFX;
+    public GameObject defUpVFX;
+    public GameObject defDownVFX;
 
     [Header("Dashing")]
     public int dashNumber = 0;
@@ -90,7 +101,7 @@ public class PlayerStateManager : MonoBehaviour
         eventBroadcast.healVFX += PlayHealingVFX;
         eventBroadcast.enterUI += EnterUI;
         eventBroadcast.exitUI += ExitUI;
-        eventBroadcast.gainExp += GainEXP;
+        eventBroadcast.gainExp += GainExpQueue;
         eventBroadcast.possessEvent += CanPossess;
         eventBroadcast.finishPossessionAnimation += possessState.Teleport;
         eventBroadcast.finishPossessionAnimation += FinishPossessAnimation;
@@ -102,7 +113,7 @@ public class PlayerStateManager : MonoBehaviour
         eventBroadcast.healVFX -= PlayHealingVFX;
         eventBroadcast.enterUI -= EnterUI;
         eventBroadcast.exitUI -= ExitUI;
-        eventBroadcast.gainExp -= GainEXP;
+        eventBroadcast.gainExp -= GainExpQueue;
         eventBroadcast.possessEvent -= CanPossess;
         eventBroadcast.finishPossessionAnimation -= possessState.Teleport;
         eventBroadcast.finishPossessionAnimation -= FinishPossessAnimation;
@@ -116,12 +127,19 @@ public class PlayerStateManager : MonoBehaviour
         eventBroadcast.UpdateLvlNoti();
         eventBroadcast.UpdateMoneyNoti();
         eventBroadcast.UpdateWeaponNoti();
+        playerStat.atkPerc = playerStat.defaultAtkPerc;
+        playerStat.defPerc = playerStat.defaultDefPerc;
         isInvincible = false;
         damagedAnimationTimer = 0f;
         flashWhiteTimer = 0f;
+        hitTaken = 0;
         defaultMat = playerSprites[0].material;
         healingVFX.SetActive(false);
         burningVFX.SetActive(false);
+        speedUpVFX.SetActive(false);
+        speedDownVFX.SetActive(false);
+        defUpVFX.SetActive(false);
+        defDownVFX.SetActive(false);
         SwitchState(spawnState);
     }
     private void Update()
@@ -130,7 +148,7 @@ public class PlayerStateManager : MonoBehaviour
         {
             dashNumber = 0;
         }
-        if(currentState != deadState)
+        if (currentState != deadState)
         {
             if (Time.time - damagedAnimationTimer < 0.6f)
             {
@@ -162,8 +180,14 @@ public class PlayerStateManager : MonoBehaviour
                 }
             }
         }
+
+        #region status
+        string status = "";
         if (burnTime > Time.time)
         {
+            if (status != "")
+                status += " ";
+            status += "<sprite=\"StatusEffect\" index=0> x" + burnStack.ToString();
             if (Time.time > burnTickTime)
             {
                 TakeDamage(burnStack, true);
@@ -177,6 +201,9 @@ public class PlayerStateManager : MonoBehaviour
         }
         if (poisonTime > Time.time)
         {
+            if (status != "")
+                status += " ";
+            status += "<sprite=\"StatusEffect\" index=1> x" + poisonStack.ToString();
             if (Time.time > poisonTickTime)
             {
                 TakeDamage(poisonStack, true);
@@ -188,6 +215,27 @@ public class PlayerStateManager : MonoBehaviour
             poisonStack = 0;
             poisonVFX.SetActive(false);
         }
+        statusText.text = status;
+        #endregion
+
+        #region exp queue
+        if(queue.Count > 0 && !isInUI)
+        {
+            switch (queue.Dequeue())
+            {
+                case "Red":
+                    GainRedExp(1);
+                    break;
+                case "Green":
+                    GainGreenExp(1);
+                    break;
+                case "Blue":
+                    GainBlueExp(1);
+                    break;
+            }
+        }
+        #endregion
+
         currentState.UpdateState(this);
     }
     public void SwitchState(PlayerBaseState state)
@@ -204,12 +252,22 @@ public class PlayerStateManager : MonoBehaviour
         if (isInvincible && !byEnvironment)
             return;
 
-        if(damage >= 0)
+        if (damage > 0)
         {
+            hitTaken++;
+            if (playerStat.shockArmor && hitTaken % 5 == 0)
+            {
+                GameObject.Instantiate(shockWave, transform);
+            }
+            if (playerStat.rage)
+                playerStat.atkPerc += 2;
             damagedAnimationTimer = Time.time;
-            playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - Mathf.CeilToInt(damage * (100 - playerStat.defPerc) / 100f));
+            if (playerStat.curseOfDefense == 0)
+                playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - Mathf.CeilToInt(damage * (100 - playerStat.defPerc) / 100f));
+            else
+                playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - Mathf.CeilToInt(damage * (100 + 10 - playerStat.defPerc) / 100f));
         }
-        else
+        else if (damage < 0)
         {
             eventBroadcast.HealVFXNoti();
             playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP - damage);
@@ -228,7 +286,7 @@ public class PlayerStateManager : MonoBehaviour
     }
     public void SelfDestruct()
     {
-        if(SceneManager.GetActiveScene().name == "Tutorial")
+        if (SceneManager.GetActiveScene().name == "Tutorial")
         {
             playerStat.ResetStat();
             SceneManager.LoadScene("Tutorial");
@@ -254,14 +312,15 @@ public class PlayerStateManager : MonoBehaviour
     {
         canPossessMarker.SetActive(true);
         this.enemy = enemy;
-        StartCoroutine(CannotPossess());
+        possessCoroutine = CannotPossess();
+        StartCoroutine(possessCoroutine);
     }
     public void FinishPossessAnimation()
     {
         if (currentState == possessState)
         {
             enemy = null;
-            if(IFrameCoroutine != null)
+            if (IFrameCoroutine != null)
                 StopCoroutine(IFrameCoroutine);
             IFrameCoroutine = InvulnerableFrame();
             StartCoroutine(IFrameCoroutine);
@@ -284,7 +343,7 @@ public class PlayerStateManager : MonoBehaviour
 
     public void TeleportToNextStage()
     {
-        if(interactingObj.name == "Tutorial")
+        if (interactingObj.name == "Tutorial")
         {
             SceneManager.LoadScene("Tutorial");
         }
@@ -301,17 +360,56 @@ public class PlayerStateManager : MonoBehaviour
     }
 
     #region UI
-    private void GainEXP(int ammount)
+    private void GainExpQueue(int amount, string type)
     {
-        for(int i = 0; i < ammount; i++)
+        for(int i = 0; i < amount; i++)
         {
-            playerStat.exp++;
+            queue.Enqueue(type);
+        }
+    }
+    private void GainRedExp(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            playerStat.redExp++;
             LevelUpVFX.SetActive(false);
             LevelUpVFX.SetActive(true);
-            if (playerStat.exp >= (playerStat.level * (playerStat.level + 1)) / 2)
+            if (playerStat.redExp >= (playerStat.redLevel * (playerStat.redLevel + 1)) / 2)
             {
-                playerStat.level++;
-                playerStat.luck += 10;
+                playerStat.redLevel++;
+                upgradeSelection.GetComponent<UpgradeSelection>().rewardType = "Red";
+                upgradeSelection.SetActive(true);
+            }
+            eventBroadcast.UpdateLvlNoti();
+        }
+    }
+    private void GainGreenExp(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            playerStat.greenExp++;
+            LevelUpVFX.SetActive(false);
+            LevelUpVFX.SetActive(true);
+            if (playerStat.greenExp >= (playerStat.greenLevel * (playerStat.greenLevel + 1)) / 2)
+            {
+                playerStat.greenLevel++;
+                upgradeSelection.GetComponent<UpgradeSelection>().rewardType = "Green";
+                upgradeSelection.SetActive(true);
+            }
+            eventBroadcast.UpdateLvlNoti();
+        }
+    }
+    private void GainBlueExp(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            playerStat.blueExp++;
+            LevelUpVFX.SetActive(false);
+            LevelUpVFX.SetActive(true);
+            if (playerStat.blueExp >= (playerStat.blueLevel * (playerStat.blueLevel + 1)) / 2)
+            {
+                playerStat.blueLevel++;
+                upgradeSelection.GetComponent<UpgradeSelection>().rewardType = "Blue";
                 upgradeSelection.SetActive(true);
             }
             eventBroadcast.UpdateLvlNoti();
@@ -331,7 +429,7 @@ public class PlayerStateManager : MonoBehaviour
     #region animation
     public void FinishSpawning()
     {
-        if(currentState == spawnState)
+        if (currentState == spawnState)
             SwitchState(normalState);
     }
     #endregion
@@ -345,44 +443,77 @@ public class PlayerStateManager : MonoBehaviour
     public void GetBurn(int stack)
     {
         burnStack = Mathf.Min(10, burnStack + stack);
-        burnTime = Time.time + 5f;
+        if (playerStat.fireResistance)
+            burnTime = Time.time + 2.5f;
+        else
+            burnTime = Time.time + 5f;
         burningVFX.SetActive(true);
     }
     public void GetPoison(int stack = 1)
     {
         Debug.Log(poisonStack);
         poisonStack = Mathf.Min(5, poisonStack + stack);
-        poisonTime = Time.time + 2.5f;
+        if (playerStat.poisonResistance)
+            poisonTime = Time.time + 1.25f;
+        else
+            poisonTime = Time.time + 2.5f;
         poisonVFX.SetActive(false);
         poisonVFX.SetActive(true);
     }
-    public void GetSpeedChange(float ammount, float duration)
+    public void GetSpeedChange(float amount, float duration)
     {
         if (speedCoroutine != null)
             StopCoroutine(speedCoroutine);
-        speedCoroutine = SpeedChange(ammount, duration);
+        speedCoroutine = SpeedChange(amount, duration);
         StartCoroutine(speedCoroutine);
     }
-    IEnumerator SpeedChange(float ammount, float duration)
+    IEnumerator SpeedChange(float amount, float duration)
     {
-        if (ammount > 0)
+        if (amount > 0)
         {
             speedUpVFX.SetActive(false);
             speedDownVFX.SetActive(false);
             speedUpVFX.SetActive(true);
-            speedModifier = ammount;
+            speedModifier = amount;
         }
         else
         {
             speedUpVFX.SetActive(false);
             speedDownVFX.SetActive(false);
             speedDownVFX.SetActive(true);
-            speedModifier = ammount;
+            speedModifier = amount;
         }
         yield return new WaitForSeconds(duration);
         speedUpVFX.SetActive(false);
         speedDownVFX.SetActive(false);
         speedModifier = 0;
+    }
+    public void GetDefChange(float amount, float duration)
+    {
+        if (defCoroutine != null)
+            StopCoroutine(defCoroutine);
+        defCoroutine = DefChange(amount, duration);
+        StartCoroutine(defCoroutine);
+    }
+    IEnumerator DefChange(float amount, float duration)
+    {
+        if (amount > 0)
+        {
+            defUpVFX.SetActive(false);
+            defDownVFX.SetActive(false);
+            defUpVFX.SetActive(true);
+        }
+        else
+        {
+            defUpVFX.SetActive(false);
+            defDownVFX.SetActive(false);
+            defDownVFX.SetActive(true);
+        }
+        playerStat.defPerc = playerStat.defaultDefPerc + (int)amount;
+        yield return new WaitForSeconds(duration);
+        defUpVFX.SetActive(false);
+        defDownVFX.SetActive(false);
+        playerStat.defPerc = playerStat.defaultDefPerc;
     }
     #endregion
 
@@ -391,7 +522,11 @@ public class PlayerStateManager : MonoBehaviour
     {
         while (true)
         {
-            playerStat.currentWeapon[0] = Random.Range(0, WeaponDatabase.weaponList.Count);
+            do
+            {
+                playerStat.currentWeapon[0] = UnityEngine.Random.Range(0, WeaponDatabase.weaponList.Count);
+            }
+            while (playerStat.unsellableWeapon.Contains(playerStat.currentWeapon[0]));
             float ammoModifier = 0f;
             switch (WeaponDatabase.weaponList[playerStat.currentWeapon[0]].weaponType)
             {
@@ -437,7 +572,11 @@ public class PlayerStateManager : MonoBehaviour
                 * (100 + ammoModifier) / 100f);
 
 
-            playerStat.currentWeapon[1] = Random.Range(0, WeaponDatabase.weaponList.Count);
+            do
+            {
+                playerStat.currentWeapon[1] = UnityEngine.Random.Range(0, WeaponDatabase.weaponList.Count);
+            }
+            while (playerStat.unsellableWeapon.Contains(playerStat.currentWeapon[1]));
             ammoModifier = 0f;
             switch (WeaponDatabase.weaponList[playerStat.currentWeapon[1]].weaponType)
             {

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SpecialBulletEffect : WeaponBaseEffect
 {
-    private int weaponId = 0;
     float speed = 10f;
     public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, Rigidbody2D userRigid, ref GameObject spawnObj)
     {

@@ -121,7 +121,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
+        y: 48
         width: 25
         height: 4
       alignment: 0
@@ -142,7 +142,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 25
-        y: 16
+        y: 48
         width: 7
         height: 4
       alignment: 0
@@ -163,7 +163,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 32
         width: 25
         height: 4
       alignment: 0
@@ -175,6 +175,48 @@ TextureImporter:
       bones: []
       spriteID: 1e055ad1428b70446a0a74bcaef33daf
       internalID: -883883107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyHP_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 16
+        width: 25
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 336358f3e4088b741a35683add6bcdaf
+      internalID: -2123651180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyHP_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 25
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fdae5d24efe84f44688c3e28a67744fe
+      internalID: 678615017
       vertices: []
       indices: 
       edges: []
@@ -194,6 +236,7 @@ TextureImporter:
       EnemyHP_1: 1016854600
       EnemyHP_2: -883883107
       EnemyHP_3: -2123651180
+      EnemyHP_4: 678615017
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -14,6 +14,7 @@ public class TextAnimation : MonoBehaviour
     public List<string> textBoxList = new List<string>();
     private bool _isPlaying = false;
     private int counter = 0;
+    private int lineCounter = 0;
 
     [SerializeField] float timeBtwnChars = 0.01f;
 
@@ -39,6 +40,10 @@ public class TextAnimation : MonoBehaviour
         if (_isPlaying)
         {
             counter = _textMeshPro.textInfo.characterCount - 1;
+            if (_textMeshPro.textInfo.lineCount > 4)
+            {
+                _textMeshPro.text = _textMeshPro.text.Remove(0, _textMeshPro.textInfo.lineInfo[0].characterCount * (_textMeshPro.textInfo.lineCount - 4));
+            }
             _isPlaying = false;
         }
         else if (i < textBoxList.Count)
@@ -57,7 +62,10 @@ public class TextAnimation : MonoBehaviour
     {
         _textMeshPro.ForceMeshUpdate();
         int totalVisibleCharacters = _textMeshPro.textInfo.characterCount;
+        int totalVisibleLines = _textMeshPro.textInfo.lineCount;
         counter = 0;
+        lineCounter = 0;
+        int previousLineCharCount = 0;
 
         while (true)
         {
@@ -73,6 +81,17 @@ public class TextAnimation : MonoBehaviour
             }
 
             counter += 1;
+            if(counter > previousLineCharCount + _textMeshPro.textInfo.lineInfo[lineCounter].characterCount)
+            {
+                previousLineCharCount += _textMeshPro.textInfo.lineInfo[lineCounter].characterCount;
+                lineCounter++;
+                if(lineCounter >= 4)
+                {
+                    lineCounter--;
+                    counter -= _textMeshPro.textInfo.lineInfo[0].characterCount;
+                    _textMeshPro.text = _textMeshPro.text.Remove(0, _textMeshPro.textInfo.lineInfo[0].characterCount);
+                }
+            }
             yield return StartCoroutine(CoroutineUtil.WaitForRealSeconds(timeBtwnChars));
 
 

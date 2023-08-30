@@ -32,4 +32,8 @@ public class WeaponTrigger : MonoBehaviour
             player.UpdateWeaponSprite();
         }
     }
+    public void StartCharging()
+    {
+        player.normalState.isCharging = true;
+    }
 }

@@ -25,14 +25,14 @@ public class Wea09_PaintGun : Bullet
                 float attackModifier = 0f;
                 if (ID == playerStat.currentWeapon[0])
                     attackModifier += playerStat.defaultWeaponAtkUpPerc;
-                if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                if (isCrit)
                 {
                     attackModifier += 200;
                     Instantiate(critVFX).transform.position = collision.transform.position;
                 }
                 if (isBurning)
                     temp.GetBurn(1);
-                temp.GetSpeedChange(-50f, 1f);
+                temp.GetSpeedChange(-65f, 1f);
                 temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc + attackModifier) / 100f)));
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet")
@@ -45,7 +45,7 @@ public class Wea09_PaintGun : Bullet
                         float attackModifier = 0f;
                         if (ID == playerStat.currentWeapon[0])
                             attackModifier += playerStat.defaultWeaponAtkUpPerc;
-                        if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                        if (isCrit)
                         {
                             attackModifier += 200;
                             Instantiate(critVFX).transform.position = collision.transform.position;
@@ -78,7 +78,7 @@ public class Wea09_PaintGun : Bullet
             if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
             {
                 PlayerStateManager temp = collision.GetComponent<PlayerStateManager>();
-                temp.GetSpeedChange(-50f,1f);
+                temp.GetSpeedChange(-65f, 1f);
                 temp.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "PlayerBullet")

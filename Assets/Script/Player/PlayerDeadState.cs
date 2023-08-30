@@ -13,7 +13,7 @@ public class PlayerDeadState : PlayerBaseState
         player.playerSprites[1].enabled = false;
         player.weaponSprite.enabled = false;
         player.rb.velocity = Vector2.zero;
-        Time.timeScale = 0.1f;
+        Time.timeScale = 0.15f;
         player.bodyAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
         player.bodyAnimator.SetTrigger("Dead");
         flashWhiteTimer = Time.unscaledTime;

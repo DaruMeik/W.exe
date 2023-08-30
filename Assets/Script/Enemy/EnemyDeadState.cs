@@ -20,11 +20,13 @@ public class EnemyDeadState : EnemyBaseState
             enemy.eventBroadcast.PossessEventNoti(enemy);
         }
         enemy.animator.SetTrigger("Dead");
+        enemy.StopSkill();
     }
     public override void UpdateState(EnemyStateManager enemy)
     {
         if (Time.time - flashTime >= 0.15f)
         {
+            enemy.StopSkill();
             if (show)
             {
                 enemy.enemySprite.material = enemy.defaultMat;

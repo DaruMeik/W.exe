@@ -217,6 +217,9 @@ MonoBehaviour:
   playerStat: {fileID: 11400000, guid: 8a107fd139e91684d9ec2c13774160e6, type: 2}
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
   triggerCol: {fileID: 6628299433444547129}
+  moneyGenerator: {fileID: 4412527800955019369, guid: 2f6c2016d3af7f14e8058d491b4bdeb0, type: 3}
+  moneyValue: 40
+  textAnimation: {fileID: 8169065299831549065}
 --- !u!1001 &8107668090797569647
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -290,11 +293,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: textBoxList.Array.data[0]
-      value: Gives you 20P.
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3453592409188408222, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
       propertyPath: m_IsActive
@@ -302,6 +305,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
+--- !u!114 &8169065299831549065 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 133525481607650022, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}
+  m_PrefabInstance: {fileID: 8107668090797569647}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2dc20de9bbdb54c8d89611dedafd5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8169065300105801498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 133525481327991157, guid: 67a0ffdc073c3ec41be811203df582b0, type: 3}

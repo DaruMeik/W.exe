@@ -21,6 +21,8 @@ public class Wea11_ChargeSpear : Bullet
             }
             playerState.beingControlledBy = gameObject;
             playerState.transform.parent = gameObject.transform;
+            playerState.normalState.isShooting1 = false;
+            playerState.normalState.isShooting2 = false;
         }
         else
         {
@@ -40,23 +42,27 @@ public class Wea11_ChargeSpear : Bullet
             return;
         if(Vector2.Distance(gameObject.transform.position, endPoint) < 1f)
         {
-            if (bySelf)
+            try
             {
-                playerState.rb.isKinematic = false;
-                playerState.transform.parent = null;
-                playerState.beingControlledBy = null;
-                playerState.GetStun(0.5f);
-                Destroy(gameObject);
+                if (bySelf)
+                {
+                    playerState.rb.isKinematic = false;
+                    playerState.transform.parent = null;
+                    playerState.beingControlledBy = null;
+                    playerState.GetStun(0.5f);
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    enemyState.rb.isKinematic = false;
+                    enemyState.transform.parent = null;
+                    enemyState.beingControlledBy = null;
+                    enemyState.animator.SetTrigger("Stop");
+                    enemyState.GetStun(1.5f, false);
+                    Destroy(gameObject);
+                }
             }
-            else
-            {
-                enemyState.rb.isKinematic = false;
-                enemyState.transform.parent = null;
-                enemyState.beingControlledBy = null;
-                enemyState.animator.SetTrigger("Stop");
-                enemyState.GetStun(1.5f, false);
-                Destroy(gameObject);
-            }
+            catch { Destroy(gameObject); };
         }
     }
     protected override void OnTriggerEnter2D(Collider2D collision)
@@ -78,7 +84,7 @@ public class Wea11_ChargeSpear : Bullet
                 {
                     attackModifier += 50;
                 }
-                if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                if (isCrit)
                 {
                     attackModifier += 200;
                     Instantiate(critVFX).transform.position = collision.transform.position;
@@ -96,7 +102,7 @@ public class Wea11_ChargeSpear : Bullet
                         float attackModifier = 0f;
                         if (ID == playerStat.currentWeapon[0])
                             attackModifier += playerStat.defaultWeaponAtkUpPerc;
-                        if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                        if (isCrit)
                         {
                             attackModifier += 200;
                             Instantiate(critVFX).transform.position = collision.transform.position;

@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bac29c49779e624997d7a74842fdb73, type: 3}
   m_Name: PlayerStat
   m_EditorClassIdentifier: 
-  currentHP: 150
+  currentHP: 100
   currentIndex: 0
-  currentWeapon: 030000000a000000
+  currentWeapon: 0000000000000000
   currentAmmo: ffffffffffffffff
   cardReadyPerc: 100
   level: 1
   exp: 0
-  defaultMaxHP: 150
+  defaultMaxHP: 100
   defaultPlayerSpeed: 5
   defaultMaxDash: 1
   defaultShockWaveRange: 2.5
@@ -30,28 +30,50 @@ MonoBehaviour:
   defaultDefPerc: 0
   defaultWeapon: 0
   defaultWeaponAtkUpPerc: 0
-  maxHP: 150
+  maxHP: 100
   playerSpeed: 5
   maxDash: 1
   shockWaveRange: 2.5
   shockWaveStunTime: 0.5
   money: 0
+  chip: 0
   luck: -20
   atkPerc: 0
   defPerc: 0
   extraCardDamage: 0
   extraAmmoPerc: 0
-  extraPossessHealingPerc: 0
   shockwaveDealDamage: 0
   cardShockWave: 0
-  burningBullet: 0
+  rage: 0
+  closeCombat: 0
+  sharpShooter: 0
+  stubborn: 0
+  extraAtkSpeedPerc: 0
+  swiftMovement: 0
+  featherStep: 0
+  shadowMovement: 0
+  extraPossessHealingPerc: 0
+  movingFort: 0
+  poisonResistance: 0
+  fireResistance: 0
+  shockArmor: 0
+  shockBlast: 0
+  fireBullet: 0
   fasterCharge: 0
   unseenBlade: 0
-  BEEG: 0
-  critable: 1
-  goodReflex: 0
+  BEEGBomb: 0
+  critableGun: 0
+  reflectSword: 0
   sharpBullet: 0
-  unsellableWeapon: 000000000600000009000000
-  levelUpgradeRegister: 
+  wildCard: 0
+  sturdyBuild: 0
+  goldBuild: 0
+  curseOfOffense: 0
+  curseOfDefense: 0
+  curseOfMobility: 0
+  unsellableWeapon: 0000000006000000090000000c000000
+  redUpgradeRegister: 
+  greenUpgradeRegister: 
+  blueUpgradeRegister: 
   bulletModRegister: 
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}

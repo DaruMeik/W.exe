@@ -23,12 +23,18 @@ public class PlayerPossessState : PlayerBaseState
     }
     public override void ExitState(PlayerStateManager player)
     {
+        player.StopCoroutine(player.possessCoroutine);
+        player.enemy = null;
+        player.canPossessMarker.SetActive(false);
         player.eventBroadcast.UpdateHPNoti();
         player.bodyAnimator.SetTrigger("FinishPossess");
         player.isInvincible = false;
         GameObject.Instantiate(player.shockWave, player.transform);
-        player.TakeDamage(-Mathf.FloorToInt(player.playerStat.maxHP * (5 * (100 + player.playerStat.extraPossessHealingPerc) / 100f) / 100f));
+        if(player.playerStat.curseOfDefense == 0)
+           player.TakeDamage(-Mathf.FloorToInt(player.playerStat.maxHP * (5 * (100 + player.playerStat.extraPossessHealingPerc) / 100f) / 100f));
         player.playerStat.cardReadyPerc = 100;
+        if (player.playerStat.shadowMovement)
+            player.GetSpeedChange(75, 1f);
         player.eventBroadcast.UpdateCardUINoti();
     }
 

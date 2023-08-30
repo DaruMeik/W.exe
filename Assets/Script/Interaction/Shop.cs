@@ -14,6 +14,9 @@ public class Shop : MonoBehaviour
             item.gameObject.SetActive(false);
         }
 
+        items[0].itemType = "Utility";
+        items[0].itemId = ShopDatabase.utilityList[Random.Range(0, ShopDatabase.utilityList.Count)].id;
+
         List<int> possibleId = new List<int>();
         possibleId.Clear();
         foreach (ShopItem item in ShopDatabase.weaponList)
@@ -22,29 +25,15 @@ public class Shop : MonoBehaviour
                 possibleId.Add(item.id);
         }
         //Roll for weapon
-        items[0].itemType = "Weapon";
-        items[0].itemId = possibleId[Random.Range(0, possibleId.Count)];
-        possibleId.Remove(items[0].itemId);
         items[1].itemType = "Weapon";
         items[1].itemId = possibleId[Random.Range(0, possibleId.Count)];
         possibleId.Remove(items[1].itemId);
         items[2].itemType = "Weapon";
         items[2].itemId = possibleId[Random.Range(0, possibleId.Count)];
+        possibleId.Remove(items[2].itemId);
 
-        //Roll for upgrade
-        possibleId = new List<int>();
-        possibleId.Clear();
-        foreach (ShopItem item in ShopDatabase.upgradeList)
-        {
-            possibleId.Add(item.id);
-        }
-        var temp = possibleId.Where(x => !playerStat.levelUpgradeRegister.Contains(x) && x != 0);
-        items[3].itemType = "Upgrade";
-        if (temp.Count() > 0)
-            items[3].itemId = temp.ElementAt(Random.Range(0, temp.Count()));
-        else
-            items[3].itemId = 0;
-
+        items[3].itemType = "Exp";
+        items[3].itemId = ShopDatabase.expList[Random.Range(0, ShopDatabase.expList.Count)].id;
 
         foreach (BuyItem item in items)
         {

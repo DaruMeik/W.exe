@@ -28,6 +28,10 @@ public class ShockWave : MonoBehaviour
         {
             EnemyStateManager temp = collision.gameObject.GetComponent<EnemyStateManager>();
             temp.GetStun(playerStat.shockWaveStunTime, true);
+            if (playerStat.shockBlast)
+            {
+                temp.rb.AddForce((temp.transform.position - gameObject.transform.position).normalized * 7.5f, ForceMode2D.Impulse);
+            }
             if (playerStat.shockwaveDealDamage)
             {
                 temp.TakeDamage(Mathf.FloorToInt((WeaponDatabase.fishingMail.power + playerStat.extraCardDamage) * (100 + playerStat.atkPerc) / 100f));

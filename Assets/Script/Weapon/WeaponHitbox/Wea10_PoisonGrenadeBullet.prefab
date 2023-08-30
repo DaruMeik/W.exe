@@ -133,10 +133,12 @@ MonoBehaviour:
   bulletSprites:
   - {fileID: 7746414403799508877}
   - {fileID: 7746414404709655293}
+  moneyGenerator: {fileID: 4412527800955019369, guid: 2f6c2016d3af7f14e8058d491b4bdeb0, type: 3}
   playerStat: {fileID: 11400000, guid: 8a107fd139e91684d9ec2c13774160e6, type: 2}
   eventBroadcast: {fileID: 11400000, guid: 9356b7c094d21024fb0bd1d8f563b6de, type: 2}
   critVFX: {fileID: 510411677040249560, guid: f0e26a66c7eee4240bb7ae0fe8d4eccb, type: 3}
   isBurning: 0
+  isCrit: 0
   endPoint: {x: 0, y: 0, z: 0}
   col: {fileID: 734370303481511099}
   Toxic: {fileID: 1797239419535962036, guid: 2061f2b665332b84cbffeaacb08d6797, type: 3}

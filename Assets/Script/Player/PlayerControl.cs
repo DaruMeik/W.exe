@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -14,6 +15,6 @@ public class PlayerControl : MonoBehaviour
         pInput = new PlayerInput();
         pInput.Enable();
         pInput.Player.Enable();
-        pInput.UI.Disable();
+        pInput.UI.Enable();
     }
 }

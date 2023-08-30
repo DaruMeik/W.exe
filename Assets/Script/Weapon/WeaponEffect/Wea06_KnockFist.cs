@@ -76,7 +76,7 @@ public class Wea06_KnockFist : Bullet
                             float attackModifier = 0f;
                             if (ID == playerStat.currentWeapon[0])
                                 attackModifier += playerStat.defaultWeaponAtkUpPerc;
-                            if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                            if (isCrit)
                             {
                                 attackModifier += 200;
                                 Instantiate(critVFX).transform.position = collision.transform.position;
@@ -143,7 +143,7 @@ public class Wea06_KnockFist : Bullet
                         float attackModifier = 0f;
                         if (ID == playerStat.currentWeapon[0])
                             attackModifier += playerStat.defaultWeaponAtkUpPerc;
-                        if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                        if (isCrit)
                         {
                             attackModifier += 200;
                             Instantiate(critVFX).transform.position = collision.transform.position;

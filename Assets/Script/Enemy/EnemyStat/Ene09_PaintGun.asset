@@ -18,7 +18,7 @@ MonoBehaviour:
   enemyRewardWeaponID: 9
   enemyBehavior: Hold
   explosionImmunity: 0
-  poisonImmunity: 100
+  poisonImmunity: 75
   enemyWeaponId: 09000000
   enemyAtkRange:
   - 6

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Wea02_ShortSwordEffect : WeaponBaseEffect
 {
-
     private int weaponId = 2;
     public override void ApplyEffect(Vector3 startPoint, Vector3 endPoint, bool bySelf, PlayerStat playerStat, Rigidbody2D userRigid, ref GameObject spawnObj)
     {
@@ -12,6 +11,7 @@ public class Wea02_ShortSwordEffect : WeaponBaseEffect
         endPoint.z = 0;
 
         GameObject instancedObj = GameObject.Instantiate(WeaponDatabase.weaponList[weaponId].weaponHitBox) as GameObject;
+        instancedObj.tag = (bySelf) ? "PlayerBullet" : "EnemyBullet";
         // Rotate Skill
         Vector3 lookDir = endPoint - startPoint;
         float lookAngle = -Mathf.Atan2(lookDir.x, lookDir.y) * Mathf.Rad2Deg + 90f;

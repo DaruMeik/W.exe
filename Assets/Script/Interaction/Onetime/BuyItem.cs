@@ -18,23 +18,23 @@ public class BuyItem : Onetime
         string temp = "";
         switch (itemType)
         {
-            case "StarterWeapon":
-                temp += ShopDatabase.weaponList[itemId].name + "\n" + ShopDatabase.weaponList[itemId].description;
-                itemPrice = 0;
-                spriteRenderer.sprite = ShopDatabase.weaponList[itemId].sprite;
-                highlightRenderer.sprite = ShopDatabase.weaponList[itemId].sprite;
-                break;
             case "Weapon":
                 temp += ShopDatabase.weaponList[itemId].name + "\n" + ShopDatabase.weaponList[itemId].description + "\nPrice: " + ShopDatabase.weaponList[itemId].price + "P";
                 itemPrice = ShopDatabase.weaponList[itemId].price;
                 spriteRenderer.sprite = ShopDatabase.weaponList[itemId].sprite;
                 highlightRenderer.sprite = ShopDatabase.weaponList[itemId].sprite;
                 break;
-            case "Upgrade":
-                temp += ShopDatabase.upgradeList[itemId].name + "\n" + ShopDatabase.upgradeList[itemId].description + "\nPrice: " + ShopDatabase.upgradeList[itemId].price + "P";
-                itemPrice = ShopDatabase.upgradeList[itemId].price;
-                spriteRenderer.sprite = ShopDatabase.upgradeList[itemId].sprite;
-                highlightRenderer.sprite = ShopDatabase.upgradeList[itemId].sprite;
+            case "Utility":
+                temp += ShopDatabase.utilityList[itemId].name + "\n" + ShopDatabase.utilityList[itemId].description + "\nPrice: " + ShopDatabase.utilityList[itemId].price + "P";
+                itemPrice = ShopDatabase.utilityList[itemId].price;
+                spriteRenderer.sprite = ShopDatabase.utilityList[itemId].sprite;
+                highlightRenderer.sprite = ShopDatabase.utilityList[itemId].sprite;
+                break;
+            case "Exp":
+                temp += ShopDatabase.expList[itemId].name + "\n" + ShopDatabase.expList[itemId].description + "\nPrice: " + ShopDatabase.expList[itemId].price + "P";
+                itemPrice = ShopDatabase.expList[itemId].price;
+                spriteRenderer.sprite = ShopDatabase.expList[itemId].sprite;
+                highlightRenderer.sprite = ShopDatabase.expList[itemId].sprite;
                 break;
         }
         textAnim.textBoxList.Add(temp);
@@ -54,9 +54,11 @@ public class BuyItem : Onetime
                     weaponSlotSelection.weaponID = ShopDatabase.weaponList[itemId].id;
                     weaponSlotSelection.gameObject.SetActive(true);
                     break;
-                case "Upgrade":
-                    UpgradeDatabase.levelUpgradeList[itemId].upgradeBaseEffect.ApplyEffect(playerStat);
-                    playerStat.levelUpgradeRegister.Add(ShopDatabase.upgradeList[itemId].id);
+                case "Utility":
+                    Instantiate(ShopDatabase.utilityList[itemId].interactObject).GetComponent<Onetime>().Interact();
+                    break;
+                case "Exp":
+                    Instantiate(ShopDatabase.expList[itemId].interactObject).GetComponent<Onetime>().Interact();
                     break;
             }
             Destroy(gameObject);

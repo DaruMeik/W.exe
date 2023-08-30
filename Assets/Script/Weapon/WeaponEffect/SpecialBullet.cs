@@ -27,7 +27,7 @@ public class SpecialBullet : Bullet
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
                 float attackModifier = 0f;
-                if (playerStat.critableGun && Random.Range(0, 100) >= 90)
+                if (isCrit)
                 {
                     attackModifier += 200;
                     Instantiate(critVFX).transform.position = collision.transform.position;

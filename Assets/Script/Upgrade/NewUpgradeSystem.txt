@@ -1,0 +1,10 @@
+Weapon
+
+
+Mobility:
+
+
+Defense
+- Create shockwave when
+- Lose 50% Max HP, gain 1 death defiance per room.
+- More healing from all source.

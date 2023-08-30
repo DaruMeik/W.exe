@@ -7,7 +7,7 @@ public class MedKit : Onetime
     public override void Interact()
     {
         hasBeenUsed = true;
-        playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP + Mathf.FloorToInt(playerStat.maxHP * 25f / 100f));
+        playerStat.currentHP = Mathf.Min(playerStat.maxHP, playerStat.currentHP + 50);
         eventBroadcast.HealVFXNoti();
         playerStat.eventBroadcast.UpdateHPNoti();
         Destroy(gameObject);

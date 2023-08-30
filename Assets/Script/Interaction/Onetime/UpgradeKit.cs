@@ -8,6 +8,7 @@ public class UpgradeKit : Onetime
     {
         hasBeenUsed = true;
         playerStat.maxHP += 25;
+        playerStat.currentHP += 25;
         playerStat.eventBroadcast.UpdateHPNoti();
         Destroy(gameObject);
     }

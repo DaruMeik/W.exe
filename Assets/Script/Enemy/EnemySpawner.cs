@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 public class EnemySpawner : MonoBehaviour
 {
     public bool specialSpawn = false;
+    public int specialSpawnNumber;
+    public int spawnAmountPlus = 0;
+    public int waveAmountPlus = 0;
     private bool stageFinished = false;
     private float nextSpawnTime = 0;
     [SerializeField] private EventBroadcast eventBroadcast;
@@ -52,7 +55,7 @@ public class EnemySpawner : MonoBehaviour
     }
     private void Update()
     {
-        if (specialSpawn && Time.time > nextSpawnTime && killedAmount == spawnAmount)
+        if (specialSpawn && Time.time > nextSpawnTime && killedAmount == spawnAmount && specialSpawnNumber != 0)
         {
             killedAmount = 0;
             SpawnNewEnemy();
@@ -82,15 +85,19 @@ public class EnemySpawner : MonoBehaviour
                     enemyIDList.Add(new int[] { Random.Range(0, specialEnemyObj.Length), 3 });
                     break;
             }
-            spawnAmount = 2;
+            spawnAmount = specialSpawnNumber;
         }
         else if (MapGenerator.Instance.currentPos[0] <= 2)
         {
-            spawnAmount = 2 + spawnWave;
+            spawnAmount = 2 + spawnWave + spawnAmountPlus;
+        }
+        else if (MapGenerator.Instance.currentPos[0] >= 10)
+        {
+            spawnAmount = 4 + spawnWave + spawnAmountPlus;
         }
         else
         {
-            spawnAmount = 3 + spawnWave;
+            spawnAmount = 3 + spawnWave + spawnAmountPlus;
         }
         for (int i = 0; i < spawnAmount; i++)
         {
@@ -111,9 +118,13 @@ public class EnemySpawner : MonoBehaviour
             {
                 enemyID = enemyIDList[1];
             }
-            else
+            else if (i < 5)
             {
                 enemyID = enemyIDList[2];
+            }
+            else
+            {
+                enemyID = enemyIDList[3];
             }
             if (possibleField.Count == 0)
             {
@@ -147,7 +158,7 @@ public class EnemySpawner : MonoBehaviour
             enemyStateManager.target = target.transform;
             enemyStateManager.patrolPath = patrolPos;
         }
-        nextSpawnTime = Time.time + 12f;
+        nextSpawnTime = Time.time + 1000f;
     }
 
     private void GenerateEnemyID()
@@ -195,6 +206,27 @@ public class EnemySpawner : MonoBehaviour
                     {
                         case 0:
                             i = new int[] { Random.Range(0, rangeEnemyObj.Length), 0 };
+                            type.Remove(0);
+                            break;
+                        case 1:
+                            i = new int[] { Random.Range(0, meleeEnemyObj.Length), 1 };
+                            type.Remove(1);
+                            break;
+                        case 2:
+                            i = new int[] { Random.Range(0, supportEnemyObj.Length), 2 };
+                            type.Remove(2);
+                            break;
+                        case 3:
+                            i = new int[] { Random.Range(0, specialEnemyObj.Length), 3 };
+                            type.Remove(3);
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch (type[Random.Range(0, type.Count)])
+                    {
+                        case 0:
+                            i = new int[] { Random.Range(0, rangeEnemyObj.Length), 0 };
                             break;
                         case 1:
                             i = new int[] { Random.Range(0, meleeEnemyObj.Length), 1 };
@@ -223,7 +255,7 @@ public class EnemySpawner : MonoBehaviour
                 enemyIDList.Add(i);
             }
         }
-        while (enemyIDList.Count < 3);
+        while (enemyIDList.Count < 4);
     }
     private void RefreshMap()
     {
@@ -236,6 +268,7 @@ public class EnemySpawner : MonoBehaviour
     private void CountDaDeath()
     {
         killedAmount++;
+        nextSpawnTime = Time.time + 5f;
         if (!specialSpawn)
             CheckForFinish();
     }
@@ -245,42 +278,38 @@ public class EnemySpawner : MonoBehaviour
         if (killedAmount == spawnAmount)
         {
             spawnWave++;
-            if (spawnWave < 3)
+            if (spawnWave < 3 + waveAmountPlus)
             {
                 killedAmount = 0;
                 SpawnNewEnemy();
             }
             else
             {
-                int temp = Random.Range(0, 100);
-                if(playerStat.currentHP < playerStat.maxHP * 25 / 100f)
+                switch (MapGenerator.Instance.currentReward)
                 {
-                    Instantiate(rewards[1]).transform.position = target.transform.position;
-                }
-                else if (playerStat.currentHP < playerStat.maxHP * 75 / 100f)
-                {
-
-                    if (temp >= 40)
+                    case "RedExp":
                         Instantiate(rewards[0]).transform.position = target.transform.position;
-                    else
+                        break;
+                    case "GreenExp":
                         Instantiate(rewards[1]).transform.position = target.transform.position;
-                }
-                else if (playerStat.currentHP < playerStat.maxHP)
-                {
-                    if (temp >= 40)
-                        Instantiate(rewards[0]).transform.position = target.transform.position;
-                    else
+                        break;
+                    case "BlueExp":
                         Instantiate(rewards[2]).transform.position = target.transform.position;
-                }
-                else
-                {
-                    if (temp >= 80)
-                        Instantiate(rewards[0]).transform.position = target.transform.position;
-                    else
-                        Instantiate(rewards[2]).transform.position = target.transform.position;
+                        break;
+                    case "Gold":
+                        Instantiate(rewards[3]).transform.position = target.transform.position;
+                        break;
+                    case "MaxHP":
+                        Instantiate(rewards[4]).transform.position = target.transform.position;
+                        break;
+                    case "Gem":
+                        Instantiate(rewards[5]).transform.position = target.transform.position;
+                        break;
+                    case "Chip":
+                        Instantiate(rewards[6]).transform.position = target.transform.position;
+                        break;
                 }
                 eventBroadcast.AllDeadNoti();
-                eventBroadcast.GainEXPNoti(1);
             }
         }
     }
@@ -288,6 +317,5 @@ public class EnemySpawner : MonoBehaviour
     {
         stageFinished = true;
         eventBroadcast.AllDeadNoti();
-        eventBroadcast.GainEXPNoti(2);
     }
 }

@@ -8,17 +8,15 @@ public class WeaponSlotSelection : MonoBehaviour
     [SerializeField] private EventBroadcast eventBroadcast;
 
     public int weaponID;
-    private float previousTimeScale;
     private void OnEnable()
     {
         eventBroadcast.EnterUINoti();
-        previousTimeScale = Time.timeScale;
-        Time.timeScale = 0f;
+        Time.timeScale = Mathf.Max(0, Time.timeScale - 1f);
     }
     private void OnDisable()
     {
         eventBroadcast.ExitUINoti();
-        Time.timeScale = previousTimeScale;
+        Time.timeScale = Mathf.Min(1f, Time.timeScale + 1f);
     }
     public void ChooseReward(int buttonIndex)
     {

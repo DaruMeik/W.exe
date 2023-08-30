@@ -25,8 +25,7 @@ public class BulletMod : Onetime
     }
     public override void Interact()
     {
-        UpgradeDatabase.levelUpgradeList[itemId].upgradeBaseEffect.ApplyEffect(playerStat);
-        playerStat.levelUpgradeRegister.Add(ShopDatabase.upgradeList[itemId].id);
+        UpgradeDatabase.bulletModList[itemId].upgradeBaseEffect.ApplyEffect(playerStat);
         eventBroadcast.BulletModPickedNoti();
     }
     private void SelfDestruct()

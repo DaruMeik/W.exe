@@ -27,14 +27,14 @@ public class EventBroadcast : ScriptableObject
     public event GameEvent exitUI;
 
     public event GameEvent bulletModPicked;
+    public event GameEvent bossSpawn;
 
 
     public delegate void IntGameEvent(int i);
-    public event IntGameEvent gainExp;
+    public event IntGameEvent finishNewMachine;
 
-    // Random Event
-    public delegate void RandomMachine(int buff, int nerf);
-    public event RandomMachine finishNewMachine;
+    public delegate void ExpEvent(int i, string type);
+    public event ExpEvent gainExp;
 
     public delegate void EnemyEvent(EnemyStateManager enemy);
     public event EnemyEvent possessEvent;
@@ -129,15 +129,23 @@ public class EventBroadcast : ScriptableObject
         if (bulletModPicked != null)
             bulletModPicked.Invoke();
     }
-    public void GainEXPNoti(int ammount)
+
+    public void BossSpawnNoti()
     {
-        if(gainExp != null)
-            gainExp.Invoke(ammount);
+        if(bossSpawn != null)
+            bossSpawn.Invoke();
     }
-    public void FinishNewMachineNoti(int i, int j)
+
+    public void GainExpNoti(int amount, string type)
+    {
+        if (gainExp != null)
+            gainExp.Invoke(amount, type);
+    }
+
+    public void FinishNewMachineNoti(int curseIndex)
     {
         if (finishNewMachine != null)
-            finishNewMachine.Invoke(i, j);
+            finishNewMachine.Invoke(curseIndex);
     }
     public void PossessEventNoti(EnemyStateManager enemy)
     {

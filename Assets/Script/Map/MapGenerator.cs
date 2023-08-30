@@ -12,16 +12,21 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private GameObject line;
     [SerializeField] private GameObject playerIcon;
     public Sprite[] nodeImages;
+    public Sprite[] bossImages;
+    public int currentBossIndex;
     public int[] currentPos;
     public int width;
     public int height;
+    public string currentReward;
     private GameObject[,] nodeMap;
     private List<GameObject> lineList;
     [SerializeField] private EventBroadcast eventBroadcast;
+    [SerializeField] private PlayerStat playerStat;
 
     [Header("Scene List")]
-    public List<string> garageFightList = new List<string>();
-    public List<string> garageMinibossList = new List<string> ();
+    public List<string> garageEasyFightList = new List<string>();
+    public List<string> garageHardFightList = new List<string>();
+    public List<string> garageMinibossList = new List<string>();
     public List<string> officeFightList = new List<string>();
     public List<string> randomFightList = new List<string>();
     public List<string> restList = new List<string>();
@@ -41,6 +46,7 @@ public class MapGenerator : MonoBehaviour
     {
         if (Instance == null)
             Instance = this;
+        currentBossIndex = Random.Range(0, garageBossList.Count);
         lineList = new List<GameObject>();
         map = new MapSystem(width, height);
         currentPos = new int[2] { 0, 0 };
@@ -59,13 +65,14 @@ public class MapGenerator : MonoBehaviour
                 nodeMap[x, y].transform.position = new Vector3(x, y, 0f);
             }
         }
-        map.SetRoomType(0, Mathf.FloorToInt(map.height / 2f), "Start");
+        map.SetRoomType(0, 1, "Start");
+        map.SetNextRoom(0, 1, new List<int> { 0, 2 });
     }
 
     private void GenerateNode()
     {
         // ClearMap
-        foreach(GameObject gObj in lineList)
+        foreach (GameObject gObj in lineList)
         {
             Destroy(gObj);
         }
@@ -78,135 +85,130 @@ public class MapGenerator : MonoBehaviour
                 map.SetNextRoom(x, y, new List<int>());
             }
         }
-        //special first room rule
-        ChangeCurrentPos(0, Mathf.FloorToInt(map.height / 2f));
-        List<int> possibleFirstNodes = new List<int>();
-        for (int i = 0; i < map.height; i++)
+        ChangeCurrentPos(0, 1);
+
+        // Set The Skeleton
+        List<string> mapSkeleton = new List<string>();
+        int chanceForWeakPrice = 25;
+        // Init skeleton
+        for (int i = 0; i < map.width; i++)
         {
-            possibleFirstNodes.Add(i);
+            mapSkeleton.Add("");
         }
-        for (int i = 0; i < map.height - 3; i++)
+        // Setting the rule
+        mapSkeleton[0] = "Start";
+        mapSkeleton[1] = "ExpType";
+        mapSkeleton[4] = "Miniboss";
+        mapSkeleton[5] = "Upgrade";
+        if (Random.Range(0, 100) < 20)
         {
-            possibleFirstNodes.RemoveAt(Random.Range(0, possibleFirstNodes.Count));
+            mapSkeleton[7] = "RestType";
         }
-        foreach (int i in possibleFirstNodes)
+        mapSkeleton[map.width - 2] = "RestType";
+        mapSkeleton[map.width - 1] = "Boss";
+        for (int i = 0; i < map.width; i++)
         {
-            SetUpRoom(1, i);
+            if (mapSkeleton[i] == "")
+            {
+                int dice = Random.Range(0, 100);
+                if (dice < chanceForWeakPrice)
+                {
+                    mapSkeleton[i] = "WeakType";
+                    chanceForWeakPrice = Mathf.Max(0, chanceForWeakPrice - 50);
+                }
+                else
+                {
+                    mapSkeleton[i] = "StrongType";
+                    chanceForWeakPrice += 25;
+                }
+            }
         }
-        map.SetNextRoom(0, Mathf.FloorToInt(map.height / 2f), possibleFirstNodes);
+
+
+        map.SetRoomType(0, 1, "Start");
+        map.SetNextRoom(0, 1, new List<int> { 0, 2 });
+        List<int> nextNode = new List<int>() { 0, 2 };
         for (int x = 1; x < map.width - 1; x++)
         {
-            int minIndex = 0;
-            int maxIndex = map.height;
+            List<string> possibleNodes = new List<string>();
+            switch (mapSkeleton[x])
+            {
+                case "ExpType":
+                    possibleNodes = new List<string> { "RedExp", "GreenExp", "BlueExp" };
+                    break;
+                case "Miniboss":
+                    possibleNodes = new List<string> { "Miniboss" };
+                    break;
+                case "Upgrade":
+                    possibleNodes = new List<string>() { "Upgrade" };
+                    break;
+                case "RestType":
+                    possibleNodes = new List<string>() { "Rest", "Shop", "Random" };
+                    break;
+                case "Boss":
+                    possibleNodes = new List<string>() { "Boss" };
+                    break;
+                case "WeakType":
+                    possibleNodes = new List<string>() { "Chip", "Gem" , "Gold"};
+                    break;
+                case "StrongType":
+                    possibleNodes = new List<string>() { "RedExp", "GreenExp", "BlueExp", "Gold", "MaxHP" };
+                    break;
+            }
 
-            // Check converge
-            int availableNode = 0;
+            // Set Room
             for (int y = 0; y < map.height; y++)
             {
-                if (map.GetRoomType(x, y) != "")
+                if (nextNode.Contains(y))
                 {
-                    availableNode++;
+                    if (Random.Range(0, 100) < 10 && !new List<string> { "Miniboss", "Upgrade", "Boss", "RestType" }.Contains(mapSkeleton[x]))
+                        map.SetRoomType(x, y, "Random");
+                    else
+                    {
+                        string nodeType = possibleNodes[Random.Range(0, possibleNodes.Count)];
+                        map.SetRoomType(x, y, nodeType);
+                        possibleNodes.Remove(nodeType);
+                    }
                 }
             }
 
+            // Set Next
+            nextNode.Clear();
             for (int y = 0; y < map.height; y++)
             {
                 if (map.GetRoomType(x, y) != "")
                 {
-                    int rand = Random.Range(0, 100);
-                    if (availableNode == 1 || rand >= 60)
+                    if (x == 3 || x == 4 || x == map.width - 2)
                     {
-                        int randY1 = Random.Range((int)Mathf.Max(minIndex, y - 1), (int)Mathf.Min(maxIndex, y + 2));
-                        if (randY1 > minIndex)
-                            minIndex = randY1;
-                        SetUpRoom(x + 1, randY1);
-                        int randY2 = Random.Range((int)Mathf.Max(minIndex, y - 1), (int)Mathf.Min(maxIndex, y + 2));
-                        if (randY2 > minIndex)
-                            minIndex = randY2;
-                        SetUpRoom(x + 1, randY2);
-                        if (randY1 != randY2)
-                            map.SetNextRoom(x, y, new List<int> { randY1, randY2 });
-                        else
-                            map.SetNextRoom(x, y, new List<int> { randY1 });
+                        map.SetNextRoom(x, y, new List<int> { 1 });
+                        nextNode.Add(1);
+                    }
+                    else if (x == map.width - 3)
+                    {
+                        map.SetNextRoom(x, y, new List<int> { 0, 1, 2 });
+                        nextNode.Add(0);
+                        nextNode.Add(1);
+                        nextNode.Add(2);
                     }
                     else
                     {
-                        int randY = Random.Range(Mathf.Max(minIndex, y - 1), Mathf.Min(maxIndex, y + 2));
-                        if (randY > minIndex)
-                            minIndex = randY;
-                        SetUpRoom(x + 1, randY);
-                        map.SetNextRoom(x, y, new List<int> { randY });
+                        List<int> goTo = new List<int> { 0, 1, 2 };
+                        goTo.RemoveAt(Random.Range(0, goTo.Count));
+                        map.SetNextRoom(x, y, goTo);
+                        foreach (int i in goTo)
+                        {
+                            if (!nextNode.Contains(i))
+                                nextNode.Add(i);
+                        }
                     }
                 }
             }
         }
+        map.SetRoomType(map.width - 1, 1, "Boss");
         GenerateMap();
     }
 
-    private void SetUpRoom(int x, int y)
-    {
-        if (x == map.width - 1)
-        {
-            map.SetRoomType(x, y, "Rest");
-        }
-        else if (x == Mathf.CeilToInt(map.width / 2f))
-        {
-            map.SetRoomType(x, y, "Upgrade");
-        }
-        else if (x == Mathf.CeilToInt(map.width / 2f) - 1)
-        {
-            int dice = Random.Range(0, 100);
-            if (dice < 80)
-            {
-                map.SetRoomType(x, y, "Miniboss");
-            }
-            else if (dice < 95)
-            {
-                map.SetRoomType(x, y, "Fight");
-            }
-            else
-            {
-                map.SetRoomType(x, y, "Random");
-            }
-        }
-        else if (x == 1 | x == 2)
-        {
-            int dice = Random.Range(0, 100);
-            if (dice < 75)
-            {
-                map.SetRoomType(x, y, "Fight");
-            }
-            else
-            {
-                map.SetRoomType(x, y, "Random");
-            }
-        }
-        else
-        {
-            int dice = Random.Range(0, 100);
-            if (dice < 40)
-            {
-                map.SetRoomType(x, y, "Fight");
-            }
-            else if (dice < 70)
-            {
-                map.SetRoomType(x, y, "Random");
-            }
-            else if (dice < 82)
-            {
-                map.SetRoomType(x, y, "Shop");
-            }
-            else if (dice < 92)
-            {
-                map.SetRoomType(x, y, "Miniboss");
-            }
-            else
-            {
-                map.SetRoomType(x, y, "Rest");
-            }
-        }
 
-    }
     public void GenerateMap()
     {
         for (int x = 0; x < map.width; x++)
@@ -220,30 +222,54 @@ public class MapGenerator : MonoBehaviour
                     destionation += i + " ";
                     GameObject temp = Instantiate(line, nodeMap[x, y].transform);
                     lineList.Add(temp);
-                    lineList[lineList.Count - 1].GetComponent<LineRenderer>().SetPositions(new Vector3[] { new Vector3(x, y, 0f), new Vector3(x + 1, i, 0f) });
+                    if (x == map.width - 2)
+                        lineList[lineList.Count - 1].GetComponent<LineRenderer>().SetPositions(new Vector3[] { new Vector3(x, y, 0f), new Vector3((x + 2f), i, 0f) });
+                    else
+                        lineList[lineList.Count - 1].GetComponent<LineRenderer>().SetPositions(new Vector3[] { new Vector3(x, y, 0f), new Vector3((x + 1), i, 0f) });
                 }
                 switch (roomType)
                 {
                     case "Start":
                         nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[0];
                         break;
-                    case "Fight":
+                    case "RedExp":
                         nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[1];
                         break;
-                    case "Random":
+                    case "GreenExp":
                         nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[2];
                         break;
-                    case "Rest":
+                    case "BlueExp":
                         nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[3];
                         break;
-                    case "Shop":
+                    case "Gold":
                         nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[4];
                         break;
-                    case "Upgrade":
+                    case "MaxHP":
                         nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[5];
                         break;
-                    case "Miniboss":
+                    case "Gem":
                         nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[6];
+                        break;
+                    case "Chip":
+                        nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[7];
+                        break;
+                    case "Random":
+                        nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[8];
+                        break;
+                    case "Shop":
+                        nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[9];
+                        break;
+                    case "Rest":
+                        nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[10];
+                        break;
+                    case "Upgrade":
+                        nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[11];
+                        break;
+                    case "Miniboss":
+                        nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = nodeImages[12];
+                        break;
+                    case "Boss":
+                        nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = bossImages[currentBossIndex];
                         break;
                     default:
                         nodeMap[x, y].GetComponent<SpriteRenderer>().sprite = null;
@@ -261,26 +287,94 @@ public class MapGenerator : MonoBehaviour
 
     public void Travel(string roomType, int nextPos)
     {
-        ChangeCurrentPos(currentPos[0] + 1, nextPos);
+        if (currentPos[0] + 1 != width - 1)
+        {
+            ChangeCurrentPos(currentPos[0] + 1, nextPos);
+        }
+        else
+        {
+            ChangeCurrentPos(currentPos[0] + 1, Mathf.FloorToInt(height / 2f));
+        }
         switch (roomType)
         {
-            case "Fight":
-                SceneManager.LoadScene(garageFightList[Random.Range(0, garageFightList.Count)]);
+            case "RedExp":
+                currentReward = "RedExp";
+                if (currentPos[0] + 1 < 6)
+                    SceneManager.LoadScene(garageEasyFightList[Random.Range(0, garageEasyFightList.Count)]);
+                else
+                    SceneManager.LoadScene(garageHardFightList[Random.Range(0, garageHardFightList.Count)]);
+                break;
+            case "GreenExp":
+                currentReward = "GreenExp";
+                if (currentPos[0] + 1 < 6)
+                    SceneManager.LoadScene(garageEasyFightList[Random.Range(0, garageEasyFightList.Count)]);
+                else
+                    SceneManager.LoadScene(garageHardFightList[Random.Range(0, garageHardFightList.Count)]);
+                break;
+            case "BlueExp":
+                currentReward = "BlueExp";
+                if (currentPos[0] + 1 < 6)
+                    SceneManager.LoadScene(garageEasyFightList[Random.Range(0, garageEasyFightList.Count)]);
+                else
+                    SceneManager.LoadScene(garageHardFightList[Random.Range(0, garageHardFightList.Count)]);
+                break;
+            case "Gold":
+                currentReward = "Gold";
+                if (currentPos[0] + 1 < 6)
+                    SceneManager.LoadScene(garageEasyFightList[Random.Range(0, garageEasyFightList.Count)]);
+                else
+                    SceneManager.LoadScene(garageHardFightList[Random.Range(0, garageHardFightList.Count)]);
+                break;
+            case "MaxHP":
+                currentReward = "MaxHP";
+                if (currentPos[0] + 1 < 6)
+                    SceneManager.LoadScene(garageEasyFightList[Random.Range(0, garageEasyFightList.Count)]);
+                else
+                    SceneManager.LoadScene(garageHardFightList[Random.Range(0, garageHardFightList.Count)]);
+                break;
+            case "Gem":
+                currentReward = "Gem";
+                if (currentPos[0] + 1 < 6)
+                    SceneManager.LoadScene(garageEasyFightList[Random.Range(0, garageEasyFightList.Count)]);
+                else
+                    SceneManager.LoadScene(garageHardFightList[Random.Range(0, garageHardFightList.Count)]);
+                break;
+            case "Chip":
+                currentReward = "Chip";
+                if (currentPos[0] + 1 < 6)
+                    SceneManager.LoadScene(garageEasyFightList[Random.Range(0, garageEasyFightList.Count)]);
+                else
+                    SceneManager.LoadScene(garageHardFightList[Random.Range(0, garageHardFightList.Count)]);
                 break;
             case "Random":
-                SceneManager.LoadScene(randomFightList[Random.Range(0, randomFightList.Count)]);
+                string sceneName = randomFightList[Random.Range(0, randomFightList.Count)];
+                currentReward = "";
+                if (garageEasyFightList.Contains(sceneName))
+                {
+                    List<string> possibleRewards = new List<string> { "RedExp", "GreenExp", "BlueExp", "Gold", "MaxHP", "Gem", "Chip" };
+                    currentReward = possibleRewards[Random.Range(0, possibleRewards.Count)];
+                }
+                SceneManager.LoadScene(sceneName);
                 break;
             case "Rest":
+                currentReward = "";
                 SceneManager.LoadScene(restList[Random.Range(0, restList.Count)]);
                 break;
             case "Shop":
+                currentReward = "";
                 SceneManager.LoadScene(shopList[Random.Range(0, shopList.Count)]);
                 break;
             case "Upgrade":
+                currentReward = "";
                 SceneManager.LoadScene(upgradeList[Random.Range(0, upgradeList.Count)]);
                 break;
             case "Miniboss":
+                currentReward = "Miniboss";
                 SceneManager.LoadScene(garageMinibossList[Random.Range(0, garageMinibossList.Count)]);
+                break;
+            case "Boss":
+                currentReward = "Boss";
+                SceneManager.LoadScene(garageBossList[currentBossIndex]);
                 break;
         }
     }

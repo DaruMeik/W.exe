@@ -56,7 +56,7 @@ public class Wea08_ProtectorLantern : Bullet
             if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "EnemyBullet")
             {
                 Bullet temp = collision.GetComponent<Bullet>();
-                if(temp != null && temp.isBlockable)
+                if (temp != null && temp.isBlockable)
                     temp.atkPerc = -1000;
             }
         }
@@ -65,7 +65,7 @@ public class Wea08_ProtectorLantern : Bullet
             if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && collision.tag == "PlayerBullet")
             {
                 Bullet temp = collision.GetComponent<Bullet>();
-                if (temp != null)
+                if (temp != null && temp.isBlockable)
                     temp.atkPerc = -1000;
             }
         }

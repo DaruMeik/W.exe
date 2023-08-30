@@ -18,6 +18,7 @@ public class Bullet : MonoBehaviour
     public bool isBlockable;
     public bool isPushable;
     public SpriteRenderer[] bulletSprites;
+    public GameObject moneyGenerator;
     [SerializeField] public PlayerStat playerStat;
     [SerializeField] public EventBroadcast eventBroadcast;
 
@@ -37,7 +38,7 @@ public class Bullet : MonoBehaviour
     {
         if (bySelf )
         {
-            if(playerStat.fireBullet && WeaponDatabase.weaponList[ID].weaponType == "Gun" && Random.Range(0, 100) >= 75)
+            if(playerStat.fireBullet && WeaponDatabase.weaponList[ID].weaponType == "Gun" && Random.Range(0, 100) < 15)
             {
                 isBurning = true;
                 foreach (SpriteRenderer bulletSprite in bulletSprites)
@@ -45,7 +46,7 @@ public class Bullet : MonoBehaviour
                     bulletSprite.color = Color.red;
                 }
             }
-            else if (playerStat.critableGun && WeaponDatabase.weaponList[ID].weaponType == "Gun" && Random.Range(0, 100) >= 90)
+            else if (playerStat.critableGun && WeaponDatabase.weaponList[ID].weaponType == "Gun" && Random.Range(0, 100) < 10)
             {
                 isCrit = true;
                 foreach (SpriteRenderer bulletSprite in bulletSprites)
@@ -62,6 +63,8 @@ public class Bullet : MonoBehaviour
                     sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
                 }
             }
+            if (playerStat.stubborn)
+                atkPerc += Mathf.FloorToInt((playerStat.maxHP - playerStat.currentHP) * 200 / playerStat.maxHP);
         }
         else
         {
@@ -84,10 +87,9 @@ public class Bullet : MonoBehaviour
         damagedAnimationTimer = Time.time;
         if (HP <= 0)
         {
-            if (playerStat.goldBuild)
+            if (bySelf && playerStat.goldBuild)
             {
-                playerStat.money += 2;
-                eventBroadcast.UpdateMoneyNoti();
+                Instantiate(moneyGenerator).GetComponent<MoneyGenerator>().GenerateMoney(transform.position, 1);
             }
             Destroy(gameObject);
         }

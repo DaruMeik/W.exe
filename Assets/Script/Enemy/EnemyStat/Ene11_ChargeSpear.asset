@@ -26,4 +26,4 @@ MonoBehaviour:
   enemyCD:
   - 2
   enemyAimTime:
-  - 0.3
+  - 2

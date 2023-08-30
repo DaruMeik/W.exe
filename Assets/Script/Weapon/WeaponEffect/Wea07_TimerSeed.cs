@@ -12,6 +12,7 @@ public class Wea07_TimerSeed : Bullet
     [SerializeField] private Material whiteFlashMat;
     private Material defaultMat;
     private float flashWhiteTimer = 0;
+    private float nextResetTimer = 0;
     private bool show;
     protected override void OnEnable()
     {
@@ -50,6 +51,16 @@ public class Wea07_TimerSeed : Bullet
             rb.isKinematic = true;
             animator.SetTrigger("Trigger");
         }
+        if (Time.time > nextResetTimer && isBloom)
+        {
+            col.enabled = false;
+            col.enabled = true;
+            nextResetTimer = Time.time + 0.5f;
+        }
+        if (!bySelf && Time.time - spawnTime > 12f)
+        {
+            Destroy(gameObject);
+        }
     }
     public void Bloom()
     {
@@ -64,14 +75,7 @@ public class Wea07_TimerSeed : Bullet
         animator.SetTrigger("Explode");
         col.enabled = false;
         Collider2D[] inZoneObj = null;
-        if (bySelf)
-        {
-            inZoneObj = Physics2D.OverlapCircleAll(gameObject.transform.position + Vector3.up * 0.3f, 2.5f, LayerMask.GetMask("EnemyHurtBox", "Obstacle"));
-        }
-        else
-        {
-            inZoneObj = Physics2D.OverlapCircleAll(gameObject.transform.position + Vector3.up * 0.3f, 2.5f, LayerMask.GetMask("PlayerHurtBox", "Obstacle"));
-        }
+        inZoneObj = Physics2D.OverlapCircleAll(gameObject.transform.position + Vector3.up * 0.3f, 2.5f, LayerMask.GetMask("PlayerHurtBox", "EnemyHurtBox", "Obstacle"));
         foreach (Collider2D obj in inZoneObj)
         {
             if (obj.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
@@ -80,6 +84,7 @@ public class Wea07_TimerSeed : Bullet
                 if (enemy.currentState != enemy.deadState)
                 {
                     enemy.GetStun(1f, false);
+                    enemy.GetBurn(1);
                     float attackModifier = 0;
                     if (ID == playerStat.currentWeapon[0])
                         attackModifier += playerStat.defaultWeaponAtkUpPerc;
@@ -98,13 +103,14 @@ public class Wea07_TimerSeed : Bullet
                         enemy.animator.SetTrigger("Stop");
                         enemy.GetStun(2f, false);
                     }
-                    enemy.rb.AddForce((enemy.transform.position - gameObject.transform.position).normalized * 10f, ForceMode2D.Impulse);
+                    enemy.rb.AddForce((enemy.transform.position - gameObject.transform.position).normalized * 5f, ForceMode2D.Impulse);
                 }
             }
             else if (obj.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
             {
                 PlayerStateManager player = obj.GetComponent<PlayerStateManager>();
                 player.GetStun(1f);
+                player.GetBurn(1);
                 player.TakeDamage(Mathf.Max(0, Mathf.FloorToInt(WeaponDatabase.weaponList[ID].power * (100 + atkPerc) / 100f)));
                 if (player.beingControlledBy != null)
                 {
@@ -113,7 +119,7 @@ public class Wea07_TimerSeed : Bullet
                     Destroy(player.beingControlledBy);
                     player.beingControlledBy = null;
                 }
-                player.rb.AddForce((player.transform.position - gameObject.transform.position).normalized * 10f, ForceMode2D.Impulse);
+                player.rb.AddForce((player.transform.position - gameObject.transform.position).normalized * 5f, ForceMode2D.Impulse);
             }
             else if (obj.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
             {

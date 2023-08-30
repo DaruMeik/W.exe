@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3038396464996964463}
   - component: {fileID: 3679295650114093973}
   - component: {fileID: 1625767107645075724}
-  - component: {fileID: 5956689967750624348}
+  - component: {fileID: -7221651028041419859}
   m_Layer: 0
   m_Name: CritVFX
   m_TagString: Untagged
@@ -107,7 +107,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5956689967750624348
+--- !u!114 &-7221651028041419859
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,3 +119,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aef2e922a49d27e4f90e49c7964f6004, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fadeoutSpeed: 1
+  animator: {fileID: 1625767107645075724}
