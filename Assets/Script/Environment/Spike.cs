@@ -40,7 +40,7 @@ public class Spike : MonoBehaviour
             if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
             {
                 EnemyStateManager temp = collision.GetComponent<EnemyStateManager>();
-                temp.TakeDamage(30);
+                temp.TakeDamage(20);
             }
             else if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerHurtBox"))
             {
@@ -51,7 +51,7 @@ public class Spike : MonoBehaviour
             {
                 DestroyableObstacle temp = collision.GetComponent<DestroyableObstacle>();
                 if (temp != null)
-                    temp.TakeDamage(30);
+                    temp.TakeDamage(25);
             }
         }
     }

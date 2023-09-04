@@ -9,6 +9,7 @@ public class EnemySpawner : MonoBehaviour
     public int specialSpawnNumber;
     public int spawnAmountPlus = 0;
     public int waveAmountPlus = 0;
+    public GameObject ExpChoice;
     private bool stageFinished = false;
     private float nextSpawnTime = 0;
     [SerializeField] private EventBroadcast eventBroadcast;
@@ -118,14 +119,14 @@ public class EnemySpawner : MonoBehaviour
             {
                 enemyID = enemyIDList[1];
             }
-            else if (i < 5)
+            else //if (i < 5)
             {
                 enemyID = enemyIDList[2];
             }
-            else
-            {
-                enemyID = enemyIDList[3];
-            }
+            //else
+            //{
+            //    enemyID = enemyIDList[3];
+            //}
             if (possibleField.Count == 0)
             {
                 return;
@@ -316,6 +317,10 @@ public class EnemySpawner : MonoBehaviour
     private void StopSpawning()
     {
         stageFinished = true;
+        if (ExpChoice != null)
+        {
+            ExpChoice.SetActive(true);
+        }
         eventBroadcast.AllDeadNoti();
     }
 }

@@ -163,17 +163,19 @@ public class UpgradeSelection : MonoBehaviour
             case "Red":
             default:
                 colorUpgradeList = UpgradeDatabase.redUpgradeList;
+                playerStat.redUpgradeRegister.Add(upgradeList[buttonIndex]);
                 break;
             case "Green":
                 colorUpgradeList = UpgradeDatabase.greenUpgradeList;
+                playerStat.greenUpgradeRegister.Add(upgradeList[buttonIndex]);
                 break;
             case "Blue":
                 colorUpgradeList = UpgradeDatabase.blueUpgradeList;
+                playerStat.blueUpgradeRegister.Add(upgradeList[buttonIndex]);
                 break;
         }
         if (colorUpgradeList[upgradeList[buttonIndex]].upgradeBaseEffect != null)
             colorUpgradeList[upgradeList[buttonIndex]].upgradeBaseEffect.ApplyEffect(playerStat);
-        playerStat.redUpgradeRegister.Add(upgradeList[buttonIndex]);
         gameObject.SetActive(false);
     }
 }

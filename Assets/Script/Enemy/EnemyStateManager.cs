@@ -397,18 +397,12 @@ public class EnemyStateManager : MonoBehaviour
         if (enemyStat.enemyType == "Miniboss")
         {
             playerStat.luck += 10;
-            eventBroadcast.GainExpNoti(1, "Red");
-            eventBroadcast.GainExpNoti(1, "Blue");
-            eventBroadcast.GainExpNoti(1, "Green");
             Instantiate(moneyGenerator).GetComponent<MoneyGenerator>().GenerateMoney(transform.position, 24);
             eventBroadcast.FinishStageNoti();
         }
         else if (enemyStat.enemyType == "Boss")
         {
             playerStat.luck += 20;
-            eventBroadcast.GainExpNoti(1, "Red");
-            eventBroadcast.GainExpNoti(1, "Blue");
-            eventBroadcast.GainExpNoti(1, "Green");
             Instantiate(moneyGenerator).GetComponent<MoneyGenerator>().GenerateMoney(transform.position, 40);
             eventBroadcast.FinishStageNoti();
         }
